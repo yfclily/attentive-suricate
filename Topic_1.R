@@ -1,8 +1,3 @@
-Try
-
-
-jjjj
-
-
-
-hdkahdkshdkhdkshdsak tony
+library(readxl)
+Try <- read_excel("Data/Try.xlsx")
+View(Try)
