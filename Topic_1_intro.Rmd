@@ -1,10 +1,7 @@
 ---
 title: "Topic 1 - First steps"
 author: "by Vianney Denis"
-output:
-  "html_document":
-    theme: cerulean
-    highlight: haddock
+output: html_document
 ---
 
 \INSTALL
