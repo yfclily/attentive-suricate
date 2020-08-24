@@ -1,0 +1,211 @@
+---
+title: "Topic 1 - First steps"
+author: "by Vianney Denis"
+output:
+  "html_document":
+    theme: cerulean
+    highlight: haddock
+---
+
+\INSTALL
+
+### Download and install R
+Go to [link](http://cran.r-project.org/bin/windows/base/) for windows system or [link](https://cran.r-project.org/) for mac. 
+Run the installer, and follow the instructions, untick *'Save version number in registry'* 
+
+\UPDATE
+
+### Check for update
+
+```{r,  eval=FALSE}
+if(!require(installr)) {
+  install.packages("installr"); require(installr)} 
+updateR()
+```
+
+This will start the updating process of your R installation.  It will check for newer versions, and if one is available, will guide you through the decisions you need to make 
+
+<span style="color: red"> It will tell you if your R version is out-of-date </span>
+
+\PACKAGE
+
+### Install and use a package
+
++ Install the package </span> <span style="color: blue">```abc```</span>
+
+```{r,  eval=FALSE}
+install.packages("abc")
+```
+
+<span style="color: red"> It will tell you if your package is updated </span>
+
+To do only once, unless you remove or change of version of R 
+
++ Use the package <span style="color: blue">```abc```</span>
+
+```{r,  eval=FALSE}
+library("abc")
+```
+
+To do everytime: load your package 
+
+> *<span style="color: green">**R.practice 1**: Install and load the package </span>* <span style="color: blue">```vegan```</span>
+
+```{r,  eval=FALSE}
+install.packages('vegan')
+library('vegan')
+```
+
+\HELP
+
+### Calling for help
+
+```{r,  eval=FALSE}
+?median
+# or
+help(median)
+```
+
+Help on the function <span style="color: blue">```median```</span>
+
+```{r,  eval=FALSE}
+?median
+```
+
+It will give you details on how to use the function <span style="color: blue">```median```</span>
+
+```{r,  eval=FALSE}
+??median
+```
+It will give you all functions with median in their description 
+\WD
+
+Use of working directory
+
+```{r,  eval=FALSE}
+getwd()
+#Get Working Directory
+```
+
+Get the location of your current working directory
+
+```{r,  eval=FALSE}
+setwd()
+#Set Working Directory
+```
+
+Set up a new working directory
+
+\QUITR
+
+### Quit R
+
+```{r,  eval=FALSE}
+q()
+```
+It will leave your R session, do not save your workspace 
+
+\OBJECTS
+
+### List objects
+
+```{r,  eval=FALSE}
+ls()
+# list
+```
+
+It will list all objects in memory
+
+```{r,  eval=FALSE}
+rm(list=ls())
+# remove list
+```
+
+It will remove all objects in memory
+
+**Tip**: Use CTRL+L to clean your screen
+
+\RCALCULATOR
+
+### R is a calculator
+
+```{r,  eval=FALSE}
+3+2 # addition
+3-2 # substraction
+3*2 # multiplication
+3/2 # division
+3^3 # power
+log(2) # logarithm
+exp(2) # exponential
+(5 + 3) / 4 # define priority using () or {} 
+pi*4 # common function
+```
+
+R is case sensitive <span style="color: blue">```pi```</span> will work, whereas <span style="color: blue">```Pi```</span> will not </span> 
+
+\EDITOR
+
+### Text editor, Rite
+Install and load package <span style="color: blue">```rite```</span> 
+
+```{r,  eval=FALSE}
+install.packages('rite')
+library('rite')
+rite()
+riteout() # CTRL+Enter to send your lines
+```
+
+This is simple text editor
+
+\READINGDATA
+
+### Reading data
+Using <span style="color: blue">```riteout```</span>
+
+```{r,  eval=FALSE}
+riteout() # CTRL+Enter to send your lines
+setwd ('D:/.../Class 1')# set your working directory
+read.table ("taiwan_coral.txt",header = TRUE,sep="\t",dec=".")# opening a simple datasheet
+```
+
+<span style="color: #e1d9d7"> You can also target directly your file without setting up your working directory </span>
+
+```{r,  eval=FALSE}
+read.table ("D:/.../Class 1/taiwan.txt",header = TRUE,sep="\t", dec=".")# long version
+read.table("taiwan.txt", TRUE, "\t",".")# you can also shorten some part once you get use to it, but be careful when using this
+```
+
+<span style="color: #e1d9d7"> Now you can store it in R using the operator</span> <span style="color: #a2c6e5">```<-```</span><span style="color: #e1d9d7">or</span> <span style="color: #a2c6e5">```=```</span>
+
+```{r,  eval=FALSE}
+taiwan <- read.table ("taiwan.txt", 	header = TRUE, sep="\t", dec=".")
+```
+<span style="color: #a2c6e5">```read.delim```</span>
+<span style="color: #e1d9d7">or</span>
+<span style="color: #a2c6e5">```read.csv```</span> 
+<span style="color: #e1d9d7"> and many others are alternative to</span>
+<span style="color: #a2c6e5">```read.table```</span>  
+
+<span style="color: #e1d9d7">Now, you can call your data by calling your object</span>
+<span style="color: #a2c6e5">```taiwan```</span> 
+
+```{r,  eval=FALSE}
+taiwan
+```
+<span style="color: #e1d9d7">CONGRATS, this is your first script in R</span>
+
+
+####__*<span style="color: green">Exercice 1b:</span>*__ <span style="color: green">using the script editor of R Studio ("File>New File>R Script""):</span>
+
+#### *<span style="color: green">- change your working directory to the one you created for this class</span>*
+
+#### *<span style="color: green">- import the file <span style="color: #a2c6e5">```rairuoho.txt```</span> (see below) in an object called rairuoho </span>*
+
+*<span style="color: green">extra: try importing the url of the file using:<span style="color:#a2c6e5">```read.table()```</span>*
+
+#### *<span style="color: green">- using the help facilities, find out, how you could read just the first lines, if needed (using the <span style="color: #a2c6e5">```read.table()```</span> function) </span>*
+
+#### *<span style="color: green">- <span style="color: #a2c6e5">```sum()```</span>for this table, values from the 2nd column <span style="color: #a2c6e5">```rairuoho```</span><span style="color: #a2c6e5">```[```</span> no. line<span style="color: #a2c6e5">```,```</span> no. column<span style="color: #a2c6e5">```]```</span> </span>*
+
+
+####<span style="color: green"> **Knit** your script ("File>Knit Document") in <span style="color: #a2c6e5">`html`</span> format and upload it below</span>
