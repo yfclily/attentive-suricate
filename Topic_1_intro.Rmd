@@ -1,23 +1,57 @@
 ---
-title: "Topic 1 - First steps"
-author: "by Vianney Denis"
-output:
+title: "Fun with R:  Ecological data analysis in R"
+author: "Vianney Denis"
+date: "2020/09/15"
+output:  
   "html_document":
-    theme: cerulean
-    highlight: haddock
+   toc: true
+   toc_depth: 3
+   toc_float: true
+   number_sections: false
+    # ioslides_presentation 
 ---
 
-\INSTALL
+# **Topic 1 - First step** {.tabset}
+
+## Introduction
+
+### Syllabus
+
+The aim of this course is to get familiar with the programming language R. We will explore together the advantages of using R language for formatting reports,  preparing presentations, exploring and analyzing data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. I will quickly introduce you RStudio, Rmarkdown, and GitHub that you are requested to use at the beginning. 
+
+
+**Instructor:** Vianney DENIS [vianney.denis@gmail.com] - Functional Reef Ecology Laboratory, R406, 4F, Institute of Oceanography, National Taiwan University, Taiwan
+
+**Students:** 
+
+**Class format and philosophy:** The aim is not to know everything and test you 
+
+**Final assignment:**
+
+
+### Tentative schedule
+
+### References & readings
+
+
+
+
+
+
+
+## R environment  
 
 ### Download and install R
 Go to [link](http://cran.r-project.org/bin/windows/base/) for windows system or [link](https://cran.r-project.org/) for mac. 
 Run the installer, and follow the instructions, untick *'Save version number in registry'* 
 
+Try markdown https://bookdown.org/yihui/rmarkdown/
+
 \UPDATE
 
 ### Check for update
 
-```{r,  eval=FALSE}
+```{r,  eval=FALSE, tidy=TRUE}
 if(!require(installr)) {
   install.packages("installr"); require(installr)} 
 updateR()
@@ -127,7 +161,7 @@ It will remove all objects in memory
 
 \RCALCULATOR
 
-### R is a calculator
+## R is a calculator
 
 ```{r,  eval=FALSE}
 3+2 # addition
@@ -159,10 +193,10 @@ This is simple text editor
 
 \READINGDATA
 
-### Reading data
+## Reading data
 Using <span style="color: blue">```riteout```</span>
 
-```{r,  eval=FALSE}
+```{r,  eval=FALSE, tidy.opts=list(width.cutoff=60),tidy=TRUE}
 riteout() # CTRL+Enter to send your lines
 setwd ('D:/.../Class 1')# set your working directory
 read.table ("taiwan_coral.txt",header = TRUE,sep="\t",dec=".")# opening a simple datasheet
@@ -170,7 +204,7 @@ read.table ("taiwan_coral.txt",header = TRUE,sep="\t",dec=".")# opening a simple
 
 <span style="color: #e1d9d7"> You can also target directly your file without setting up your working directory </span>
 
-```{r,  eval=FALSE}
+```{r,  eval=FALSE,  tidy=TRUE}
 read.table ("D:/.../Class 1/taiwan.txt",header = TRUE,sep="\t", dec=".")# long version
 read.table("taiwan.txt", TRUE, "\t",".")# you can also shorten some part once you get use to it, but be careful when using this
 ```
