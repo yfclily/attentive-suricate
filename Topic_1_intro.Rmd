@@ -1,9 +1,4 @@
 ---
-<<<<<<< HEAD
-title: "Topic 1 - First steps"
-author: "by Vianney Denis"
-output: html_document
-=======
 title: "Fun with R:  Ecological data analysis in R"
 author: "Vianney Denis"
 date: "2020/09/15"
@@ -14,7 +9,6 @@ output:
    toc_float: true
    number_sections: false
     # ioslides_presentation 
->>>>>>> 2de660cb44c10d18ab7de92b8c70a6c187f987e4
 ---
 
 # **Topic 1 - First step** {.tabset}
@@ -23,19 +17,33 @@ output:
 
 ### Syllabus
 
-The aim of this course is to get familiar with the programming language R. We will explore together the advantages of using R language for formatting reports,  preparing presentations, exploring and analyzing data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. I will quickly introduce you RStudio, Rmarkdown, and GitHub that you are requested to use at the beginning. 
-
-
 **Instructor:** Vianney DENIS [vianney.denis@gmail.com] - Functional Reef Ecology Laboratory, R406, 4F, Institute of Oceanography, National Taiwan University, Taiwan
 
-**Students:** 
+**Students:**11 crazy students with various background
 
-**Class format and philosophy:** The aim is not to know everything and test you 
+**Aim of the course:**The aim of this course is to get familiar with the programming language R while avoiding technical jargon. We will explore together the advantages of using R language for formatting reports,  preparing presentations, exploring and analyzing ecoloical, data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. Along this class, you will be introduced to  RStudio GUI, Rmarkdown, and GitHub repositories that complete harmoniously the use of R. 
+
+
+At the end of this class, student should: 
+
+- not be afraid of coding anymore and see the advantages of doing so;
+- be self-learner, able to explore and solve problem;
+- analyze and valorize scientifically a dataset;
+- know several statistical tools for the analysis of ecological data in particular;
+- help and recommend on the use of R.
+
+**Class philosophy:** I am not a statiscian and I am not a programmer, so I will speak with simple words. My aim is to teach you bases in R language for you to be explore its power by yourself. The aim is not to know everything, but to be able to learn anything.
 
 **Final assignment:**
 
 
 ### Tentative schedule
+
+| Week | Day | Date     | Topic & Reading| Summary   | Discussion |
+|------|-----|----------|----------------|-----------|------------|
+| 1    | Mon | Sept. 25 | [Intro to R & RStudio](01-A-R-intro.html)| Tad & Jes |------------|
+
+
 
 ### References & readings
 
@@ -249,3 +257,6 @@ taiwan
 
 
 ####<span style="color: green"> **Knit** your script ("File>Knit Document") in <span style="color: #a2c6e5">`html`</span> format and upload it below</span>
+
+
+This is an R Markdown document. Markdown is a simple fromatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see
