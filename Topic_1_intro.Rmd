@@ -8,10 +8,11 @@ output:
    toc_depth: 3
    toc_float: true
    number_sections: false
+   code_folding: show
     # ioslides_presentation 
 ---
 
-# **Topic 1 - First step** {.tabset}
+# **Topic 1 - First steps** {.tabset}
 
 ## Introduction
 
@@ -19,51 +20,103 @@ output:
 
 **Instructor:** Vianney DENIS [vianney.denis@gmail.com] - Functional Reef Ecology Laboratory, R406, 4F, Institute of Oceanography, National Taiwan University, Taiwan
 
-**Students:**11 crazy students with various background
+**Students:** 11 crazy students with various background
 
-**Aim of the course:**The aim of this course is to get familiar with the programming language R while avoiding technical jargon. We will explore together the advantages of using R language for formatting reports,  preparing presentations, exploring and analyzing ecoloical, data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. Along this class, you will be introduced to  RStudio GUI, Rmarkdown, and GitHub repositories that complete harmoniously the use of R. 
-
+**Aim of the Course:**The aim of this course is to get familiar with the programming language R while avoiding technical jargon. We will explore together the advantages of using R language for formatting reports,  preparing presentations, exploring and analyzing ecoloical, data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. Along this class, you will be introduced to  RStudio GUI, Rmarkdown, and GitHub repositories that complete harmoniously the use of R. 
 
 At the end of this class, student should: 
 
-- not be afraid of coding anymore and see the advantages of doing so;
+- not be afraid of coding anymore and see the advantages in doing it;
 - be self-learner, able to explore and solve problem;
 - analyze and valorize scientifically a dataset;
 - know several statistical tools for the analysis of ecological data in particular;
 - help and recommend on the use of R.
 
-**Class philosophy:** I am not a statiscian and I am not a programmer, so I will speak with simple words. My aim is to teach you bases in R language for you to be explore its power by yourself. The aim is not to know everything, but to be able to learn anything.
+**Class Philosophy:** I am not a statistician and I am not a programmer, so I will speak with simple words. My aim is to teach you bases in R language for you to be explore its power by yourself. The aim is not to know everything, but to be able to learn anything.
 
-**Final assignment:**
+**Evaluation & Final Assignment:** Each week students prepare an example of the application of the things learned in previous class . One student randomly chosen will introduce its example at the beginning the class (using Rmarkdown). 
+
+For the final assignment, group (2-3 students) will pick up a research topic along the semester, and will prepare a report emphasis methodology and results (scientific forrmat). Introduction and discussion can be presented as bullet points. Report should be sent as a markdown file before the last class of the semester. Do not wait the last minute!
+
+---
+
+**Disclaimer:** Format of course largely inspired by documentation from Fukami T. & Coyle J. (Standford University). I am currently reshaping all documents to have more interaction with students during this course. 
+
+### Tentative Schedule 
+
+Schedule is highly susceptible to changes as I am updating content every week.
+
+| Week | Day | Date     | Tentative Topic | Content|
+|------|-----|----------|-----------------|--------|
+| 1    | Tue | ---------| Introduction: First step | Introduction R, R Studio, Markdown, GitHub|
+| 2 & 3 | Tue | ---------| Data manipulation, basic graphics and statistical functions | Manipulate dataset, basic operation, make and edit a plot|
+| 4 & 5 | Tue | ---------| Data exploration | Summarize dataset, preliminary analyses |
+| 6 | Tue | ---------| Ecological resemblance | Association coefficient, similarity matrix |
+| 7 | Tue | ---------| Numerical classification | Cluster analysis |
+| 8 & 9 | Tue | ---------| Unconstrained ordination | PCA, PCoA, nMDS |
+| 10 & 11 | Tue | ---------| Constrained ordination | Redundancy and cannonical analysis |
+| 12 & 13 | Tue | ---------| Generalized Linear Model | Linear regression, and GLMs |
+| 14 | Tue | ---------| From traits to functions | --- |
+
+### References & Readings
+
+Borcard, D., Gillet, F. and Legendre, P. (2018) Numerical Ecology with R. Springer. DOI: [10.1007/978-3-319-71404-2](https://www.springer.com/gp/book/9783319714035)
+
+Ramette, A. (2007) Multivariate analyses in microbial ecology. FEMS Microbiology Ecology, 62: 142-160. DOI: [10.1111/j.1574-6941.2007.00375.x](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1574-6941.2007.00375.x)
+
+Xie, Y., Allaire, J.J.,Grolemund, G. (2020) R Markdown: The Definitive Guide. Chapman & Hall/CRC. The online version of this book is free to read [here](https://bookdown.org/yihui/rmarkdown/). 
+
+Zuur, A. F., Ieno E. N., Smith, G. M. (2007) Analysing Ecological Data. Springer.  DOI: [10.1007/978-0-387-45972-1](https://www.springer.com/gp/book/9780387459677)
+
+Zuur, A. F. (2010) A protocol for data exploration to avoid common statistical problems. Methods in Ecology and Evolution, 1: 3-14. DOI: [10.1111/j.2041-210X.2009.00001.x](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2009.00001.x)
+
+## R software
+
+### What's R?
+
+R is a popular free and open program for statistical computing (https://www.r-project.org/about.html). R is a widely-used program for statistical computing. R can be run from the command line or from a graphical user interface (GUI) that is automatically installed when you install R (if you open the R program installed on your computer, this is what will open up). 
+
+R consists of a core (minimal installation + add on packages (from the Comprehensive R Archive Network, Bioconductor, or others). The core's capabilities is expanded by using the add-on packages.
+
+### Installation
+
+#### Windows
+
+If you don't have R installed on your computer:
+
+- Download R from the [CRAN website](https://cran.r-project.org/bin/windows/base/release.htm).
+- Run the `.exe` file that was just downloaded.
+- Once it’s installed, open R to make sure it works and you don’t get any error messages.
+
+If you already have R already install:
+
+To check the version of R you are using, start R: the version of R you are running is the first thing that appears on the terminal. Alternatively, Type `sessionInfo()` in the R console, which will  display which version of R you are running. Go on the [CRAN website](https://cran.r-project.org/) and check whether a more recent version is available. If so, please download and install it. You can check [here](https://cran.r-project.org/bin/windows/base/rw-FAQ.html#How-do-I-UNinstall-R_003f) for more information on how to remove old versions from your system if you wish to do so.
+
+#### macOS
+
+If you don't have R installed on your computer:
+
+- Download R from the [CRAN website](https://cran.r-project.org/bin/macosx/).
+- Select the `.pkg` file for the latest R version.
+- Double click on the downloaded file to install R
+- It is also a good idea to install [XQuartz] (https://www.xquartz.org/) (needed by some packages)
+- Once it’s installed, open R to make sure it works and you don’t get any error messages.
+
+If you already have R already install:
+
+To check the version of R you are using, start R: the version of R you are running is the first thing that appears on the terminal. Alternatively, Type `sessionInfo()` in the R console, which will  display which version of R you are running. Go on the [CRAN website](https://cran.r-project.org/bin/macosx/) and check whether a more recent version is available. If so, please download and install it. 
 
 
-### Tentative schedule
+#### Linux
 
-| Week | Day | Date     | Topic & Reading| Summary   | Discussion |
-|------|-----|----------|----------------|-----------|------------|
-| 1    | Mon | Sept. 25 | [Intro to R & RStudio](01-A-R-intro.html)| Tad & Jes |------------|
+- Follow the instructions for your distribution from [CRAN](https://cloud.r-project.org/bin/linux/), they provide information to get the most recent version of R for common distributions. 
 
-
-
-### References & readings
+- Once it’s installed, open R to make sure it works and you don’t get any error messages.
 
 
+### Update
 
-
-
-
-
-## R environment  
-
-### Download and install R
-Go to [link](http://cran.r-project.org/bin/windows/base/) for windows system or [link](https://cran.r-project.org/) for mac. 
-Run the installer, and follow the instructions, untick *'Save version number in registry'* 
-
-Try markdown https://bookdown.org/yihui/rmarkdown/
-
-\UPDATE
-
-### Check for update
+If you already have R on your computer, an alternative is to just run (<span style="color: red">it will tell you if your R version is out-of-date </span>): 
 
 ```{r,  eval=FALSE, tidy=TRUE}
 if(!require(installr)) {
@@ -71,42 +124,49 @@ if(!require(installr)) {
 updateR()
 ```
 
-This will start the updating process of your R installation.  It will check for newer versions, and if one is available, will guide you through the decisions you need to make 
+This will start the updating process of your R installation.  It will check for newer versions, and if one is available, will guide you through the decisions you need to make. 
 
-<span style="color: red"> It will tell you if your R version is out-of-date </span>
+You may have to choose a CRAN mirror if it is your first download. This is just a copy of the CRAN archives. Choose one in Taiwan, it is usually a bit faster to download and install. 
 
-\PACKAGE
+### Package
 
-### Install and use a package
+To expand the abilities of R, you can first install a package with its name. The package `ABC` provides tools for Approximate Bayesian Computation (ABC) 
 
-+ Install the package </span> <span style="color: blue">```abc```</span>
+- Install the package `abc`
 
 ```{r,  eval=FALSE}
 install.packages("abc")
 ```
 
-<span style="color: red"> It will tell you if your package is updated </span>
+```{r,  eval=FALSE}
+# all information after `#` is ignored, this is VERY important and use to comment your code.
+```
 
-To do only once, unless you remove or change of version of R 
+```{r,  eval=FALSE}
+install.packages("abc") # I am installing the package 'abc'
+```
 
-+ Use the package <span style="color: blue">```abc```</span>
+- Use the package `abc`
 
 ```{r,  eval=FALSE}
 library("abc")
 ```
 
-To do everytime: load your package 
+To do every time you wanna use the package: load your package 
 
-> *<span style="color: green">**R.practice 1**: Install and load the package </span>* <span style="color: blue">```vegan```</span>
 
-```{r,  eval=FALSE}
+> *<span style="color: green">**R_P_1**: Install and load the package </span>* <span style="color: blue">```vegan```</span>
+
+```{r class.source = "fold-hide",  eval=FALSE}
 install.packages('vegan')
 library('vegan')
 ```
 
-\HELP
+If you don't know the name of the package:
 
-### Calling for help
+- Use task views available at http://cran.r-project.org/web/views that group packages to subject areas such environmetrics, multivariate, etc.
+
+### Help
 
 ```{r,  eval=FALSE}
 ?median
