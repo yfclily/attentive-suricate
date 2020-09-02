@@ -1263,6 +1263,66 @@ window.buildTabsets = function(tocID) {
 };
 
 </script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('show');
+    });
+  });
+  $("#rmd-hide-all-code").click(function() {
+    $('div.r-code-collapse').each(function() {
+      $(this).collapse('hide');
+    });
+  });
+
+  // index for unique code element ids
+  var currentIndex = 1;
+
+  // select all R code blocks
+  var rCodeBlocks = $('pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan, pre.julia, pre.foldable');
+  rCodeBlocks.each(function() {
+
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    show = (show || $(this).hasClass('fold-show')) && !$(this).hasClass('fold-hide');
+    if (show) div.addClass('in');
+    var id = 'rcode-643E0F36' + currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide' : 'Code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide');
+    });
+  });
+
+}
+</script>
 <style type="text/css">.hljs-literal {
 color: #990073;
 }
@@ -1418,6 +1478,9 @@ summary {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -1507,6 +1570,14 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Fun with R: Ecological data analysis in R</h1>
@@ -1516,94 +1587,201 @@ div.tocify {
 </div>
 
 
-<div id="topic-1---first-step" class="section level1 tabset">
-<h1><strong>Topic 1 - First step</strong></h1>
+<div id="topic-1---first-steps" class="section level1 tabset">
+<h1><strong>Topic 1 - First steps</strong></h1>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <div id="syllabus" class="section level3">
 <h3>Syllabus</h3>
 <p><strong>Instructor:</strong> Vianney DENIS [<a href="mailto:vianney.denis@gmail.com" class="email">vianney.denis@gmail.com</a>] - Functional Reef Ecology Laboratory, R406, 4F, Institute of Oceanography, National Taiwan University, Taiwan</p>
-<p><strong>Students:</strong>11 crazy students with various background</p>
-<p><strong>Aim of the course:</strong>The aim of this course is to get familiar with the programming language R while avoiding technical jargon. We will explore together the advantages of using R language for formatting reports, preparing presentations, exploring and analyzing ecoloical, data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. Along this class, you will be introduced to RStudio GUI, Rmarkdown, and GitHub repositories that complete harmoniously the use of R.</p>
+<p><strong>Students:</strong> 11 crazy students with various background</p>
+<p><strong>Aim of the Course:</strong>The aim of this course is to get familiar with the programming language R while avoiding technical jargon. We will explore together the advantages of using R language for formatting reports, preparing presentations, exploring and analyzing ecoloical, data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. Along this class, you will be introduced to RStudio GUI, Rmarkdown, and GitHub repositories that complete harmoniously the use of R.</p>
 <p>At the end of this class, student should:</p>
 <ul>
-<li>not be afraid of coding anymore and see the advantages of doing so;</li>
+<li>not be afraid of coding anymore and see the advantages in doing it;</li>
 <li>be self-learner, able to explore and solve problem;</li>
 <li>analyze and valorize scientifically a dataset;</li>
 <li>know several statistical tools for the analysis of ecological data in particular;</li>
 <li>help and recommend on the use of R.</li>
 </ul>
-<p><strong>Class philosophy:</strong> I am not a statiscian and I am not a programmer, so I will speak with simple words. My aim is to teach you bases in R language for you to be explore its power by yourself. The aim is not to know everything, but to be able to learn anything.</p>
-<p><strong>Final assignment:</strong></p>
+<p><strong>Class Philosophy:</strong> I am not a statistician and I am not a programmer, so I will speak with simple words. My aim is to teach you bases in R language for you to be explore its power by yourself. The aim is not to know everything, but to be able to learn anything.</p>
+<p><strong>Evaluation &amp; Final Assignment:</strong> Each week students prepare an example of the application of the things learned in previous class . One student randomly chosen will introduce its example at the beginning the class (using Rmarkdown).</p>
+<p>For the final assignment, group (2-3 students) will pick up a research topic along the semester, and will prepare a report emphasis methodology and results (scientific forrmat). Introduction and discussion can be presented as bullet points. Report should be sent as a markdown file before the last class of the semester. Do not wait the last minute!</p>
+<hr />
+<p><strong>Disclaimer:</strong> Format of course largely inspired by documentation from Fukami T. &amp; Coyle J. (Standford University). I am currently reshaping all documents to have more interaction with students during this course.</p>
 </div>
 <div id="tentative-schedule" class="section level3">
-<h3>Tentative schedule</h3>
+<h3>Tentative Schedule</h3>
+<p>Schedule is highly susceptible to changes as I am updating content every week.</p>
 <table>
+<colgroup>
+<col width="13%"></col>
+<col width="10%"></col>
+<col width="21%"></col>
+<col width="36%"></col>
+<col width="17%"></col>
+</colgroup>
 <thead>
 <tr class="header">
 <th>Week</th>
 <th>Day</th>
 <th>Date</th>
-<th>Topic &amp; Reading</th>
-<th>Summary</th>
-<th>Discussion</th>
+<th>Tentative Topic</th>
+<th>Content</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>1</td>
-<td>Mon</td>
-<td>Sept. 25</td>
-<td><a href="01-A-R-intro.html">Intro to R &amp; RStudio</a></td>
-<td>Tad &amp; Jes</td>
-<td>————</td>
+<td>Tue</td>
+<td>———</td>
+<td>Introduction: First step</td>
+<td>Introduction R, R Studio, Markdown, GitHub</td>
+</tr>
+<tr class="even">
+<td>2 &amp; 3</td>
+<td>Tue</td>
+<td>———</td>
+<td>Data manipulation, basic graphics and statistical functions</td>
+<td>Manipulate dataset, basic operation, make and edit a plot</td>
+</tr>
+<tr class="odd">
+<td>4 &amp; 5</td>
+<td>Tue</td>
+<td>———</td>
+<td>Data exploration</td>
+<td>Summarize dataset, preliminary analyses</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Tue</td>
+<td>———</td>
+<td>Ecological resemblance</td>
+<td>Association coefficient, similarity matrix</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Tue</td>
+<td>———</td>
+<td>Numerical classification</td>
+<td>Cluster analysis</td>
+</tr>
+<tr class="even">
+<td>8 &amp; 9</td>
+<td>Tue</td>
+<td>———</td>
+<td>Unconstrained ordination</td>
+<td>PCA, PCoA, nMDS</td>
+</tr>
+<tr class="odd">
+<td>10 &amp; 11</td>
+<td>Tue</td>
+<td>———</td>
+<td>Constrained ordination</td>
+<td>Redundancy and cannonical analysis</td>
+</tr>
+<tr class="even">
+<td>12 &amp; 13</td>
+<td>Tue</td>
+<td>———</td>
+<td>Generalized Linear Model</td>
+<td>Linear regression, and GLMs</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td>Tue</td>
+<td>———</td>
+<td>From traits to functions</td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div id="references-readings" class="section level3">
-<h3>References &amp; readings</h3>
+<h3>References &amp; Readings</h3>
+<p>Borcard, D., Gillet, F. and Legendre, P. (2018) Numerical Ecology with R. Springer. DOI: <a href="https://www.springer.com/gp/book/9783319714035">10.1007/978-3-319-71404-2</a></p>
+<p>Ramette, A. (2007) Multivariate analyses in microbial ecology. FEMS Microbiology Ecology, 62: 142-160. DOI: <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/j.1574-6941.2007.00375.x">10.1111/j.1574-6941.2007.00375.x</a></p>
+<p>Xie, Y., Allaire, J.J.,Grolemund, G. (2020) R Markdown: The Definitive Guide. Chapman &amp; Hall/CRC. The online version of this book is free to read <a href="https://bookdown.org/yihui/rmarkdown/">here</a>.</p>
+<p>Zuur, A. F., Ieno E. N., Smith, G. M. (2007) Analysing Ecological Data. Springer. DOI: <a href="https://www.springer.com/gp/book/9780387459677">10.1007/978-0-387-45972-1</a></p>
+<p>Zuur, A. F. (2010) A protocol for data exploration to avoid common statistical problems. Methods in Ecology and Evolution, 1: 3-14. DOI: <a href="https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2009.00001.x">10.1111/j.2041-210X.2009.00001.x</a></p>
 </div>
 </div>
-<div id="r-environment" class="section level2">
-<h2>R environment</h2>
-<div id="download-and-install-r" class="section level3">
-<h3>Download and install R</h3>
-<p>Go to <a href="http://cran.r-project.org/bin/windows/base/">link</a> for windows system or <a href="https://cran.r-project.org/">link</a> for mac. Run the installer, and follow the instructions, untick <em>‘Save version number in registry’</em></p>
-<p>Try markdown <a href="https://bookdown.org/yihui/rmarkdown/" class="uri">https://bookdown.org/yihui/rmarkdown/</a></p>
-
+<div id="r-software" class="section level2">
+<h2>R software</h2>
+<div id="whats-r" class="section level3">
+<h3>What’s R?</h3>
+<p>R is a popular free and open program for statistical computing (<a href="https://www.r-project.org/about.html" class="uri">https://www.r-project.org/about.html</a>). R is a widely-used program for statistical computing. R can be run from the command line or from a graphical user interface (GUI) that is automatically installed when you install R (if you open the R program installed on your computer, this is what will open up).</p>
+<p>R consists of a core (minimal installation + add on packages (from the Comprehensive R Archive Network, Bioconductor, or others). The core’s capabilities is expanded by using the add-on packages.</p>
 </div>
-<div id="check-for-update" class="section level3">
-<h3>Check for update</h3>
+<div id="installation" class="section level3">
+<h3>Installation</h3>
+<div id="windows" class="section level4">
+<h4>Windows</h4>
+<p>If you don’t have R installed on your computer:</p>
+<ul>
+<li>Download R from the <a href="https://cran.r-project.org/bin/windows/base/release.htm">CRAN website</a>.</li>
+<li>Run the <code>.exe</code> file that was just downloaded.</li>
+<li>Once it’s installed, open R to make sure it works and you don’t get any error messages.</li>
+</ul>
+<p>If you already have R already install:</p>
+<p>To check the version of R you are using, start R: the version of R you are running is the first thing that appears on the terminal. Alternatively, Type <code>sessionInfo()</code> in the R console, which will display which version of R you are running. Go on the <a href="https://cran.r-project.org/">CRAN website</a> and check whether a more recent version is available. If so, please download and install it. You can check <a href="https://cran.r-project.org/bin/windows/base/rw-FAQ.html#How-do-I-UNinstall-R_003f">here</a> for more information on how to remove old versions from your system if you wish to do so.</p>
+</div>
+<div id="macos" class="section level4">
+<h4>macOS</h4>
+<p>If you don’t have R installed on your computer:</p>
+<ul>
+<li>Download R from the <a href="https://cran.r-project.org/bin/macosx/">CRAN website</a>.</li>
+<li>Select the <code>.pkg</code> file for the latest R version.</li>
+<li>Double click on the downloaded file to install R</li>
+<li>It is also a good idea to install [XQuartz] (<a href="https://www.xquartz.org/" class="uri">https://www.xquartz.org/</a>) (needed by some packages)</li>
+<li>Once it’s installed, open R to make sure it works and you don’t get any error messages.</li>
+</ul>
+<p>If you already have R already install:</p>
+<p>To check the version of R you are using, start R: the version of R you are running is the first thing that appears on the terminal. Alternatively, Type <code>sessionInfo()</code> in the R console, which will display which version of R you are running. Go on the <a href="https://cran.r-project.org/bin/macosx/">CRAN website</a> and check whether a more recent version is available. If so, please download and install it.</p>
+</div>
+<div id="linux" class="section level4">
+<h4>Linux</h4>
+<ul>
+<li><p>Follow the instructions for your distribution from <a href="https://cloud.r-project.org/bin/linux/">CRAN</a>, they provide information to get the most recent version of R for common distributions.</p></li>
+<li><p>Once it’s installed, open R to make sure it works and you don’t get any error messages.</p></li>
+</ul>
+</div>
+</div>
+<div id="update" class="section level3">
+<h3>Update</h3>
+<p>If you already have R on your computer, an alternative is to just run (<span style="color: red">it will tell you if your R version is out-of-date </span>):</p>
 <pre class="r"><code>if(!require(installr)) {
   install.packages(&quot;installr&quot;); require(installr)} 
 updateR()</code></pre>
-<p>This will start the updating process of your R installation. It will check for newer versions, and if one is available, will guide you through the decisions you need to make</p>
-<p><span style="color: red"> It will tell you if your R version is out-of-date </span></p>
-
+<p>This will start the updating process of your R installation. It will check for newer versions, and if one is available, will guide you through the decisions you need to make.</p>
+<p>You may have to choose a CRAN mirror if it is your first download. This is just a copy of the CRAN archives. Choose one in Taiwan, it is usually a bit faster to download and install.</p>
 </div>
-<div id="install-and-use-a-package" class="section level3">
-<h3>Install and use a package</h3>
+<div id="package" class="section level3">
+<h3>Package</h3>
+<p>To expand the abilities of R, you can first install a package with its name. The package <code>ABC</code> provides tools for Approximate Bayesian Computation (ABC)</p>
 <ul>
-<li>Install the package </span> <span style="color: blue"><code>abc</code></span></li>
+<li>Install the package <code>abc</code></li>
 </ul>
 <pre class="r"><code>install.packages(&quot;abc&quot;)</code></pre>
-<p><span style="color: red"> It will tell you if your package is updated </span></p>
-<p>To do only once, unless you remove or change of version of R</p>
+<pre class="r"><code># all information after `#` is ignored, this is VERY important and use to comment your code.</code></pre>
+<pre class="r"><code>install.packages(&quot;abc&quot;) # I am installing the package &#39;abc&#39;</code></pre>
 <ul>
-<li>Use the package <span style="color: blue"><code>abc</code></span></li>
+<li>Use the package <code>abc</code></li>
 </ul>
 <pre class="r"><code>library(&quot;abc&quot;)</code></pre>
-<p>To do everytime: load your package</p>
+<p>To do every time you wanna use the package: load your package</p>
 <blockquote>
-<p><em><span style="color: green"><strong>R.practice 1</strong>: Install and load the package </span></em> <span style="color: blue"><code>vegan</code></span></p>
+<p><em><span style="color: green"><strong>R_P_1</strong>: Install and load the package </span></em> <span style="color: blue"><code>vegan</code></span></p>
 </blockquote>
-<pre class="r"><code>install.packages(&#39;vegan&#39;)
+<pre class="r fold-hide"><code>install.packages(&#39;vegan&#39;)
 library(&#39;vegan&#39;)</code></pre>
-
+<p>If you don’t know the name of the package:</p>
+<ul>
+<li>Use task views available at <a href="http://cran.r-project.org/web/views" class="uri">http://cran.r-project.org/web/views</a> that group packages to subject areas such environmetrics, multivariate, etc.</li>
+</ul>
 </div>
-<div id="calling-for-help" class="section level3">
-<h3>Calling for help</h3>
+<div id="help" class="section level3">
+<h3>Help</h3>
 <pre class="r"><code>?median
 # or
 help(median)</code></pre>
@@ -1692,6 +1870,7 @@ read.table(&quot;taiwan.txt&quot;, TRUE, &quot;\t&quot;,&quot;.&quot;)# you can 
 <div id="sumfor-this-table-values-from-the-2nd-column-rairuoho-no.-line-no.-column" class="section level4">
 <h4><em><span style="color: green">- <span style="color: #a2c6e5"><code>sum()</code></span>for this table, values from the 2nd column <span style="color: #a2c6e5"><code>rairuoho</code></span><span style="color: #a2c6e5"><code>[</code></span> no. line<span style="color: #a2c6e5"><code>,</code></span> no. column<span style="color: #a2c6e5"><code>]</code></span> </span></em></h4>
 <p>####<span style="color: green"> <strong>Knit</strong> your script (“File&gt;Knit Document”) in <span style="color: #a2c6e5"><code>html</code></span> format and upload it below</span></p>
+<p>This is an R Markdown document. Markdown is a simple fromatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see</p>
 </div>
 </div>
 </div>
@@ -1731,6 +1910,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {
