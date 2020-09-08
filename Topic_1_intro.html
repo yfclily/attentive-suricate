@@ -1700,6 +1700,7 @@ div.tocify {
 <div id="references-readings" class="section level3">
 <h3>References &amp; Readings</h3>
 <p>Borcard, D., Gillet, F. and Legendre, P. (2018) Numerical Ecology with R. Springer. DOI: <a href="https://www.springer.com/gp/book/9783319714035">10.1007/978-3-319-71404-2</a></p>
+<p>Paradis, E. (2005) R for beginner. Available among many others documentation at <a href="https://cran.r-project.org/other-docs.html" class="uri">https://cran.r-project.org/other-docs.html</a> (page frozen and no longer actively maintained)</p>
 <p>Ramette, A. (2007) Multivariate analyses in microbial ecology. FEMS Microbiology Ecology, 62: 142-160. DOI: <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/j.1574-6941.2007.00375.x">10.1111/j.1574-6941.2007.00375.x</a></p>
 <p>Xie, Y., Allaire, J.J.,Grolemund, G. (2020) R Markdown: The Definitive Guide. Chapman &amp; Hall/CRC. The online version of this book is free to read <a href="https://bookdown.org/yihui/rmarkdown/">here</a>.</p>
 <p>Zuur, A. F., Ieno E. N., Smith, G. M. (2007) Analysing Ecological Data. Springer. DOI: <a href="https://www.springer.com/gp/book/9780387459677">10.1007/978-0-387-45972-1</a></p>
@@ -1771,54 +1772,64 @@ updateR()</code></pre>
 <pre class="r"><code>library(&quot;abc&quot;)</code></pre>
 <p>To do every time you wanna use the package: load your package</p>
 <blockquote>
-<p><em><span style="color: green"><strong>R_P_1</strong>: Install and load the package </span></em> <span style="color: blue"><code>vegan</code></span></p>
+<p><em><span style="color: green"><strong>RP1</strong>: Install and load the package </span></em> <code>vegan</code></p>
 </blockquote>
 <pre class="r fold-hide"><code>install.packages(&#39;vegan&#39;)
 library(&#39;vegan&#39;)</code></pre>
 <p>If you don’t know the name of the package:</p>
 <ul>
-<li>Use task views available at <a href="http://cran.r-project.org/web/views" class="uri">http://cran.r-project.org/web/views</a> that group packages to subject areas such environmetrics, multivariate, etc.</li>
+<li><p>use task views available at <a href="http://cran.r-project.org/web/views" class="uri">http://cran.r-project.org/web/views</a> that group packages to subject areas such environmetrics, multivariate, etc.</p></li>
+<li><p>many online discussion, forum, and docs. Among many others sources, you will often be directed to discusion in <a href="https://stackoverflow.com/">stackoverflow</a></p></li>
 </ul>
 </div>
 <div id="help" class="section level3">
 <h3>Help</h3>
-<pre class="r"><code>?median
+<p>You can acces the html help via the Help menu: <em>Help/Search help</em>. Alternatively, a faster solution is to call for help directly in the console:</p>
+<ul>
+<li>a quick summary on how to use the function <code>median</code></li>
+</ul>
+<pre class="r fold-show"><code>?median</code></pre>
+<ul>
+<li>a detailed summary on the use of the function `median```</span></li>
+</ul>
+<pre class="r fold-show"><code>?median
 # or
 help(median)</code></pre>
-<p>Help on the function <span style="color: blue"><code>median</code></span></p>
-<pre class="r"><code>?median</code></pre>
-<p>It will give you details on how to use the function <span style="color: blue"><code>median</code></span></p>
+<ul>
+<li>it will give you all functions with median in their description</li>
+</ul>
 <pre class="r"><code>??median</code></pre>
-<p>It will give you all functions with median in their description </p>
-<p>Use of working directory</p>
-<pre class="r"><code>getwd()
-#Get Working Directory</code></pre>
-<p>Get the location of your current working directory</p>
+</div>
+<div id="working-directory" class="section level3">
+<h3>Working directory</h3>
+<p>It is a good practice to create a working directory (folder) where you will store all your file. In general, each project will have its working directory including data set, script, plot, etc</p>
+<p>Use of working directory. Retrieve it using:</p>
+<pre class="r"><code>getwd() #get the location of your working directory</code></pre>
+<p>Set it up using:</p>
 <pre class="r"><code>setwd()
-#Set Working Directory</code></pre>
-<p>Set up a new working directory</p>
-
+#get the location of your working directory</code></pre>
 </div>
 <div id="quit-r" class="section level3">
 <h3>Quit R</h3>
+<p><strong>File -&gt; Exit</strong> or use the console:</p>
 <pre class="r"><code>q()</code></pre>
-<p>It will leave your R session, do not save your workspace</p>
-
+<p>Saving the workspace image will allow you to save all objects created in the R memory into your working directory (.Rdata). It also saves all commands given during the session (.Rhistory).</p>
+<p>Quit without saving for now.</p>
 </div>
-<div id="list-objects" class="section level3">
-<h3>List objects</h3>
-<pre class="r"><code>ls()
-# list</code></pre>
-<p>It will list all objects in memory</p>
-<pre class="r"><code>rm(list=ls())
-# remove list</code></pre>
-<p>It will remove all objects in memory</p>
-<p><strong>Tip</strong>: Use CTRL+L to clean your screen</p>
-
+<div id="list" class="section level3">
+<h3>List</h3>
+<p><code>ls()</code> will list all the objects in the memory.</p>
+<pre class="r"><code>a&lt;-&#39;corals&#39; # create an object &#39;a&#39; containing &#39;corals&#39;
+b&lt;-&#39;are&#39; # create an object &#39;b&#39; containing &#39;are&#39;
+c&lt;-&#39;cool&#39;# create an object &#39;c&#39; containing &#39;cool&#39;
+ls # list objects &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</code></pre>
+<p>You can clean the objects present in the memory using:</p>
+<pre class="r"><code>rm(list=ls()) # rm: remove ls: list of all objects present in memory</code></pre>
+<p><strong>Tip</strong>: Use CTRL+L to clean your screen when you want to make it clear. It does not remove the objects in memory.</p>
 </div>
-</div>
-<div id="r-is-a-calculator" class="section level2">
-<h2>R is a calculator</h2>
+<div id="calculator" class="section level3">
+<h3>Calculator</h3>
+<p>R is a calculator:</p>
 <pre class="r"><code>3+2 # addition
 3-2 # substraction
 3*2 # multiplication
@@ -1829,49 +1840,132 @@ exp(2) # exponential
 (5 + 3) / 4 # define priority using () or {} 
 pi*4 # common function</code></pre>
 <p>R is case sensitive <span style="color: blue"><code>pi</code></span> will work, whereas <span style="color: blue"><code>Pi</code></span> will not </span></p>
-
-<div id="text-editor-rite" class="section level3">
-<h3>Text editor, Rite</h3>
-<p>Install and load package <span style="color: blue"><code>rite</code></span></p>
-<pre class="r"><code>install.packages(&#39;rite&#39;)
-library(&#39;rite&#39;)
-rite()
-riteout() # CTRL+Enter to send your lines</code></pre>
-<p>This is simple text editor</p>
-
+</div>
+<div id="reading" class="section level3">
+<h3>Reading</h3>
+<p>To be able to work with a dataset (and make calculation based on it), it has to be import as an object in the memory of R. Many formats can be used (.xls, .spss, SAS, etc.). To start with, we will use and .xlsx file, but quickly we will turn toward less heavy format. Note the distinction between <strong>reading</strong> a file and <strong>importing</strong> a file.</p>
+<p>My file <code>reef_fish</code> is an .xlsx file located in the file ‘Data’ of my working directory.</p>
+<pre class="r"><code>library(readxl) # I am loading a package (library) allowing me to read .xls file
+read_excel(&#39;Data/reef_fish.xlsx&#39;) # I am reading my file
+fish&lt;-read_excel(&#39;Data/reef_fish.xlsx&#39;) # I am importing my file in an object called &#39;fish&#39;</code></pre>
+<p>More commonly, we will use .txt file (lighter) and the function `read.table’. But often you will need to think at several ‘arguments’:</p>
+<ul>
+<li>What is the name of the data file (with the extension)?</li>
+<li>Does the file have column titles?</li>
+<li>What is the delimiter between the columns (tab, space, comma or semicolon)?</li>
+<li>What is the character used for decimal points (dot, comma)?</li>
+</ul>
+<pre class="r"><code>fish&lt;-read.table(&#39;Data/reef_fish.txt&#39;, header=T, sep=&#39;\t&#39;, dec=&#39;.&#39;) # reading txt file</code></pre>
+<p>Check <code>?read.table</code> for all arguments you can specify within this function</p>
+<p>Instead or working in a working directory, you can also target directly your file (check your file properties) or an url.</p>
+<pre class="r"><code>fish&lt;-read.table (&quot;D:/.../Topic 1/Data/reef_fish.txt&quot;,header = TRUE,sep=&quot;\t&quot;, dec=&quot;.&quot;)# long version
+fish&lt;-read.table(&quot;taiwan.txt&quot;, TRUE, &quot;\t&quot;,&quot;.&quot;)# you can also shorten some part once you get use to it, but be careful when using this</code></pre>
+<p>You can also use `file.choose()’ to locate dircetly the file or or computer or alternatively import data from the R menu.</p>
+<pre class="r"><code>fish&lt;-read.table(file.choose (), header = TRUE,sep=&quot;\t&quot;, dec=&quot;.&quot;)</code></pre>
+<p><strong>Note_1</strong>: in all cases creation of a file with the same name ‘fish’ will replace the one previously created.</p>
+<p><strong>Note_2</strong>: two operators <code>&lt;-</code> and <code>=</code> can be used to import data. While longer, I favor <code>&lt;-</code> in the creation of object to avoid confusion with mathematical operator.</p>
+</div>
+<div id="editor" class="section level3">
+<h3>Editor</h3>
+<p>You can feel it will be interesting to have an editor for our code. It will help at saving and running quickly our code in R. Many alternative: open a .txt file, open an new script in R, use a text editor. The latest one is the most commone altrenative.</p>
 </div>
 </div>
-<div id="reading-data" class="section level2">
-<h2>Reading data</h2>
-<p>Using <span style="color: blue"><code>riteout</code></span></p>
-<pre class="r"><code>riteout() # CTRL+Enter to send your lines
-setwd (&#39;D:/.../Class 1&#39;)# set your working directory
-read.table (&quot;taiwan_coral.txt&quot;,header = TRUE,sep=&quot;\t&quot;,dec=&quot;.&quot;)# opening a simple datasheet</code></pre>
-<p><span style="color: #e1d9d7"> You can also target directly your file without setting up your working directory </span></p>
-<pre class="r"><code>read.table (&quot;D:/.../Class 1/taiwan.txt&quot;,header = TRUE,sep=&quot;\t&quot;, dec=&quot;.&quot;)# long version
-read.table(&quot;taiwan.txt&quot;, TRUE, &quot;\t&quot;,&quot;.&quot;)# you can also shorten some part once you get use to it, but be careful when using this</code></pre>
-<p><span style="color: #e1d9d7"> Now you can store it in R using the operator</span> <span style="color: #a2c6e5"><code>&lt;-</code></span><span style="color: #e1d9d7">or</span> <span style="color: #a2c6e5"><code>=</code></span></p>
-<pre class="r"><code>taiwan &lt;- read.table (&quot;taiwan.txt&quot;,     header = TRUE, sep=&quot;\t&quot;, dec=&quot;.&quot;)</code></pre>
-<p><span style="color: #a2c6e5"><code>read.delim</code></span> <span style="color: #e1d9d7">or</span> <span style="color: #a2c6e5"><code>read.csv</code></span> <span style="color: #e1d9d7"> and many others are alternative to</span> <span style="color: #a2c6e5"><code>read.table</code></span></p>
-<p><span style="color: #e1d9d7">Now, you can call your data by calling your object</span> <span style="color: #a2c6e5"><code>taiwan</code></span></p>
-<pre class="r"><code>taiwan</code></pre>
-<p><span style="color: #e1d9d7">CONGRATS, this is your first script in R</span></p>
-<p>####<strong><em><span style="color: green">Exercice 1b:</span></em></strong> <span style="color: green">using the script editor of R Studio (“File&gt;New File&gt;R Script”&quot;):</span></p>
-<div id="change-your-working-directory-to-the-one-you-created-for-this-class" class="section level4">
-<h4><em><span style="color: green">- change your working directory to the one you created for this class</span></em></h4>
+<div id="rstudio" class="section level2">
+<h2>RStudio</h2>
+<div id="whats-rstudio" class="section level3">
+<h3>What’s RStudio?</h3>
+<p>RStudio is a graphical integrated development environment (IDE) that makes using R much easier and more interactive. It is open source (i.e. free) and available at <a href="http://www.rstudio.com/" class="uri">http://www.rstudio.com/</a></p>
 </div>
-<div id="import-the-file-rairuoho.txt-see-below-in-an-object-called-rairuoho" class="section level4">
-<h4><em><span style="color: green">- import the file <span style="color: #a2c6e5"><code>rairuoho.txt</code></span> (see below) in an object called rairuoho </span></em></h4>
-<p><em><span style="color: green">extra: try importing the url of the file using:<span style="color:#a2c6e5"><code>read.table()</code></span></em></p>
+<div id="installation-1" class="section level3">
+<h3>Installation</h3>
+<p>If you don’t have RStudio installed on your computer:</p>
+<ul>
+<li>Go to the <a href="https://rstudio.com/products/rstudio/download/#download">RStudio download page</a>.</li>
+<li>Under Installers select RStudio x.yy.zzz - Windows XP/Vista/7/8 (where x, y, and z represent version numbers)</li>
+<li>Double click the file to install it</li>
+<li>Once it’s installed, open RStudio to make sure it works and you don’t get any error messages</li>
+</ul>
+<p>If you already have R already install:</p>
+<ul>
+<li>Open RStudio, and click on “Help” &gt; “Check for updates”. If a new version is available, quit RStudio, and download the latest version for RStudio</li>
+</ul>
 </div>
-<div id="using-the-help-facilities-find-out-how-you-could-read-just-the-first-lines-if-needed-using-the-read.table-function" class="section level4">
-<h4><em><span style="color: green">- using the help facilities, find out, how you could read just the first lines, if needed (using the <span style="color: #a2c6e5"><code>read.table()</code></span> function) </span></em></h4>
+<div id="environment" class="section level3">
+<h3>Environment</h3>
+<p>RStudio combines (File&gt;New File&gt;R Script):</p>
+<ul>
+<li><p>A script editor window where you can edit and send you commands to the console</p></li>
+<li><p>The <strong>Console</strong> is where you can type commands and see the output</p></li>
+<li><p>The <strong>Workspace</strong> shows all the active objects. The history tab shows a list of commands used so far.</p></li>
+<li><p>The <strong>Files</strong> tab shows all the files and folder in your default workspace. The <strong>Plots</strong> tab will show all your graphs. The <strong>Packages</strong> tab will list a series of packages or add-ons needed to run certain processes. For additional info see the <strong>Help</strong> tab.</p></li>
+</ul>
+<p>Among the many advantages of RStudio, you will appreciate the user-adjustable interface (see Options&gt;Appearance&gt;Layout), the auto-synthax, the suggestion <code>function {package}</code> together a brief description of its use.</p>
+<p>Using our <code>fish</code> dataset, write a code to import data as an object <code>fish</code> then copy the following ‘plot’ command in in your script. Run the script, and observe the result.</p>
+<pre class="r"><code>fish&lt;-read.table(&#39;Data/reef_fish.txt&#39;, header=T, sep=&#39;\t&#39;, dec=&#39;.&#39;)
+barplot(fish$richness, main=&quot;Top 10 reef fish Richness (Allen, 2000)&quot;, horiz=TRUE, names.arg=fish$country, cex.names=0.5, las=1)</code></pre>
+<p><strong>Note</strong>: you can easily export the resulting plot as and image, a pdf, or to copy it to your clipboard.</p>
 </div>
-<div id="sumfor-this-table-values-from-the-2nd-column-rairuoho-no.-line-no.-column" class="section level4">
-<h4><em><span style="color: green">- <span style="color: #a2c6e5"><code>sum()</code></span>for this table, values from the 2nd column <span style="color: #a2c6e5"><code>rairuoho</code></span><span style="color: #a2c6e5"><code>[</code></span> no. line<span style="color: #a2c6e5"><code>,</code></span> no. column<span style="color: #a2c6e5"><code>]</code></span> </span></em></h4>
-<p>####<span style="color: green"> <strong>Knit</strong> your script (“File&gt;Knit Document”) in <span style="color: #a2c6e5"><code>html</code></span> format and upload it below</span></p>
-<p>This is an R Markdown document. Markdown is a simple fromatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see</p>
 </div>
+<div id="documentation" class="section level2">
+<h2>Documentation</h2>
+<p>Our course is a set of R markdown files that have been rendered to html files and are hosted on a repository <a href="https://github.com/vianneydenis/attentive-suricate.git" class="uri">https://github.com/vianneydenis/attentive-suricate.git</a>.</p>
+<p>Each Topic of the class has a corresponding R markdown file named Topic_X_topic.Rmd, where X is the topic number. Today for example the file Topic_1_Intro.Rmd allows you to play and review the class today. You can render today .Rmd by ‘kniting’ it in RStudio (File &gt; New File &gt; R Markdown). Options allow you to ‘Preview in Window’ or to ‘Preview in viewer Panel’</p>
+<p>This repository working directory available on GitHub is the working directory of the attentive-suricate.Rproj file and it contains all of the .Rmd, .html and data files used to review this course. While you can can individually download and render the .Rmd files. It is better to ‘fork’ this repository to your GitHub account, then clone a copy of this forked repository (from your own Github account to your computer). This only needs to be done once.</p>
+<div id="github" class="section level3">
+<h3>GitHub</h3>
+<p>Create an account on <a href="https://github.com/">GitHub</a>. You can <strong>create your first repository</strong> to later connect it to your RStudio.</p>
+</div>
+<div id="git" class="section level3">
+<h3>Git</h3>
+<p>Install Git on your computer</p>
+<div id="windows-1" class="section level4">
+<h4>Windows</h4>
+<ol style="list-style-type: decimal">
+<li><p>Download the git installer for Windows <a href="https://git-scm.com/">here</a>. This will install bash, which is a command-line shell program for interacting with files and programs on your computer.</p></li>
+<li><p>Run the installer that you just downloaded. Click “Next” as needed and when you get to the following options accept default.</p></li>
+<li><p>That’s it! You should now have three new programs installed in a folder called Git under your Program Files.</p></li>
+</ol>
+</div>
+<div id="macos-1" class="section level4">
+<h4>macOS</h4>
+<p>Follow the instructions below or view this <a href="https://www.youtube.com/watch?v=9LQhwETCdwY&amp;ab_channel=SarahStevens">video tutorial</a>.</p>
+<ol style="list-style-type: decimal">
+<li><p>Go to this <a href="https://sourceforge.net/projects/git-osx-installer/files/">list</a> and download an installer for Git.</p>
+<ul>
+<li>If you are using OS X 10.9 and higher, choose the most recent version for “mavericks”.</li>
+<li>If you are using an earlier version of OS X, choose the most recent version for “snow leopard”.</li>
+</ul></li>
+<li><p>Run the installer you downloaded.</p></li>
+<li><p>After installing Git, there will not be anything in your /Applications folder, because Git is a command line program.</p></li>
+</ol>
+<p>Note: if you have OSX El Capitan you may experience some errors when running Git if you don’t have an updated XCODE.<a href="https://stackoverflow.com/questions/32893412/command-line-tools-not-working-os-x-el-capitan-sierra-high-sierra-mojave">Here</a> is a description of the issue on StackOverflow and the solution is to open a Terminal window and type <code>xcode-select--install</code>.</p>
+</div>
+<div id="linux-1" class="section level4">
+<h4>Linux</h4>
+<p>You may already have Git installed. If not, you can try to install it via your dsitribution package manager. For Debian/Ubuntu run ‘sudo apt-get install git’ and for Fedora run ‘sudo yum install git’.</p>
+</div>
+</div>
+<div id="rstudio-1" class="section level3">
+<h3>RStudio</h3>
+<p>File &gt; New Project &gt; Version Control ‘Checkout a project from a version control repository’. Enter URL of your repository, (its name), and where you want to copy it on your computer. Once you validate:</p>
+<ul>
+<li>you will create a .RProject. Any change in your repository will appear in ‘Git’</li>
+<li>changes needs to be ‘commit’ (prepared) and ‘push’ to GitHub in order to be synchronized</li>
+<li>first ‘commit’ will fail and ask you to set up Git with email and username. Open Git CMD and process as indicated</li>
+<li>first ‘push’ will be pending your GitHub login and password</li>
+</ul>
+<p>This is a</p>
+<blockquote>
+<p>Attribution</p>
+<p>The content of this webpage was derived from Fukami T. &amp; Coyle J. (Standford University) which themselves derived from Data Carpentry and Software Carpentry materials (Copyright (c) Data Carpentry) under CC-3.0 Attribution License (see <a href="http://creativecommons.org/licenses/by/3.0/" class="uri">http://creativecommons.org/licenses/by/3.0/</a>).</p>
+</blockquote>
+</div>
+</div>
+<div id="assignements" class="section level2">
+<h2>Assignements</h2>
+<p>Your job will be to render this file in RStudio and to review it. Each week, you will prepare a short example based on the previous class. A presenter will be randomly selected (see below) to illustrate his example at the beginning of the class (be on time).</p>
+<p>and a short summary</p>
+<p>edit the lesson webpage for the day that you sign up to lead class. We have provided an outline, but you will need to supply the example code and text describing what it does.</p>
 </div>
 </div>
 

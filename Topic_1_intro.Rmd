@@ -62,6 +62,9 @@ Schedule is highly susceptible to changes as I am updating content every week.
 
 Borcard, D., Gillet, F. and Legendre, P. (2018) Numerical Ecology with R. Springer. DOI: [10.1007/978-3-319-71404-2](https://www.springer.com/gp/book/9783319714035)
 
+
+Paradis, E. (2005) R for beginner. Available among many others documentation at https://cran.r-project.org/other-docs.html (page frozen and no longer actively maintained) 
+
 Ramette, A. (2007) Multivariate analyses in microbial ecology. FEMS Microbiology Ecology, 62: 142-160. DOI: [10.1111/j.1574-6941.2007.00375.x](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1574-6941.2007.00375.x)
 
 Xie, Y., Allaire, J.J.,Grolemund, G. (2020) R Markdown: The Definitive Guide. Chapman & Hall/CRC. The online version of this book is free to read [here](https://bookdown.org/yihui/rmarkdown/). 
@@ -155,87 +158,94 @@ library("abc")
 To do every time you wanna use the package: load your package 
 
 
-> *<span style="color: green">**R_P_1**: Install and load the package </span>* <span style="color: blue">```vegan```</span>
+> *<span style="color: green">**RP1**: Install and load the package </span>* `vegan`
 
 ```{r class.source = "fold-hide",  eval=FALSE}
 install.packages('vegan')
 library('vegan')
 ```
 
-If you don't know the name of the package:
+If you don't know the name of the package: 
 
-- Use task views available at http://cran.r-project.org/web/views that group packages to subject areas such environmetrics, multivariate, etc.
+- use task views available at http://cran.r-project.org/web/views that group packages to subject areas such environmetrics, multivariate, etc. 
+
+- many online discussion, forum, and docs. Among many others sources, you will often be directed to discusion in [stackoverflow](https://stackoverflow.com/)
 
 ### Help
 
-```{r,  eval=FALSE}
+You can acces the html help via the Help menu: *Help/Search help*. Alternatively, a faster solution is to call for help directly in the console:
+
+- a quick summary on how to use the function `median`
+
+```{r class.source = "fold-show",  eval=FALSE}
+?median
+```
+
+- a detailed summary on the use of the function `median```</span>
+
+```{r class.source = "fold-show",  eval=FALSE}
 ?median
 # or
 help(median)
 ```
 
-Help on the function <span style="color: blue">```median```</span>
-
-```{r,  eval=FALSE}
-?median
-```
-
-It will give you details on how to use the function <span style="color: blue">```median```</span>
+- it will give you all functions with median in their description 
 
 ```{r,  eval=FALSE}
 ??median
 ```
-It will give you all functions with median in their description 
-\WD
 
-Use of working directory
+### Working directory
+
+It is a good practice to create a working directory (folder) where you will store all your file. In general, each project will have its working directory including data set, script, plot, etc
+
+Use of working directory. Retrieve it using:
 
 ```{r,  eval=FALSE}
-getwd()
-#Get Working Directory
+getwd() #get the location of your working directory
 ```
 
-Get the location of your current working directory
+Set it up using:
 
 ```{r,  eval=FALSE}
 setwd()
-#Set Working Directory
+#get the location of your working directory
 ```
 
-Set up a new working directory
-
-\QUITR
-
 ### Quit R
+
+**File -> Exit** or use the console:
 
 ```{r,  eval=FALSE}
 q()
 ```
-It will leave your R session, do not save your workspace 
 
-\OBJECTS
+Saving the workspace image will allow you to save all objects created in the R memory into your working directory (.Rdata). It also saves all commands given during the session (.Rhistory).
 
-### List objects
+Quit without saving for now.
 
-```{r,  eval=FALSE}
-ls()
-# list
-```
+### List
 
-It will list all objects in memory
+`ls()` will list all the objects in the memory.
 
 ```{r,  eval=FALSE}
-rm(list=ls())
-# remove list
+a<-'corals' # create an object 'a' containing 'corals'
+b<-'are' # create an object 'b' containing 'are'
+c<-'cool'# create an object 'c' containing 'cool'
+ls # list objects 'a', 'b', 'c'
 ```
 
-It will remove all objects in memory
+You can clean the objects present in the memory using:
 
-**Tip**: Use CTRL+L to clean your screen
+```{r,  eval=FALSE}
+rm(list=ls()) # rm: remove ls: list of all objects present in memory
+```
 
-\RCALCULATOR
+**Tip**: Use CTRL+L to clean your screen when you want to make it clear. It does not remove the objects in memory.
 
-## R is a calculator
+### Calculator
+
+R is a calculator:
 
 ```{r,  eval=FALSE}
 3+2 # addition
@@ -251,72 +261,194 @@ pi*4 # common function
 
 R is case sensitive <span style="color: blue">```pi```</span> will work, whereas <span style="color: blue">```Pi```</span> will not </span> 
 
-\EDITOR
+### Reading
 
-### Text editor, Rite
-Install and load package <span style="color: blue">```rite```</span> 
+To be able to work with a dataset (and make calculation based on it), it has to be import as an object in the memory of R. Many formats can be used (.xls, .spss, SAS, etc.). To start with, we will use and .xlsx file, but quickly we will turn toward less heavy format. Note the distinction between **reading** a file and **importing** a file.
+
+My file `reef_fish` is an .xlsx file located in the file 'Data' of my working directory. 
 
 ```{r,  eval=FALSE}
-install.packages('rite')
-library('rite')
-rite()
-riteout() # CTRL+Enter to send your lines
+library(readxl) # I am loading a package (library) allowing me to read .xls file
+read_excel('Data/reef_fish.xlsx') # I am reading my file
+fish<-read_excel('Data/reef_fish.xlsx') # I am importing my file in an object called 'fish'
 ```
 
-This is simple text editor
+More commonly, we will use .txt file (lighter) and the function `read.table'. But often you will need to think at several 'arguments':
 
-\READINGDATA
+- What is the name of the data file (with the extension)?
+- Does the file have column titles?
+- What is the delimiter between the columns (tab, space, comma or semicolon)?
+- What is the character used for decimal
+points (dot, comma)?
 
-## Reading data
-Using <span style="color: blue">```riteout```</span>
-
-```{r,  eval=FALSE, tidy.opts=list(width.cutoff=60),tidy=TRUE}
-riteout() # CTRL+Enter to send your lines
-setwd ('D:/.../Class 1')# set your working directory
-read.table ("taiwan_coral.txt",header = TRUE,sep="\t",dec=".")# opening a simple datasheet
+```{r,  eval=FALSE}
+fish<-read.table('Data/reef_fish.txt', header=T, sep='\t', dec='.') # reading txt file
 ```
 
-<span style="color: #e1d9d7"> You can also target directly your file without setting up your working directory </span>
+Check `?read.table` for all arguments you can specify within this function
+
+Instead or working in  a working directory, you can also target directly your file (check your file properties) or  an url.
 
 ```{r,  eval=FALSE,  tidy=TRUE}
-read.table ("D:/.../Class 1/taiwan.txt",header = TRUE,sep="\t", dec=".")# long version
-read.table("taiwan.txt", TRUE, "\t",".")# you can also shorten some part once you get use to it, but be careful when using this
+fish<-read.table ("D:/.../Topic 1/Data/reef_fish.txt",header = TRUE,sep="\t", dec=".")# long version
+fish<-read.table("taiwan.txt", TRUE, "\t",".")# you can also shorten some part once you get use to it, but be careful when using this
 ```
 
-<span style="color: #e1d9d7"> Now you can store it in R using the operator</span> <span style="color: #a2c6e5">```<-```</span><span style="color: #e1d9d7">or</span> <span style="color: #a2c6e5">```=```</span>
+You can also use `file.choose()' to locate dircetly the file or or computer or alternatively import data from the R menu.
 
-```{r,  eval=FALSE}
-taiwan <- read.table ("taiwan.txt", 	header = TRUE, sep="\t", dec=".")
+```{r,  eval=FALSE,  tidy=TRUE}
+fish<-read.table(file.choose (), header = TRUE,sep="\t", dec=".")
 ```
-<span style="color: #a2c6e5">```read.delim```</span>
-<span style="color: #e1d9d7">or</span>
-<span style="color: #a2c6e5">```read.csv```</span> 
-<span style="color: #e1d9d7"> and many others are alternative to</span>
-<span style="color: #a2c6e5">```read.table```</span>  
 
-<span style="color: #e1d9d7">Now, you can call your data by calling your object</span>
-<span style="color: #a2c6e5">```taiwan```</span> 
+**Note_1**: in all cases creation of a file with the same name 'fish' will replace the one previously created.
 
-```{r,  eval=FALSE}
-taiwan
+**Note_2**: two operators `<-` and `=` can be used to import data. While longer, I favor `<-` in the creation of object to avoid confusion with mathematical operator. 
+
+### Editor
+
+You can feel it will be interesting to have an editor for our code. It will help at saving and running quickly our code in R. Many alternative: open a .txt file, open an new script in R, use a text editor. The latest one is the most commone altrenative.
+
+
+## RStudio
+
+### What's RStudio?
+
+RStudio is a graphical integrated development environment (IDE) that makes using R much easier and more interactive. It is open source (i.e. free)
+and available at http://www.rstudio.com/
+
+### Installation
+
+If you don't have RStudio installed on your computer:
+
+- Go to the [RStudio download page](https://rstudio.com/products/rstudio/download/#download).
+- Under Installers select RStudio x.yy.zzz - Windows XP/Vista/7/8 (where x, y, and z represent version numbers)
+- Double click the file to install it
+- Once it’s installed, open RStudio to make sure it works and you don’t get any error messages
+
+If you already have R already install:
+
+- Open RStudio, and click on “Help” > “Check for updates”. If a new version is available, quit RStudio, and download the latest version for RStudio
+
+### Environment
+
+RStudio combines (File>New File>R Script):
+
+- A script editor window where you can edit and send you commands to the console
+
+- The **Console** is where you can type commands and see the output
+
+- The **Workspace** shows all the active objects. The history tab shows a
+list of commands used so far.
+
+- The **Files** tab shows all the files and folder in your default workspace. The **Plots** tab will show all your graphs. The **Packages** tab will list a series of packages or add-ons needed to run certain processes.
+For additional info see the **Help** tab.
+
+Among the many advantages of RStudio, you will appreciate the user-adjustable interface (see Options>Appearance>Layout), the auto-synthax, the suggestion `function {package}` together a brief description of its use.
+
+
+Using our `fish` dataset, write a code to import data as an object `fish` then copy the following 'plot' command in in your script. Run the script, and observe the result.
+
+```{r,  eval=F}
+fish<-read.table('Data/reef_fish.txt', header=T, sep='\t', dec='.')
+barplot(fish$richness, main="Top 10 reef fish Richness (Allen, 2000)", horiz=TRUE, names.arg=fish$country, cex.names=0.5, las=1)
 ```
-<span style="color: #e1d9d7">CONGRATS, this is your first script in R</span>
+
+**Note**: you can easily export the resulting plot as and image, a pdf, or to copy it to your clipboard.  
+
+## Documentation
+
+Our course is a set of R markdown files that have been rendered to html files and are hosted on a repository https://github.com/vianneydenis/attentive-suricate.git. 
+
+Each Topic of the class has a corresponding R markdown file named Topic_X_topic.Rmd, where X is the topic number. Today for example the file Topic_1_Intro.Rmd allows you to play and review the class today. You can render today .Rmd by 'kniting' it in RStudio (File > New File > R Markdown). Options allow you to 'Preview in Window' or to 'Preview in viewer Panel'
+
+This repository working directory available on GitHub is the working directory of the attentive-suricate.Rproj file and it contains all of the .Rmd, .html and data files used to review this course. While you can can individually download and render the .Rmd files. It is better to 'fork' this repository to your GitHub account, then clone a copy of this forked repository  (from your own Github account to your computer). This only needs to be done once. 
+
+### GitHub
+
+Create an account on [GitHub](https://github.com/). You can **create your first repository** to later connect it to your RStudio.
+
+### Git
+
+Install Git on your computer
+
+#### Windows
+
+1. Download the git installer for Windows [here](https://git-scm.com/). This will install bash, which is a command-line shell program for interacting with files and programs on your computer.
+
+2. Run the installer that you just downloaded. Click “Next” as needed and when you get to the following options accept default.
+
+3. That’s it! You should now have three new programs installed in a folder called Git under your Program Files.
+
+#### macOS
+
+Follow the instructions below or view this [video tutorial](https://www.youtube.com/watch?v=9LQhwETCdwY&ab_channel=SarahStevens).
+
+1. Go to this [list](https://sourceforge.net/projects/git-osx-installer/files/) and download an installer for Git.
+   + If you are using OS X 10.9 and higher, choose the most recent version for “mavericks”.
+   + If you are using an earlier version of OS X, choose the most recent version for “snow leopard”.
+
+2. Run the installer you downloaded.
+
+3. After installing Git, there will not be anything in your /Applications folder, because Git is a command line program.
 
 
-####__*<span style="color: green">Exercice 1b:</span>*__ <span style="color: green">using the script editor of R Studio ("File>New File>R Script""):</span>
+Note: if you have OSX El Capitan you may experience some errors when running Git if you don’t have an updated XCODE.[Here](https://stackoverflow.com/questions/32893412/command-line-tools-not-working-os-x-el-capitan-sierra-high-sierra-mojave) is a description of the issue on StackOverflow and the solution is to open a Terminal window and type `xcode-select--install`.
 
-#### *<span style="color: green">- change your working directory to the one you created for this class</span>*
+#### Linux 
 
-#### *<span style="color: green">- import the file <span style="color: #a2c6e5">```rairuoho.txt```</span> (see below) in an object called rairuoho </span>*
-
-*<span style="color: green">extra: try importing the url of the file using:<span style="color:#a2c6e5">```read.table()```</span>*
-
-#### *<span style="color: green">- using the help facilities, find out, how you could read just the first lines, if needed (using the <span style="color: #a2c6e5">```read.table()```</span> function) </span>*
-
-#### *<span style="color: green">- <span style="color: #a2c6e5">```sum()```</span>for this table, values from the 2nd column <span style="color: #a2c6e5">```rairuoho```</span><span style="color: #a2c6e5">```[```</span> no. line<span style="color: #a2c6e5">```,```</span> no. column<span style="color: #a2c6e5">```]```</span> </span>*
+You may already have Git installed. If not, you can try to install it via your dsitribution package manager. For Debian/Ubuntu run 'sudo apt-get install git' and for Fedora run 'sudo yum install git'.
 
 
-####<span style="color: green"> **Knit** your script ("File>Knit Document") in <span style="color: #a2c6e5">`html`</span> format and upload it below</span>
+### RStudio
+
+File > New Project > Version Control 'Checkout a project from a version control repository'. Enter URL of your repository, (its name), and where you want to copy it on your computer. Once you validate:
+
++ you will create a .RProject. Any change in your repository will appear in 'Git'
++ changes needs to be 'commit' (prepared) and 'push' to GitHub in order to be synchronized
++ first 'commit' will fail and ask you to set up Git with email and username. Open Git CMD and process as indicated
++ first 'push' will be pending your GitHub login and password
+
+Once set up you can travel between
 
 
-This is an R Markdown document. Markdown is a simple fromatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see
+
+
+
+
+
+
+
+
+
+> Attribution
+>
+> The content of this webpage was derived from Fukami T. & Coyle J. (Standford University) which themselves derived from Data Carpentry and Software Carpentry materials (Copyright (c) Data Carpentry) under CC-3.0 Attribution License (see http://creativecommons.org/licenses/by/3.0/).
+
+
+
+## Assignements
+
+
+
+
+
+
+
+
+
+
+
+Your job will be to render this file in RStudio and to review it. Each  week, you will prepare a short example based on the previous class. A presenter will be randomly selected (see below) to illustrate his example at the beginning of the class (be on time).   
+
+
+
+
+
+
+
+
+
+and a short summary  
+
+
+edit the lesson webpage for the day that you sign up to lead class. We have provided an outline, but you will need to supply the example code and text describing what it does.
