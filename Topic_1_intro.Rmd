@@ -20,7 +20,23 @@ output:
 
 **Instructor:** Vianney DENIS [vianney.denis@gmail.com] - Functional Reef Ecology Laboratory, R406, 4F, Institute of Oceanography, National Taiwan University, Taiwan
 
-**Students:** 11 crazy students with various background
+**Students:** 12 students (pending, maybe less after today's class)
+
+No.|Name | Major
+---|-----|------
+1|沈敬家|生科系(NTNU) 
+2|Ya-Fang CHENG|海洋所博士班_一年級 
+3|Ling-Lan HSU|海洋所博士班_二年級 
+4|Yen-Ting CHEN|海洋所生漁組碩士班_一年級 
+5|Tsai-Hsuan HSU|海洋所生漁組碩士班_一年級 
+6|Yu-Wen CHEN|海洋所生漁組碩士班_一年級 
+7|Che-Yueh LIN|海洋所生漁組碩士班_一年級
+8|Kong-Mei SHUET|海洋所生漁組碩士班_一年級 
+9|Wu-Chiao LIAO|海洋所生漁組碩士班_二年級 
+10|Mariana REYES|氣候永續學程碩士班_二年級 
+11|Chi-Le KO|生態演化所碩士班_一年級 
+12|San-Pei LEE|生態演化所碩士班_二年級  
+
 
 **Aim of the Course:**The aim of this course is to get familiar with the programming language R while avoiding technical jargon. We will explore together the advantages of using R language for formatting reports,  preparing presentations, exploring and analyzing ecoloical, data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. Along this class, you will be introduced to  RStudio GUI, Rmarkdown, and GitHub repositories that complete harmoniously the use of R. 
 
@@ -359,13 +375,13 @@ barplot(fish$richness, main="Top 10 reef fish Richness (Allen, 2000)", horiz=TRU
 
 Our course is a set of R markdown files that have been rendered to html files and are hosted on a repository https://github.com/vianneydenis/attentive-suricate.git. 
 
-Each Topic of the class has a corresponding R markdown file named Topic_X_topic.Rmd, where X is the topic number. Today for example the file Topic_1_Intro.Rmd allows you to play and review the class today. You can render today .Rmd by 'kniting' it in RStudio (File > New File > R Markdown). Options allow you to 'Preview in Window' or to 'Preview in viewer Panel'
+Each Topic of the class has a corresponding R markdown file named Topic_X_topic.Rmd, where X is the topic number. Today for example the file Topic_1_Intro.Rmd allows you to play and review the class today. You can render today .Rmd by 'kniting' it in RStudio. Options allow you to 'Preview in Window' or to 'Preview in viewer Panel'
 
 This repository working directory available on GitHub is the working directory of the attentive-suricate.Rproj file and it contains all of the .Rmd, .html and data files used to review this course. While you can can individually download and render the .Rmd files. It is better to 'fork' this repository to your GitHub account, then clone a copy of this forked repository  (from your own Github account to your computer). This only needs to be done once. 
 
 ### GitHub
 
-Create an account on [GitHub](https://github.com/). You can **create your first repository** to later connect it to your RStudio.
+Create an account on [GitHub](https://github.com/). You can **create your first repository** to later connect it into  RStudio.
 
 ### Git
 
@@ -392,7 +408,7 @@ Follow the instructions below or view this [video tutorial](https://www.youtube.
 3. After installing Git, there will not be anything in your /Applications folder, because Git is a command line program.
 
 
-Note: if you have OSX El Capitan you may experience some errors when running Git if you don’t have an updated XCODE.[Here](https://stackoverflow.com/questions/32893412/command-line-tools-not-working-os-x-el-capitan-sierra-high-sierra-mojave) is a description of the issue on StackOverflow and the solution is to open a Terminal window and type `xcode-select--install`.
+**Note**: if you have OSX El Capitan you may experience some errors when running Git if you don’t have an updated XCODE.[Here](https://stackoverflow.com/questions/32893412/command-line-tools-not-working-os-x-el-capitan-sierra-high-sierra-mojave) is a description of the issue on StackOverflow and the solution is to open a Terminal window and type `xcode-select--install`.
 
 #### Linux 
 
@@ -404,51 +420,64 @@ You may already have Git installed. If not, you can try to install it via your d
 File > New Project > Version Control 'Checkout a project from a version control repository'. Enter URL of your repository, (its name), and where you want to copy it on your computer. Once you validate:
 
 + you will create a .RProject. Any change in your repository will appear in 'Git'
-+ changes needs to be 'commit' (prepared) and 'push' to GitHub in order to be synchronized
++ changes needs to be 'commit' (prepared) and 'push' (uploaded) to GitHub in order to be synchronized
 + first 'commit' will fail and ask you to set up Git with email and username. Open Git CMD and process as indicated
 + first 'push' will be pending your GitHub login and password
++ any changes in your GitHub repo must be 'pull' prior working on your project in RStudio
 
-Once set up you can travel between
+### Rmarkdown
 
+R markdown is text-based formatting that allows you to embed code and explanatory text in the same document.R markdown documents consist of a header, code chunks and text. R markdown files (.Rmd) can be rendered to other document formats (e.g. html, pdf, docx) to generate reports or web applications. For example, the present document was generated as an html from a Rmd file. Formatting analyses in R markdown keeps the entire research process in one document that can easily regenerate reports and output if the data are changed.
 
-
-
-
-
-
+Visit R markdown [webpage](https://rmarkdown.rstudio.com/) for an overview of its capability. [Download](https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf) cheat sheet  to get familiar with it. I also recommend you R markdown bible: Xie et al. (2020), available [here](https://bookdown.org/yihui/rmarkdown/) to become an expert with markdown. 
 
 
+As for now, just try in RStudio: 
 
+*File > New File > R markdown* in order to create a simple .html document. Try to modify and play with it with the information available in the cheat sheets you downloaded.  
 
 > Attribution
 >
 > The content of this webpage was derived from Fukami T. & Coyle J. (Standford University) which themselves derived from Data Carpentry and Software Carpentry materials (Copyright (c) Data Carpentry) under CC-3.0 Attribution License (see http://creativecommons.org/licenses/by/3.0/).
 
-
-
 ## Assignements
 
+You have two main missions along the semester:
+
+- After rendering course file in RStudio, you can review it. Each  week, you will prepare a short example based on what you learned in the previous class - or how to extended it. At the beginning of each class, a presenter will be randomly selected to illustrate what he prepared (5-10 minutes). The algorithm below will decide who will present. You may present several time in the semester (lucky) or none (unlucky), so always be ready. You will prepare your summary in .Rmd format
+
+```{r,  eval=F}
+library(dplyr)
+list_student<-c('沈敬家','Ya-Fang CHENG','Ling-Lan HSU','Yen-Ting CHEN','Tsai-Hsuan HSU','Yu-Wen CHEN','Che-Yueh LIN','Kong-Mei SHUET','Wu-Chiao LIAO','Mariana REYES','Chi-Le KO','San-Pei LEE')
+sample(list_student, 1, replace = TRUE)
+```
+
+
+- Final project: research projects (2-3 students) must be ready  **one** week before the end of the semester. A final report (.Rmd) will be send to the instructor 1 week before the final, and students will present their research on our last week together. The report will follow the format of a scientific publication but the style of the introduction and discussion can used bullet point to emphasize the methodology and the results. Topic is free, but a small proposal (1-2 pages, .Rmd) must be submitted before mid-term. Mid-term week will be dedicated to a discussion of the **research project**. Topics are free (not necessarily restricted to Ecology), and you are welcome to develop your own experiment but you can also use online published datasets which you will reinterpret. 
+
+
+
+***
+**Examples of topics for the final assignment:**
+
+
+
+- Diversity and distribution of birds on NTU campus
+
+*This project aims at documenting the diversity of birds on NTU campus and at examining their habitat preferences. Overall, this study proposes to appreciate the role of the campus for the avian fauna in a megacity such Taipei*
+
+- YouBike 2.0 users: gender, age, occupation. A demographic studies.
+
+*This project aims at uncovering who are the users of YouBike 2.0 and if differences exist among genre, age and occupation. This study will contribute at a greater understanding on people circulate on the campus*
+
+
+- Diel variation in temperature, pH, and oxygen in water from the Drunken Moon Lake: a correlative approach
+
+*This project will aim at uncovering diel variations in several key physiological and biological parameters of the Drunken Moon Lake. This project will aim at a better characterization of the environmental in this artificial lake*
+
+Etc.
 
 
 
 
 
-
-
-
-
-
-Your job will be to render this file in RStudio and to review it. Each  week, you will prepare a short example based on the previous class. A presenter will be randomly selected (see below) to illustrate his example at the beginning of the class (be on time).   
-
-
-
-
-
-
-
-
-
-and a short summary  
-
-
-edit the lesson webpage for the day that you sign up to lead class. We have provided an outline, but you will need to supply the example code and text describing what it does.
