@@ -1697,8 +1697,8 @@ div.tocify {
 </tr>
 <tr class="odd">
 <td>5</td>
-<td></td>
-<td></td>
+<td>Balamurugan Ananthakrishnan</td>
+<td>Environmental Science and Engineering</td>
 </tr>
 <tr class="even">
 <td>6</td>
@@ -1734,6 +1734,26 @@ div.tocify {
 <td>12</td>
 <td>San-Pei LEE</td>
 <td>生態演化所碩士班_二年級</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>XunYi Huang</td>
+<td>Institude of Ecology and Evolutionary Biology</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>MinRou Chiang</td>
+<td>Entomology</td>
+</tr>
+<tr class="odd">
+<td>15</td>
+<td>Chiao-Jung Han</td>
+<td>Department of Entomology</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td>Meng-Chieh Feng</td>
+<td>Department of Foresty</td>
 </tr>
 </tbody>
 </table>
@@ -2114,6 +2134,13 @@ div.tocify {
 <h2>Assignements</h2>
 <p>You have two main missions along the semester:</p>
 <ul>
+<li>After rendering course file in RStudio, you can review it. Each week, you will prepare a short example based on what you learned in the previous class - or how to extended it. At the beginning of each class, a presenter will be randomly selected to illustrate what he prepared (5-10 minutes). The algorithm below will decide who will present. You may present several time in the semester (lucky) or none (unlucky), so always be ready. You will prepare your summary in .Rmd format</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">library</span>(dplyr)</a>
+<a class="sourceLine" id="cb21-2" title="2">list_student&lt;-<span class="kw">c</span>(<span class="st">&#39;沈敬家&#39;</span>,<span class="st">&#39;Ya-Fang CHENG&#39;</span>,<span class="st">&#39;Ling-Lan HSU&#39;</span>,<span class="st">&#39;Yen-Ting CHEN&#39;</span>,<span class="st">&#39;Tsai-Hsuan HSU&#39;</span>,<span class="st">&#39;Yu-Wen CHEN&#39;</span>,<span class="st">&#39;Che-Yueh LIN&#39;</span>,<span class="st">&#39;Kong-Mei SHUET&#39;</span>,<span class="st">&#39;Wu-Chiao LIAO&#39;</span>,<span class="st">&#39;Mariana REYES&#39;</span>,<span class="st">&#39;Chi-Le KO&#39;</span>,<span class="st">&#39;San-Pei LEE&#39;</span>)</a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="kw">sample</span>(list_student, <span class="dv">1</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p>Next week: install and load a package, set up your working directory, load a dataset and look for some help on the application of a given function</p>
+<ul>
 <li>Final project: research projects (2-3 students) must be ready <strong>one</strong> week before the end of the semester. A final report (.Rmd) will be send to the instructor 1 week before the final, and students will present their research on our last week together. The report will follow the format of a scientific publication but the style of the introduction and discussion can used bullet point to emphasize the methodology and the results. Topic is free, but a small proposal (1-2 pages, .Rmd) must be submitted before mid-term. Mid-term week will be dedicated to a discussion of the <strong>research project</strong>. Topics are free (not necessarily restricted to Ecology), and you are welcome to develop your own experiment but you can also use online published datasets which you will reinterpret.</li>
 </ul>
 <hr />
@@ -2131,13 +2158,6 @@ div.tocify {
 </ul>
 <p><em>This project will aim at uncovering diel variations in several key physiological and biological parameters of the Drunken Moon Lake. This project will aim at a better characterization of the environmental in this artificial lake</em></p>
 <p>Etc.</p>
-<ul>
-<li>After rendering course file in RStudio, you can review it. Each week, you will prepare a short example based on what you learned in the previous class - or how to extended it. At the beginning of each class, a presenter will be randomly selected to illustrate what he prepared (5-10 minutes). The algorithm below will decide who will present. You may present several time in the semester (lucky) or none (unlucky), so always be ready. You will prepare your summary in .Rmd format</li>
-</ul>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb21-2" title="2">list_student&lt;-<span class="kw">c</span>(<span class="st">&#39;沈敬家&#39;</span>,<span class="st">&#39;Ya-Fang CHENG&#39;</span>,<span class="st">&#39;Ling-Lan HSU&#39;</span>,<span class="st">&#39;Yen-Ting CHEN&#39;</span>,<span class="st">&#39;Tsai-Hsuan HSU&#39;</span>,<span class="st">&#39;Yu-Wen CHEN&#39;</span>,<span class="st">&#39;Che-Yueh LIN&#39;</span>,<span class="st">&#39;Kong-Mei SHUET&#39;</span>,<span class="st">&#39;Wu-Chiao LIAO&#39;</span>,<span class="st">&#39;Mariana REYES&#39;</span>,<span class="st">&#39;Chi-Le KO&#39;</span>,<span class="st">&#39;San-Pei LEE&#39;</span>)</a>
-<a class="sourceLine" id="cb21-3" title="3"><span class="kw">sample</span>(list_student, <span class="dv">1</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<p>Next week: install and load a package, set up your working directory, load a dataset and look for some help on the application of a given function</p>
 </div>
 </div>
 

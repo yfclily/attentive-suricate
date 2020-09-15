@@ -30,14 +30,18 @@ No.|Name | Major
 2|Ya-Fang CHENG|海洋所博士班_一年級 
 3|Ling-Lan HSU|海洋所博士班_二年級 
 4|Yen-Ting CHEN|海洋所生漁組碩士班_一年級 
-5|Balamurugan Ananthakrishnan|Enginnering
+5|Balamurugan Ananthakrishnan|Environmental Science and Engineering
 6|Yu-Wen CHEN|海洋所生漁組碩士班_一年級 
 7|Che-Yueh LIN|海洋所生漁組碩士班_一年級
 8|Kong-Mei SHUET|海洋所生漁組碩士班_一年級 
 9|Wu-Chiao LIAO|海洋所生漁組碩士班_二年級 
 10|Mariana REYES|氣候永續學程碩士班_二年級 
 11|Chi-Le KO|生態演化所碩士班_一年級 
-12|San-Pei LEE|生態演化所碩士班_二年級  
+12|San-Pei LEE|生態演化所碩士班_二年級
+13|XunYi Huang |Institude of Ecology and Evolutionary Biology
+14|MinRou Chiang |Entomology
+15|Chiao-Jung Han|Department of Entomology
+16|Meng-Chieh Feng |Department of Foresty
 
 
 **Aim of the Course:**The aim of this course is to get familiar with the programming language R while avoiding technical jargon. We will explore together the advantages of using R language for formatting reports,  preparing presentations, exploring and analyzing ecoloical, data creating and sharing project. We will start from scratch, i.e. downloading R and installing it on your computer. Along this class, you will be introduced to  RStudio GUI, Rmarkdown, and GitHub repositories that complete harmoniously the use of R. 
@@ -446,9 +450,17 @@ As for now, just try in RStudio:
 
 You have two main missions along the semester:
 
+- After rendering course file in RStudio, you can review it. Each  week, you will prepare a short example based on what you learned in the previous class - or how to extended it. At the beginning of each class, a presenter will be randomly selected to illustrate what he prepared (5-10 minutes). The algorithm below will decide who will present. You may present several time in the semester (lucky) or none (unlucky), so always be ready. You will prepare your summary in .Rmd format
+
+```{r,  eval=F}
+library(dplyr)
+list_student<-c('沈敬家','Ya-Fang CHENG','Ling-Lan HSU','Yen-Ting CHEN','Tsai-Hsuan HSU','Yu-Wen CHEN','Che-Yueh LIN','Kong-Mei SHUET','Wu-Chiao LIAO','Mariana REYES','Chi-Le KO','San-Pei LEE')
+sample(list_student, 1, replace = TRUE)
+```
+
+Next week: install and load a package, set up your working directory, load a dataset and look for some help on the application of a given function
+
 - Final project: research projects (2-3 students) must be ready  **one** week before the end of the semester. A final report (.Rmd) will be send to the instructor 1 week before the final, and students will present their research on our last week together. The report will follow the format of a scientific publication but the style of the introduction and discussion can used bullet point to emphasize the methodology and the results. Topic is free, but a small proposal (1-2 pages, .Rmd) must be submitted before mid-term. Mid-term week will be dedicated to a discussion of the **research project**. Topics are free (not necessarily restricted to Ecology), and you are welcome to develop your own experiment but you can also use online published datasets which you will reinterpret. 
-
-
 
 ***
 **Examples of topics for the final assignment:**
@@ -470,15 +482,5 @@ You have two main missions along the semester:
 
 Etc.
 
-
-- After rendering course file in RStudio, you can review it. Each  week, you will prepare a short example based on what you learned in the previous class - or how to extended it. At the beginning of each class, a presenter will be randomly selected to illustrate what he prepared (5-10 minutes). The algorithm below will decide who will present. You may present several time in the semester (lucky) or none (unlucky), so always be ready. You will prepare your summary in .Rmd format
-
-```{r,  eval=F}
-library(dplyr)
-list_student<-c('沈敬家','Ya-Fang CHENG','Ling-Lan HSU','Yen-Ting CHEN','Tsai-Hsuan HSU','Yu-Wen CHEN','Che-Yueh LIN','Kong-Mei SHUET','Wu-Chiao LIAO','Mariana REYES','Chi-Le KO','San-Pei LEE')
-sample(list_student, 1, replace = TRUE)
-```
-
-Next week: install and load a package, set up your working directory, load a dataset and look for some help on the application of a given function
 
 
