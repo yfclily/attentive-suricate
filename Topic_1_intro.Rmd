@@ -4,6 +4,8 @@ author: "Vianney Denis"
 date: "2020/09/15"
 output:  
   "html_document":
+   theme: united
+   highlight: tango
    toc: true
    toc_depth: 3
    toc_float: true
@@ -28,7 +30,7 @@ No.|Name | Major
 2|Ya-Fang CHENG|海洋所博士班_一年級 
 3|Ling-Lan HSU|海洋所博士班_二年級 
 4|Yen-Ting CHEN|海洋所生漁組碩士班_一年級 
-5|Tsai-Hsuan HSU|海洋所生漁組碩士班_一年級 
+5|
 6|Yu-Wen CHEN|海洋所生漁組碩士班_一年級 
 7|Che-Yueh LIN|海洋所生漁組碩士班_一年級
 8|Kong-Mei SHUET|海洋所生漁組碩士班_一年級 
