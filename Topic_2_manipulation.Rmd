@@ -135,6 +135,8 @@ The basic syntax of the `sample` function is as follows:
 
 ```{r class.source = "fold-show",  eval=FALSE}
 sample(data, size, replace = FALSE, prob = NULL)
+#get source code
+# View(sample) OR getAnywhere(sample()) 
 ```
 
 To select randomly two individuals in our`students` dataset, I first need to define the size of my target, create a filter with my random selection of individuals, then apply my filter on my `students` dataset: 
@@ -349,8 +351,7 @@ iris  %>% group_by(Species) %>% summarise(Mean.Length = mean(Sepal.Length))
 ```
 
 
-
-> *<span style="color: green"> **Challenge**: the data set `rairuoho`provides growth data for 8 days in different treatments. Reformat the table in order to have the `day` as a variable with 6 levels. Current variables are given as:</span>* 
+> *<span style="color: green"> **Challenge**: the data set `rairuoho`provides growth data for 8 days in different treatments. Reformat the table in order to have the `day` as a variable with 6 levels ogether with another variable called length. You may use another famous package for data manipulation `tidyr` and the function `gather()`. Current variables are given as:</span>* 
 
 *<span style="color: green">- `day3` to `day8`:  mean length of the grass at the given day </span>*
 
