@@ -376,6 +376,101 @@ rairuoho<-read.table('Data/rairuoho.txt',header=T, sep="\t", dec=".")
 head(rairuoho)
 ```
 
+## Package `tidyr` 
+
+The function `gather` is depreciated (I am getting older and I keep using old function), and it is now recommended to switch to `pivot_longer()` still under active development: `df %>% gather("key", "value", x, y, z)`is equivalent to `df %>% pivot_longer(c(x, y, z), names_to = "key", values_to = "value")`
+
+
+Data tables come in different sizes and shape; they can be a very simple two column dataset or they can consist of many columns and “sub-columns”. Understanding its structure, and learning how to reshape it into a workable form is critical to an effective and error free analysis. The previous example illustrates the use of the package `tidyr` in tidying or reshaping tables. This package is the package by excellence to reorganize the structure of a table. 
+
+### Pivot data
+
+Dai & Horng (2009) summarize the coral diversity around Taiwan. `TW_corals` displays scleractinian coral richness by coral reef regions:
+
+```{r,  eval=T}
+TW_corals<-read.table('Data/tw_corals.txt',header=T, sep="\t", dec=".")
+TW_corals
+```
+
+This wide table can be easily reformat into a long table as we did before:
+
+```{r,  eval=T}
+library(tidyr)
+TW_corals_long <- TW_corals %>% pivot_longer(Southern_TW:Northern_Is, names_to = "Region", values_to = "Richness")
+TW_corals_long <-TW_corals %>% pivot_longer(cols = everything(), names_to = "Region", values_to = "Richness")
+TW_corals_long 
+```
+
+The reverse operation can be made using `pivot_wider`: 
+
+```{r,  eval=T}
+TW_corals_wide <- pivot_wider(TW_corals_long, names_from = Region, values_from = Richness) 
+TW_corals_wide
+```
+
+We’ve now recreated the wide version of our table.
+
+<span style="color: red">**Note**: The pipe operator `%>%` is optional, but it is generally more elegant and you will discover its importance later when your coding skills are maturing.</span>
+
+### Advanced pivot options
+
+Here’s a subset of median income by sex and by work experience for 2017 in four states in US and Taiwan (real data).
+
+```{r,  eval=T}
+income<-read.table('Data/metoo.txt',header=T, sep="\t", dec=".", na.strings = "n/a")
+income
+```
+
+At first glance, it might seem that we have three variables as in the earlier example, but upon closer examination, we see that we can tease out two variables from the column names: sex (`male` and `female`) and work experience (`fulltime` and `other`).
+
+`pivot_longer` has an argument, `names_sep`, that is passed the character that is used to delimit the two variable values. In our example, this character is `_`. Since the column values will be split across two variables we will also need to pass two column names to the `names_to` argument.
+
+```{r,  eval=T}
+income_long <- income %>%  pivot_longer(cols = -state, 
+                         names_to = c("sex","work"), 
+                         names_sep = "_", 
+                         values_to = "income")
+                         
+income_long
+```
+
+Obviously, the reverse is possible:
+
+```{r,  eval=T}
+income_long %>% pivot_wider(names_from = c(sex,work), 
+            values_from = income,
+            names_sep = ".")
+```
+
+### Separating elements
+
+The `tidyr` package offers other functions not directly tied to pivoting. For example, to split a column into two or more columns based on a column’s delimited value, use the `separate` function.
+
+```{r,  eval=T}
+# Let's first create a delimited table
+income.long <- income %>%  pivot_longer(cols = -1, 
+                         names_to = "var1", 
+                         values_to = "income")
+income.long
+```
+
+```{r,  eval=T}
+# Split var1 column into two columns
+income.sep <- income.long %>%  separate(col = var1, 
+                    sep = "_", 
+                    into = c("sex", "work"))
+income.sep
+```
+
+### Splitting rows 
+
+```{r,  eval=T}
+income.long %>% separate_rows(var1, sep = "_")
+```
+
+Other functions from the `tidyr` package allow to (check help of the functions): replicate rows by count (`uncount`), combining elements from many columns into a single column (`unite`), etc. Many online documentation exists online on the use of this package especially convenient when you have to repeat a formatting task on a large data set.
+
+
 ## Data object type and structure
 
 ### Core data types
@@ -795,7 +890,7 @@ as.logical()	#Convert to a Boolean
 
 ---------
 
-> *<span style="color: green">**RP5**: create the following data frame summarizing the results of a small experiment on 5 individuals testing the efficiency of a specific diet (drinking bubble tea only - feak data). Calculate the % of weight loss, and comment </span>*
+> *<span style="color: green">**RP5**: create the following data frame summarizing the results of a small experiment on 5 individuals testing the efficiency of a specific diet (drinking bubble tea only - feak data). Create another vector with the weight loss (in %) associated with subject no. What can you say on this bubble tea diet? Reformat the table by creating: a variable `individual` with the identity of the five individuals,  a variable `diet` with two levels `before` and `after`, a variable `weight` containing the weight before and after the diet. </span>*
 
 <div style="width:300px; height=200px">
 ![](Figures/table_manip.png)

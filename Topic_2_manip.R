@@ -104,6 +104,48 @@ mn #To find mean sepal width by Species, we use grouping as follows
 iris %>% filter(Species == "setosa",Sepal.Width > 3.8) #To get rows with the following conditions
 iris  %>% group_by(Species) %>% summarise(Mean.Length = mean(Sepal.Length))
 
+## Package `tidyr`
+
+### Pivot data
+TW_corals<-read.table('Data/tw_corals.txt',header=T, sep="\t", dec=".")
+TW_corals
+library(tidyr)
+TW_corals_long <- TW_corals %>% pivot_longer(Southern_TW:Northern_Is, names_to = "Region", values_to = "Richness")
+TW_corals_long <-TW_corals %>% pivot_longer(cols = everything(), names_to = "Region", values_to = "Richness")
+TW_corals_long 
+TW_corals_wide <- pivot_wider(TW_corals_long, names_from = Region, values_from = Richness) 
+TW_corals_wide
+
+### Advanced pivot options
+income<-read.table('Data/metoo.txt',header=T, sep="\t", dec=".", na.strings = "n/a")
+income
+income_long <- income %>%  pivot_longer(cols = -state, 
+                                        names_to = c("sex","work"), 
+                                        names_sep = "_", 
+                                        values_to = "income")
+income_long
+
+income_long %>% pivot_wider(names_from = c(sex,work), 
+                            values_from = income,
+                            names_sep = ".")
+
+### Separating elements
+
+income.long <- income %>%  pivot_longer(cols = -1, 
+                                        names_to = "var1", 
+                                        values_to = "income")
+income.long # Let's first create a delimited table
+
+income.sep <- income.long %>%  separate(col = var1, 
+                                        sep = "_", 
+                                        into = c("sex", "work"))
+income.sep # Split var1 column into two columns
+
+### Splitting rows 
+income.long %>% separate_rows(var1, sep = "_")
+
+# check `uncount, `unite`, `expand_grid`, `complete`, `anti_join`, `expand`, `left_join`, `fill`, etc.
+
 
 ## Data object type and structure
 #### Numeric
