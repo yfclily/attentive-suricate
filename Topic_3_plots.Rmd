@@ -1,7 +1,7 @@
 ---
 title: "Fun with R:  Ecological data analysis in R"
 author: "Vianney Denis"
-date: "2020/09/22"
+date: "2020/10/6"
 output:  
   "html_document":
    theme: united
@@ -508,7 +508,109 @@ dev.off()
 
 ## The `lattice` package
 
-*pending*
+The `lattice` package is an implementation of the **Trellis** display (or multi-panel display) used to visualize multivariate data or, more specifically, to visualize the dependencies and interactions between multiple variables. 
+
+### Univariate distribution
+
+Let’s look at a simple example where the density distribution of Petal.Length is conditioned by Species.
+
+```{r,  eval=T}
+library(lattice)
+densityplot(~ Petal.Length| Species, iris, plot.points = "", layout=c(1,3))
+```
+
+The `layout=c(1,3)` parameter instructs the lattice function to layout the panels along 1 column and 3 row. If you wanted the plots to be displayed in 1 rows and 3 column you would simply type `layout=c(3,1)` which is teh default option.
+
+The first thing to note is that the x-scale axis range is the same for all five plots. At first, this may seem as an inefficient use of the range of x values–for example, the setosa density plot is squeezed in the left-hand side of the plot, but it is important to understand the purpose of a trellis plot: to facilitate comparison of plots. By ensuring that all scale ranges remain the same, we can easily compare the plot shape. In the above plot, it is clear that the length of petal differs among **species**.
+
+The `lattice` packages also has a histogram function
+
+```{r,  eval=T}
+histogram(~ Petal.Length| Species, iris, plot.points = "", nint = 20, layout=c(1,3))
+```
+
+Note the importance of having a table shaped in “long form”. The density plots are conditioned on **species** which requires that crop type be treated as different values of a same variable (i.e. column `Species` in `iris`). The above plot could not be generated if the **species** crop were treated as separate variable variables (i.e. columns)in iris.
+
+You can also compare the distributions to a normal distribution (i.e. a Q-Q plot):
+
+```{r,  eval=T}
+qqmath(~ Petal.Length| Species, iris, plot.points = "", nint = 20, layout=c(3,1))
+```
+
+
+Boxplots are another popular way to view the distribution of values. In the following example, we create boxplots of Petal Length as a function of a dummy variable `variety` (`Petal.Length ~  variety`) and condition this comparison on species (`|Species`) 
+
+```{r,  eval=T}
+iris$variety<-rep(c(rep('pure',25), rep('hybrid',25)),3) # dummy variable
+bwplot(Petal.Length ~  variety|Species, iris)
+```
+
+### Multivariate data
+
+#### Scatter plots
+
+The Lattice package allows us to plot several variables on a same plot. For example, we can plot `Sepal.Length + Sepal.Width` vs `Petal.Length + Petal.Width` for each `Species` on a same plot:
+
+```{r,  eval=T}
+xyplot(Sepal.Length + Sepal.Width ~ Petal.Length + Petal.Width | Species,
+       data = iris, scales = "free", layout = c(2, 2), type=c("p","g"),
+       auto.key = list(x = .6, y = .7, corner = c(0, 0)))
+```
+
+The `xyplot` function is passed several parameters. The parameter type = c("p","g") instructs the function to generate both points, "p", and a background grid ,"g". Parameter `type` can accept many other options, a few are listed in the following table:
+
+
+Option|Adds
+------|-----
+`"p"`|`Points`
+`"l"`|`Lines`
+`"b"`|`Both points and lines`
+`"o"`|`Both points and lines`
+`"r"`|`Regression line`
+`"g"`|`	Reference grid`
+`"smooth"`|`LOESS fit`
+`"spline"`|`Cubic spline fit`
+
+
+Let's check how `Petal.Length` is related to other variables in each species
+
+```{r,  eval=T}
+xyplot(Sepal.Length + Sepal.Width + Petal.Width ~ Petal.Length  | Species,
+       data = iris, scales = "free", layout = c(2, 2), type=c("p","r"),
+       auto.key = list(x = .6, y = .7, corner = c(0, 0)))
+```
+
+#### Basic line plots
+
+After `order` my data `iris` by `Petal.Length`
+
+```{r,  eval=T}
+xyplot(Sepal.Length + Sepal.Width + Petal.Width ~ Petal.Length  | Species,
+       data = iris[order(iris$Petal.Length),], scales = "free", layout = c(2, 2), type=c("l"),
+       auto.key = list(x = .6, y = .7, corner = c(0, 0)))
+```
+
+The parameters `pch` and `cex` define the symbol shape and size. The parameter `col.symbol` defines the point color. The parameter `aspect="iso"` sets the aspect ratio in such a way that a unit of measure along x matches that of y. The parameter `abline=c(0,1)` generated a 45° line. Etc.
+
+We can take this a step further. We could condition the previous relationship by species and variety.
+
+```{r,  eval=T}
+xyplot(Sepal.Length + Sepal.Width + Petal.Width ~ Petal.Length  | variety+Species,
+       data = iris[order(iris$Petal.Length),], scales = "free", layout = c(3, 2), type=c("l"),
+       auto.key = T)
+```
+
+
+### Customizing trellis plots
+
+As the `par` function mentioned ealier, Various elements of a trellis plot can be customized by passing the graphic parameters to the `trellis.par.set` function. To get the list of graphic parameters and their values call:
+
+```{r,  eval=F}
+trellis.par.get()
+```
+
+It gives you an idea about how many parameters can be customized. Those defaults can be store in an object to further restore them. Many tutorials are available online on the `lattice` package in order to customize your plotas you need.
+
 
 ## The `ggplot` package
 
