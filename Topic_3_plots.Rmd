@@ -47,7 +47,7 @@ plot(Petal.Length ~ Petal.Width, dat = iris,
      main = 'Petal width and length of iris flower') # add title to the plot 
 ```
 
-We can change the symbole type using argument `pch` (see `?pch` for point options). `pch = 19` will produce a solid circle. The argument `cex` will control is size. We can also set its colors to be 90% transparent (10% opaque) using expression `col = rgb (0,0,0,0.10)`. The `rgb` function defines the intensities fro each of the display primary colors (on a scale of 0 to 1). The primary colors are red, green and blue. The forth value is optional and provides the fraction opaqueness with a value of 1 being completely opaque. 
+We can change the symbole type using argument `pch` (plotting ‘character’, see `?pch` for point options). `pch = 19` will produce a solid circle. The argument `cex` will control his size (character expansion). We can also set its colors to be 90% transparent (10% opaque) using expression `col = rgb (0,0,0,0.10)`. The `rgb` function defines the intensity for each of the display primary colors (on a scale of 0 to 1). The primary colors are red, green and blue. The forth value is optional and provides the fraction opaqueness (or transparency) with a value of 1 being completely opaque. 
 
 
 ```{r,  eval=T}
@@ -67,14 +67,14 @@ plot(Petal.Length ~ Petal.Width, dat = iris,
 
 ```
 
-Now it is time to combine with this what we learned in the previous class. How to add different colors for the three different species. Remember the `ifelse`?
+Now it is time to combine this with what we previously learned on conditional selection. How to add different colors for the three different species. Remember the `ifelse`?
 
 ```{r,  eval=T}
 col.iris<-ifelse(iris$Species=='setosa','purple',ifelse(iris$Species=='versicolor','blue','pink')) # create a vector of character with the name of the color we wanna use
 col.iris
 ```
 
-You can insert this color vector in the argument `col` and controlling its opacity with the `alpha` function from the package `scales`. Accordingly, you can guess the argument `col` can accept a vector of character with just the name of color instead of a rgb code.
+We can insert this color vector in the argument `col` and controlling its opacity with the `alpha` function from the package `scales`. You can guess the argument `col` can accept a vector of character with just the name of color instead of a `rgb` code.
 
 ```{r,  eval=T}
 library(scales)
@@ -270,7 +270,7 @@ boxplot(Sepal.Width ~ Species,iris)
 
 We can `reorder` the boxplots based on the median value. By default, `boxplot` will order the boxplots following the factor’s level order.
         
- ```{r,  eval=T}
+```{r,  eval=T}
 iris$Species.ord <- reorder(iris$Species,iris$Sepal.Width, median)
 levels(iris$Species.ord)
 boxplot(Sepal.Width ~ Species.ord, iris)
@@ -426,7 +426,7 @@ plot(Petal.Length ~ Petal.Width, dat = iris,
 legend(x="bottomright", pch= 19, cex=0.8, legend= c("versicolor","setosa", "virginica"), col=levels(as.factor(alpha(col.iris, 0.2))))
 ``` 
 
-We reinitialize the graphical parameters using `dev.off()'
+We reinitialize the graphical parameters using `dev.off()`
 
 ```{r,  eval=T}
 dev.off()
@@ -586,8 +586,7 @@ After `order` my data `iris` by `Petal.Length`
 
 ```{r,  eval=T}
 xyplot(Sepal.Length + Sepal.Width + Petal.Width ~ Petal.Length  | Species,
-       data = iris[order(iris$Petal.Length),], scales = "free", layout = c(2, 2), type=c("l"),
-       auto.key = list(x = .6, y = .7, corner = c(0, 0)))
+       data = iris[order(iris$Petal.Length),], scales = "free", layout = c(2, 2), type=c("l"), auto.key = list(x = .6, y = .7, corner = c(0, 0)))
 ```
 
 The parameters `pch` and `cex` define the symbol shape and size. The parameter `col.symbol` defines the point color. The parameter `aspect="iso"` sets the aspect ratio in such a way that a unit of measure along x matches that of y. The parameter `abline=c(0,1)` generated a 45° line. Etc.
