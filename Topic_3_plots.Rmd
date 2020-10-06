@@ -332,7 +332,7 @@ qqnorm(iris$Sepal.Width)
 qqline(iris$Sepal.Width)
 ```
 
-> *<span style="color: green">**RP6**: Using our previous `rairuho` dataset, examine the relationship between the length of the plant at `day3` and the length at `day7`: create a scatterplot. Examine if the length at `day7` is normal: you will use `hist`, a `density plot and `qqnorm`. How `treatment`affect the length at day7: make a `boxplot`. Make a comparison of the lenght of the plant between each pair of days using `pairs`.</span>*.
+> *<span style="color: green">**RP6**: Using our previous `rairuoho` dataset, examine the relationship between the length of the plant at `day3` and the length at `day7`: create a scatterplot. Examine if the length at `day7` is normal: you will use `hist`, a `density` plot and `qqnorm`. How does the`treatment` affect the length at day7: make a `boxplot`. Make a comparison of the lenght of the plant between each pair of days using `pairs`.</span>*
 
 ```{r class.source = "fold-hide",  eval=FALSE}
 rairuoho<-read.table('Data/rairuoho.txt',header=T, sep="\t", dec=".")

@@ -37,10 +37,11 @@ plot(Petal.Length ~ Petal.Width, dat = iris,
      xlab = 'Petal width (cm)', 
      ylab = 'Petal length (cm)', 
      main = 'Petal width and length of iris flower',
-     pch = 19, cex=2, 
+     pch = 19, cex=ratio, 
      col = alpha(col.iris, 0.2)) # set symbol types and color 
 
-legend(x="bottomright", pch= 19, cex=1.5, legend= c("versicolor","setosa", "virginica"), col=levels(as.factor(alpha(col.iris, 0.2))))
+legend(x="bottomleft", pch= 19, cex=1.5, legend= c("versicolor","setosa", "virginica"), col=alpha(levels(as.factor(col.iris)),0.2))
+       
 
 plot(Petal.Length ~ Petal.Width, dat = iris,
      xlab = 'Petal width (cm)', 
@@ -62,6 +63,11 @@ plot(Petal.Length ~ Petal.Width, dat = iris,
 pairs(iris[1:4], pch=19, col = alpha(col.iris, 0.2))
 
 iris<-iris[order(iris$Petal.Width),] # first order
+
+
+
+
+
 blossom<-NULL
 blossom$year <- 2010:2019                                               # 
 blossom$count.alaska <- c(3, 1, 5, 2, 3, 8, 4, 7, 6, 9)
@@ -74,19 +80,19 @@ plot(count.alaska ~ year,dat = blossom, type='b', pch=20,
      ylab = "No. of flower blossoming") 
 
 plot(count.alaska ~ year,dat = blossom, type='b', pch=20,
-     lty=2, lwd=0.5, col='red', ylab = "No. of flower blossoming") 
+     lty=2, lwd=4, col='red', ylab = "No. of flower blossoming") 
 
 plot(count.alaska ~ year,dat = blossom, type='b', pch=20,
-     lty=2, lwd=0.5, col='red', ylab = "No. of flower blossoming") 
+     lty=2, lwd=4, col='red', ylab = "No. of flower blossoming") 
 lines(count.canada ~ year,dat = blossom, type='b', pch=20,
-      lty=3, lwd=0.5, col='blue')
+      lty=3, lwd=4, col='blue')
 
 y.rng<-range(c(blossom$count.alaska, blossom$count.canada))
 
 plot(count.alaska ~ year,dat = blossom, type='l', ylim = y.rng,
-     lty=2, lwd=1, col='red', ylab = "No. of flower blossoming")
+     lty=2, lwd=4, col='red', ylab = "No. of flower blossoming")
 
-lines(count.canada ~ year,dat = blossom, lty=1, lwd=1, col='blue')
+lines(count.canada ~ year,dat = blossom, lty=1, lwd=4, col='blue')
 
 iris.ver<- subset(iris, Species == "versicolor")
 iris.vir<- subset(iris, Species == "virginica")
@@ -106,15 +112,17 @@ plot(Petal.Length ~ Petal.Width, dat = iris.ver,
 points(Petal.Length ~ Petal.Width, dat = iris.ver, pch = 20,cex=2, col = rgb(0,0,1,0.10)) # Add points for versicolor
 
 
-points(Petal.Length ~ Petal.Width, dat = iris.vir, pch = 20,cex=2, col =  alpha('#fc03c6', 0.2)) # Add points for versicolor
+points(Petal.Length ~ Petal.Width, dat = iris.vir, pch = 20,cex=2, col =  alpha('#EB9121', 0.2)) # Add points for versicolor
 
 
-legend("topleft", c("versicolor", "virginica"), pch = 19, cex=1.2, col = c(rgb(0,0,1,0.10), alpha('#fc03c6', 0.2))) # Add legend
+legend("topleft", c("versicolor", "virginica"), pch = 19, cex=1.2, col = c(rgb(0,0,1,0.10), alpha('#EB9121', 0.2))) # Add legend
 
 ### Boxplots
 boxplot(iris$Sepal.Width, na.rm = TRUE)
 boxplot(iris$Sepal.Width,iris$Sepal.Length, iris$Petal.Width,iris$Petal.Length, names = c("Sepal.Width", "Sepal.Length", "Petal.Length","Petal.Width"), main = "Iris flower traits")
 boxplot(iris$Sepal.Width,iris$Sepal.Length, iris$Petal.Width,iris$Petal.Length, names = c("Sepal.Width", "Sepal.Length", "Petal.Length","Petal.Width"), main = "Iris flower traits",outline = FALSE, horizontal = TRUE )
+
+
 boxplot(Sepal.Width ~ Species,iris)
 iris$Species.ord <- reorder(iris$Species,iris$Sepal.Width, median)
 levels(iris$Species.ord)
