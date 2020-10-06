@@ -1,7 +1,7 @@
 library(dplyr)
 list_student<-c(
   'Shen-Chin-CHIA',
-  '簡睫',
+  '呂易陽',
   'YA-FANG CHENG',
   'Ling-Lan HSU',
   'Yen-Ting CHEN',
@@ -10,6 +10,8 @@ list_student<-c(
   'Wu-Chiao LIAO',
   'Mariana REYES',
   'Balamurugan ANANTHAKRISHNAN',
+  'Jose Daniel Tapia GALVAN',
+  'Oscar Hamilton GARCIA',
   'Chiao-Jung HAN',
   'Min-Rou  JIANG', 
   'Hsun-Yi  HUANG',
