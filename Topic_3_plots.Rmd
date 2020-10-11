@@ -7,7 +7,7 @@ output:
    theme: united
    highlight: tango
    toc: true
-   toc_depth: 3
+   toc_depth: 4
    toc_float: true
    number_sections: false
    code_folding: show
@@ -613,18 +613,129 @@ It gives you an idea about how many parameters can be customized. Those defaults
 
 ## The `ggplot` package
 
-*pending*
+*Tutorial from Manny Gimond (2020)*
+
+The `ggplot2` package is designed around the idea that statistical graphics can be decomposed into a formal system of grammatical rules. The `ggplot2` learning curve is the steepest of all graphing environments encountered thus far, but once mastered it affords the greatest control over graphical design. For an up-to-date list of `ggplot2` functions, you may want to refer to ggplot2’s [website](https://ggplot2.tidyverse.org/reference/).
+
+A plot in `ggplot2` consists of different *layering components*, with the three primary components being:
+
++ The **dataset** that houses the data to be plotted;
++ The **aesthetics** which describe how data are to be mapped to the geometric elements (color, shape, size, etc..);
++ The **geometric elements** to use in the plot (i.e. points, lines, rectangles, etc…).
+
+Additional (optional) layering components include:
+
++ **Statistical** elements such as smoothing, binning or transforming the variable
++ **Facets** for conditional or trellis plots
++ **Coordinate systems** for defining the plots shape (i.e. cartesian, polar, spatial map projections, etc…)
+
+To access `ggplot2` functions, you will need to load its library:
+
+```{r,  eval=T}
+library(ggplot2)
+```
+
+Today, we will use the following datasets: 
+
+(1) `dat1`: grain harvest for north america + several long and wide versions of this dataset. Examine the following objects created.  
+
+```{r,  eval=T, message=F}
+library(tidyr)
+library(dplyr)
+
+dat1 <- read.csv("Data/FAO_grains_NA.csv", header=TRUE)
+
+dat1w <- dat1 %>%
+         filter(Information == "Yield (Hg/Ha)", 
+                Country =="United States of America", 
+                Crop %in% c("Oats", "Maize", "Barley", "Buckwheat","Rye")) %>% 
+                select (Year, Crop, Value) %>% spread(key = Crop, value="Value")
+
+dat1l <- gather(dat1w, key = "Crop", value = "Yield", 2:6)
+
+dat1l2 <- dat1 %>%
+          filter(Information == "Yield (Hg/Ha)", 
+                 Crop       %in% c("Oats", "Maize", "Barley", "Buckwheat","Rye")) %>%
+          select( Year, Crop, Country,  Yield = Value)  # Note that we are renaming the Value field
+```
+
+(2) `dat2`: ncome/education census data for the US 
+
+```{r,  eval=T}
+dat2 <- read.csv("Data/Income_education.csv", header=TRUE)
+```
+
+From a grammatical perspective, a scientific graph is the conversion of *data* to **aesthetic** attributes and **geometric** objects. This is an important concept to grasp since it underlies the construction of all graphics in `ggplot2`.
+
+For example, if we want to generate a point plot of crop yield as a function of year using the `dat1l` data frame, we type:
+
+```{r,  eval=T}
+ggplot(dat1l , aes(x = Year, y = Yield)) + geom_point()
+```
+
+where the function, `ggplot`, is passed the data frame name whose content will be mapped; the `aes` function is given data-to-geometry mapping instructions (`Year` is mapped to the x-axis and `Yield` is mapped to the y-axis); and `geom_point` is the geometry type.
+
+![](Figures/ggplot_1.png)
+
+If we wanted to include a third variable, crop type, to the map, we would need to map its aesthetics: here we’ll map `Crop` to the color element of the geom.
+
+```{r,  eval=T}
+ggplot(dat1l , aes(x = Year, y = Yield, color = Crop)) + geom_point()
+```
+
+The parameter color acts as a grouping parameter whereby the groups are assigned unique colors.
+
+![](Figures/ggplot_2.png)
+
+If we want to plot lines instead of points, simply substitute the geometry type with the `geom_line` geometry.
+
+```{r,  eval=T}
+ggplot(dat1l , aes(x = Year, y = Yield, color = Crop)) + geom_line()
+```
+
+Note that the aesthetics are still mapped in the same way with `Year` mapped to the x coordinate, `Yield` mapped to the y coordinate and `Crop` mapped to the geom’s color.
+
+Note that the parameters `x=` and `y=` can be omitted from the syntax reducing the line of code to:
+
+```{r,  eval=T}
+ggplot(dat1l , aes(Year, Yield, color = Crop)) + geom_line()
+```
 
 
+### Geometries
 
+Examples of a few available geometric elements follow.
 
+#### `geom_line`
 
+`geom_line` generates line geometries. We’ll use data from `dat1w` to generate a simple plot of oat yield as a function of year.
 
+```{r,  eval=T}
+ggplot(dat1w, aes(x = Year, y = Oats)) + geom_line() 
+```
 
+Parameters such as color and linetype can be passed directly to the `geom_line` function:
 
+```{r,  eval=T}
+ggplot(dat1w, aes(x = Year, y = Oats)) + 
+  geom_line(linetype = 2, colour = "blue", size=0.4)
+```
 
+Note the difference in how `colour=` is implemented here. It’s no longer **mapping** a variable’s levels to a range of colors as when it’s called inside of the `aes` function, instead, it’s **setting** the line color to blue.
 
+#### `geom_point`
 
+This generates point geometries. This is often used in generating scatterplots. For example, using `dat` dataste to plot male income (variable `B20004013`) vs female income (variable `B20004007`):
+
+```{r,  eval=T}
+ggplot(dat2, aes(x = B20004013, y = B20004007)) + geom_point(alpha = 0.3) 
+```
+As did earlier, we modify the point’s transparency by passing the `alpha=0.3` parameter to the `geom_point` function. Other parameters that can be passed to point geoms include `colour`, `pch` and `cex`.
+
+```{r,  eval=T}
+ggplot(dat2, aes(x = B20004013, y = B20004007)) + 
+  geom_point(colour = "red", pch=3 , alpha = 0.3, cex=0.6)
+```
 
 
 
