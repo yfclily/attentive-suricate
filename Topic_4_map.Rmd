@@ -14,6 +14,7 @@ output:
     # ioslides_presentation 
 ---
 
+
 # **Topic 4 - Make a map**
 
 Current solutions for creating maps usually involves GIS software, such as ArcGIS, QGIS, eSpatial, etc., which allow to visually prepare a map, in the same approach as one would prepare a poster or a document layout. On the other hand, R has also advanced spatial capabilities and can be used to draw maps. As we mentioned earlier, you can customize easily a map as you wish.  
@@ -286,6 +287,7 @@ ggplot(data = world) +
 Several packages are available to create a scale bar on a map (e.g. `prettymapr`, `vcd`, `ggsn`, or `legendMap`).Here the package `ggspatial` provides easy-to-use functions. `scale_bar` that allows to add simultaneously the north symbol and a scale bar into the `ggplot` map. Five arguments need to be set manually: `lon`, `lat`, `distance_lon`, `distance_lat`, and `distance_legend`. The location of the scale bar has to be specified in longitude/latitude in the `lon` and `lat` arguments. The shaded distance inside the scale bar is controlled by the `distance_lon` argument while its width is determined by `distance_lat`. Additionally, it is possible to change the font size for the legend of the scale bar (argument `legend_size`, which defaults to 3). The North arrow behind the “N” north symbol can also be adjusted for its length (`arrow_length`), its distance to the scale (`arrow_distance`), or the size the N north symbol itself (`arrow_north_size`, which defaults to 6). Note that all distances (`distance_lon`, `distance_lat`, `distance_legend`, `arrow_length`, `arrow_distance`) are set to `"km"` by default in `distance_unit`; they can also be set to nautical miles with `“nm”`, or miles with `“mi”`.
 
 ```{r,  eval=T}
+library(ggspatial)
 ggplot(data = world) +
     geom_sf() +
     annotation_scale(location = "br", width_hint = 0.4) +
@@ -350,20 +352,33 @@ ggplot(data = world) +
 
 The final map is now ready, it is very easy to save it using ggsave. This function allows a graphic (typically the last plot displayed) to be saved in a variety of formats, including the most common PNG (raster bitmap) and PDF (vector graphics), with control over the size and resolution of the outcome. For instance here, we save a PDF version of the map, which keeps the best quality, and a PNG version of it for web purposes:
 
+```{r,  eval=T}
 ggsave("Output/Datamap.pdf")
 ggsave("Output/map_web.png", width = 6, height = 6, dpi = "screen")
+```
 
 
+### Species distribution 
 
+```{r,  eval=T}
+library(rgbif)
+library(ggplot2)
+library(mapr)
 
+gbif.res <- occ_search(scientificName = "Urocissa caerulea", limit = 1200)
 
+map_ggplot(gbif.res) +
+  coord_sf(xlim = c(120, 123), ylim = c(21, 26), expand = FALSE)
+```
 
-\BATHYMETRY
-<span style="color: #e1d9d7">Bathymetry data using the package  <span style="color: #a2c6e5">`marmap`</span></span>
+### Bathymetric map with  `marmap`
 
-```{r,  eval=FALSE}
+`marmap` can query and plot NOAA's bathymetry database
+
+```{r,  eval=T}
+library(marmap)
 # download data
-TW.bathy <- getNOAA.bathy(lon1=118,lon2=124, lat1=21,lat2=26,resolution=0.5) # don't put too wide / resolution: 0.5 
+TW.bathy <- getNOAA.bathy(lon1=118,lon2=124, lat1=21,lat2=26,resolution=1) # don't put too wide / resolution: 0.5 
 # define palette
 blues <- colorRampPalette(c("darkblue", "cyan"))
 greys <- colorRampPalette(c(grey(0.4),grey(0.99)))
@@ -380,76 +395,79 @@ plot.bathy(TW.bathy,
      bpal = list(c(0,max(TW.bathy),greys(100)),c(min(TW.bathy),0,blues(100))),
      land=T, xaxs="i"
      )
-# Extract a profile
-# Manually
-manual.profile<-get.transect (TW.bathy, loc=T,dist=T) 
-plotProfile(manual.profile) 
-# By coordinates
+```
+
+Profiles can be extract using `get.transect`:
+
+```{r,  eval=T}
 tw.profile <-get.transect(TW.bathy,x1=119.5,y1=23.75, x2=122,y2=23.75, dis=TRUE)
 plotProfile(tw.profile) 
+# Extract a profile
+# Manually
+#manual.profile<-get.transect (TW.bathy, loc=T,dist=T) 
+#plotProfile(manual.profile) 
+# By coordinates
 ```
 
+### Interactive maps
 
-\SPECIESDISTRI
+```{r,  eval=T}
+library(sf)
+library(RColorBrewer)
+library(dplyr)
+library(devtools)
+library(ggsflabel)
+# devtools::install_github("yutannihilation/ggsflabel") #None
 
-<span style="color: #e1d9d7">Using <span style="color: #a2c6e5">`dismo`</span> package for species distribution</span>
+df.pop <- read.csv("Data/tw_population.csv", h = T)
+df.pop <- data.frame(df.pop)
 
-```{r,  eval=FALSE}
-distri <- gbif("Acropora","muricata")
-locs <- subset(distri, select = c("country", "lat", "lon"))
-locs <- subset(distri, locs$lat < 90)
-coordinates(locs) <- c("lon", "lat")  # set spatial coordinates
-plot(locs)
-crs.geo <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84")  # geographical, datum WGS84
-proj4string(locs) <- crs.geo  # define projection system of our data
-summary(locs)
-plot(locs, axes=T,pch = 20, col = "red")
-data(coastsCoarse)
-data(countriesLow)
-plot(coastsCoarse, add = T)
+ggplot(df.pop, aes(x = reorder(County, Population), y = Population/10000, fill = Category)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  labs(title = "Taiwan Population", x = "County", y = "Population(萬)")
 
+taiwan.map <- st_read ("Data/GADM/gadm36_TWN_2.shp")
 
+ggplot(data = taiwan.map) +
+  geom_sf() +
+  labs(title = "Taiwan Map ")
 
-options(kmlpath="Data")
-sp.map.df <- create_map_df(c("USA","MEX"))
+ggplot(data = taiwan.map) +
+  geom_sf(aes(fill = NAME_2), show.legend= F) +
+  geom_sf_text(aes(label = NAME_2), size = 3) +
+  labs(title = "Taiwan Map ")
 
-splist <- c("Junco hyemalis", "Aix sponsa")
-out <- occurrencelist_many(splist, coordinatestatus = TRUE, maxresults = 1000)
-
-## create map plot
-sp.map <- ggplot(sp.map.df,aes(x=long,y=lat,group=group))+geom_polygon(fill="white",colour="black")+xlim(-130,-65)+ylim(12,50)
-
-## Overlay occurrence data
-sp.map + geom_point(data=gbifdata(out),aes(y=decimalLatitude,x=decimalLongitude,group=taxonName,colour=taxonName))
-
-
-
-
-
-library(rgbif)
-## Grab some occurrence data
-
-splist <- c("Junco hyemalis", "Aix sponsa")
-out <- occurrencelist_many(splist, coordinatestatus = TRUE, maxresults = 1000)
-
-## Set the map data path
-options(kmlpath = "/Users/edmundhart/kmltemp")
-sp.map.df <- create_map_df(c("USA","MEX"))
-
-## create map plot
-sp.map <- ggplot(sp.map.df,aes(x=long,y=lat,group=group))+geom_polygon(fill="white",colour="black")+xlim(-130,-65)+ylim(12,50)
-
-## Overlay occurrence data
-sp.map + geom_point(data=gbifdata(out),aes(y=decimalLatitude,x=decimalLongitude,group=taxonName,colour=taxonName))
-
+ggplot(data = taiwan.map) +
+  geom_sf(aes(fill = NAME_2)) +
+  scale_fill_manual(name = "County",values = colorRampPalette(brewer.pal(8, "Accent"))(22)) +
+  labs(title = "Taiwan Map ")
 ```
 
-\EXERCISE
+Combine the two datasets:
 
-####***<span style="color: green">Exercise 5A:</span>***
 
-#### *<span style="color: green">Using the packages of your choice:</span>*
+```{r,  eval=T}
+my.taiwan.map <- taiwan.map[c("NAME_2", "geometry")]
+my.taiwan.map$NAME_2 <- as.character(my.taiwan.map$NAME_2)
+my.taiwan.map.data <- left_join(my.taiwan.map, df.pop,by= c("NAME_2" = "County"))
 
-#### *<span style="color: green">- make a map of the island for which you downloaded data: land in grey, sea in blue, add the important cities, the name of the island, the scale and the North arrow</span>*
+ggplot(data = my.taiwan.map.data) +
+  geom_sf(aes(fill = Population))
 
-#### *<span style="color: green">- in another figure, plot the bathymetry around the island together with its topography. Select a transect transversal to the island and plot the corresponding profile - add name of the island and seas. Plot both the bathymetry map and profile in one panel ! </span>*
+ggplot(data = my.taiwan.map.data) +
+  geom_sf(aes(fill = Population/10000)) +
+  scale_fill_distiller(palette = "Spectral", name = "Population(x10,000)") +
+  geom_sf_label_repel(aes(label = NAME_2, alpha = 1)) +
+  labs(title="Taiwan popualtion map", x ="Longitude", y = "Latitude")
+```
+
+Make it interactive:
+
+```{r,  eval=T}
+# not run
+# library(mapview)
+# library(fields)
+# mapview(my.taiwan.map.data["Population"])
+# mapview(my.taiwan.map.data["Population"], col.regions = tim.colors(100))
+```
