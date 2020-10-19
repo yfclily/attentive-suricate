@@ -1,0 +1,122 @@
+---
+title: "Untitled"
+author: "Vianney Denis"
+date: "10/19/2020"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately. 
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+## Inputs and Outputs
+
+You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change.  This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. The `selectInput` and `sliderInput` functions create the input widgets used to drive the plot.
+
+```{r eruptions, echo=FALSE}
+inputPanel(
+  selectInput("n_breaks", label = "Number of bins:",
+              choices = c(10, 20, 35, 50), selected = 20),
+  
+  sliderInput("bw_adjust", label = "Bandwidth adjustment:",
+              min = 0.2, max = 2, value = 1, step = 0.2)
+)
+
+renderPlot({
+  hist(faithful$eruptions, probability = TRUE, breaks = as.numeric(input$n_breaks),
+       xlab = "Duration (minutes)", main = "Geyser eruption duration")
+  
+  dens <- density(faithful$eruptions, adjust = input$bw_adjust)
+  lines(dens, col = "blue")
+})
+```
+
+## Embedded Application
+
+It's also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
+
+```{r tabsets, echo=FALSE}
+shinyAppDir(
+  system.file("examples/06_tabsets", package = "shiny"),
+  options = list(
+    width = "100%", height = 550
+  )
+)
+```
+
+Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+
+You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+
+In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+
+
+```{r,  eval=T}
+library(sf)
+library(RColorBrewer)
+library(dplyr)
+library(devtools)
+library(ggsflabel)
+library(raster)   
+# devtools::install_github("yutannihilation/ggsflabel") #None
+
+df.pop <- read.csv("Data/tw_population.csv", h = T)
+df.pop <- data.frame(df.pop)
+
+ggplot(df.pop, aes(x = reorder(County, Population), y = Population/10000, fill = Category)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  labs(title = "Taiwan Population", x = "County", y = "Population(萬)")
+
+#temp_shapefile <- tempfile()
+#taiwan.map <- read_sf ("Data/GADM/gadm36_TWN_2.shp")
+taiwan.map<-getData('GADM', country='TWN', level=2)#####
+taiwan.map<-st_as_sf(taiwan.map)
+
+ggplot(data = taiwan.map) +
+  geom_sf() +
+  labs(title = "Taiwan Map ")
+
+ggplot(data = taiwan.map) +
+  geom_sf(aes(fill = NAME_2), show.legend= F) +
+  geom_sf_text(aes(label = NAME_2), size = 3) +
+  labs(title = "Taiwan Map ")
+
+ggplot(data = taiwan.map) +
+  geom_sf(aes(fill = NAME_2)) +
+  scale_fill_manual(name = "County",values = colorRampPalette(brewer.pal(8, "Accent"))(22)) +
+  labs(title = "Taiwan Map ")
+```
+
+Combine the two datasets:
+
+
+```{r,  eval=T}
+my.taiwan.map <- taiwan.map[c("NAME_2", "geometry")]
+my.taiwan.map$NAME_2 <- as.character(my.taiwan.map$NAME_2)
+my.taiwan.map.data <- left_join(my.taiwan.map, df.pop,by= c("NAME_2" = "County"))
+
+ggplot(data = my.taiwan.map.data) +
+  geom_sf(aes(fill = Population))
+
+ggplot(data = my.taiwan.map.data) +
+  geom_sf(aes(fill = Population/10000)) +
+  scale_fill_distiller(palette = "Spectral", name = "Population(x10,000)") +
+  geom_sf_label_repel(aes(label = NAME_2, alpha = 1)) +
+  labs(title="Taiwan popualtion map", x ="Longitude", y = "Latitude")
+```
+
+Make it interactive:
+
+```{r,  eval=T}
+# not run
+library(mapview)
+ library(fields)
+ mapview(my.taiwan.map.data["Population"])
+# mapview(my.taiwan.map.data["Population"], col.regions = tim.colors(100))
+```
