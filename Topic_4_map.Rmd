@@ -25,7 +25,7 @@ Current solutions for creating maps usually involves GIS software, such as ArcGI
 
 Getting a simple map is pretty straightforward  in R using the package`maptools`
 
-```{r,  eval=T}
+```{r,  eval=T, message=F}
 library('maptools')
 data(wrld_simpl)
 plot(wrld_simpl)
@@ -214,8 +214,17 @@ First, let us start with creating a base map of the world using `ggplot2`. This 
 
 ```{r,  eval=T}
 ggplot(data = world) +
-    geom_sf()
+   geom_sf()
 ```
+
+In your map of the world, the plot panel is expanded beyond the size of the earth (you can see that the graticule lines end before the edge of the plot panel), and hence no axis ticks are drawn. One way to solve the issue is to turn off the expansion.
+
+```{r,  eval=T}
+ggplot(data = world) +
+   geom_sf() +
+   coord_sf(expand = FALSE)
+```
+
 
 As before, the  layers are added one at a time in a `ggplot` call, so the order of each layer is very important. All data will have to be in an `sf` format to be used by `ggplot2`; data in other formats (e.g. classes from `sp`) will be manually converted to `sf` classes if necessary.
 
@@ -226,6 +235,7 @@ A title and a subtitle can be added to the map using the function `ggtitle`, pas
 ```{r,  eval=T}
 ggplot(data = world) +
     geom_sf() +
+    coord_sf(expand = FALSE) +
     xlab("Longitude") + ylab("Latitude") +
     ggtitle("World map", subtitle = paste0("(", length(unique(world$name)), " countries)"))
 ```
@@ -236,7 +246,8 @@ In many ways, `sf` geometries are no different than regular geometries, and can 
 
 ```{r,  eval=T}
 ggplot(data = world) + 
-    geom_sf(color = "black", fill = "lightgreen")
+    geom_sf(color = "black", fill = "lightgreen") +
+    coord_sf(expand = FALSE) 
 ```
 
 
@@ -245,6 +256,7 @@ The package `ggplot2` allows the use of more complex color schemes, such as a gr
 ```{r,  eval=T}
 ggplot(data = world) +
     geom_sf(aes(fill = pop_est)) +
+    coord_sf(expand = FALSE) +
     scale_fill_viridis_c(option = "plasma", trans = "sqrt")
 ```
 
@@ -371,6 +383,8 @@ map_ggplot(gbif.res) +
   coord_sf(xlim = c(120, 123), ylim = c(21, 26), expand = FALSE)
 ```
 
+Have a look [here](https://damariszurell.github.io/HU-GCIB/1_Data.html#2_environmental_data), to combine climate and species data. I have been trying to do it for few days but packages need API keys. This tutorial (not ggplot) should work - but not tested.
+
 ### Bathymetric map with  `marmap`
 
 `marmap` can query and plot NOAA's bathymetry database
@@ -378,7 +392,7 @@ map_ggplot(gbif.res) +
 ```{r,  eval=T}
 library(marmap)
 # download data
-TW.bathy <- getNOAA.bathy(lon1=118,lon2=124, lat1=21,lat2=26,resolution=1) # don't put too wide / resolution: 0.5 
+TW.bathy <- getNOAA.bathy(lon1=118,lon2=124, lat1=21,lat2=26,resolution=1) # don't put too wide / resolution: 1 
 # define palette
 blues <- colorRampPalette(c("darkblue", "cyan"))
 greys <- colorRampPalette(c(grey(0.4),grey(0.99)))
@@ -402,11 +416,9 @@ Profiles can be extract using `get.transect`:
 ```{r,  eval=T}
 tw.profile <-get.transect(TW.bathy,x1=119.5,y1=23.75, x2=122,y2=23.75, dis=TRUE)
 plotProfile(tw.profile) 
-# Extract a profile
-# Manually
-#manual.profile<-get.transect (TW.bathy, loc=T,dist=T) 
-#plotProfile(manual.profile) 
-# By coordinates
+#### Not Run: extract a profile Manually
+#### manual.profile<-get.transect (TW.bathy, loc=T,dist=T) 
+#### plotProfile(manual.profile)
 ```
 
 ### Interactive maps
