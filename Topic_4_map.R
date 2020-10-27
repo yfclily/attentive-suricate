@@ -16,7 +16,7 @@ library('dplyr')
 library('devtools')
 library('mapview')
 library('fields')
-library('ggsflabel')
+library('ggsflabel') # NOT ON CRAN
 # devtools::install_github("yutannihilation/ggsflabel") # None
 
 rm(list=ls())# clean all objects in memory
@@ -214,9 +214,9 @@ plot.bathy(TW.bathy,
            deepest.isobath=c(-6000,-120,-30,0),
            shallowest.isobath=c(-1000,-60,0,0),
            step=c(2000,60,30,0),
-           lwd=c(0.3,1,1,2),
+           lwd=c(4,1,1,4),
            lty=c(1,1,1,1),
-           col=c("grey","black","black","black"), 
+           col=c("red","black","black","black"), 
            drawlabels=c(T,T,T,F),
            bpal = list(c(0,max(TW.bathy),greys(100)),c(min(TW.bathy),0,blues(100))),
            land=T, xaxs="i"
