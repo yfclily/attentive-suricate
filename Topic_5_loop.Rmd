@@ -148,8 +148,8 @@ grow2 <- function (growth.rate, number.generation) {
 ```
 
 ## Animation
-
-An animation will consist in overlapping created plots. Becuase we will overlap plots, this time we will fix the limit of our axes. Let's get back to our function with flexibility on `growth.rate` only.
+### gif
+An animation will consist in overlapping created plots. Because we will overlap plots, this time we will fix the limit of our axes. Let's get back to our function with flexibility on `growth.rate` only.
 
 
 ```{r class.source = "fold-show",  eval=T}
@@ -180,6 +180,31 @@ for (i in 2:10){
 
 The result is an illustration of the exponential growth over 10 generations at various growth rates.
 
+
+### `gganimate`
+
+```{r,  eval=F} 
+library(ggplot2)
+library (gganimate)
+
+demo<-NULL
+demo$count<-N
+demo$generation<-generation
+demo<-as.data.frame(demo)
+
+p <- ggplot(demo, aes(x = generation, y=count, size =2)) +
+   geom_point(show.legend = FALSE, alpha = 0.7) +
+   scale_color_viridis_d() +
+   scale_size(range = c(0, 12)) +
+   labs(x = "Generation", y = "Individuals")
+
+p + transition_time(generation) +
+   labs(title = "Generation: {frame_time}") +
+   shadow_wake(wake_length = 0.2, alpha = FALSE)
+```
+
+
+Check it [here](https://www.datanovia.com/en/blog/gganimate-how-to-create-plots-with-beautiful-animation-in-r/) for more fancy option. Obviously, you can combine those animation in a [map](https://gist.github.com/rafapereirabr/0d68f7ccfc3af1680c4c8353cf9ab345
 
 ## DIY
 
