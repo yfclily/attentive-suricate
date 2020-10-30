@@ -13,7 +13,7 @@ rm(list=ls())# clean all objects in memory
 for(i in 1:100) {
    print("Hello world!")
    print(i*i)
-}
+   }
 
 
 foo <- seq (1,100,by=2) # a sequence  1, 3, ..., 99
@@ -43,9 +43,9 @@ plot (N) # plotting the results
 num_gen<-10 # my counter, number of generation
 generation<-1:num_gen # create a variable generation
 N <- rep (0,num_gen)# this creates a "vector" of 10 zeros, can also be empty `NULL`
-N[1] <- 2 # we set the first value equal to 2
+N[1] <- 3 # we set the first value equal to 2
 for (i in 2:num_gen) { # i will move from 2 to num_gen =10
-   N[i]=2*N[i-1] # the population will double every generation
+   N[i]=2*(N[i-1]) # the population will double every generation
 }
 plot(N~generation, type='b') # plotting the results 
 
