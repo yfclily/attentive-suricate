@@ -94,7 +94,7 @@ The wide family of `apply` functions often represents an alternative to loops. Y
 
 > *<span style="color: green">**RP11**: Using the data 'iris' explore how the four traits vary among speces. Use boxplots and make a summary of the data set by species </span>* 
 
-*<span style="color: green"> Calculate the number of observations for each trait and species (many possibilities, be creative). You should get a table of 3 species x 4 traits filled with 50 values</span>*
+*<span style="color: green"> Calculate the number of observations for each trait and species (many possibilities, be creative). You should get a table of 3 species x 4 traits filled with the values "50"</span>*
 
 
 *<span style="color: green"> Calculate median of each variable by `Species`, then calculate the mean by `Species` for the `Sepal.Length` only </span>*
