@@ -16,7 +16,7 @@ output:
 
 # Topic 6 - Statistics: first steps.
 
-```{r,  eval=T, warning=F}
+```{r,  eval=T, warning=F, message=F}
 library (psych)
 library(ggplot2)
 library(dplyr)
@@ -277,6 +277,6 @@ leveneTest(len~interaction (supp,dose),data=ToothGrowth) # sensitivity non-norma
 fligner.test(len~interaction (supp,dose),data=ToothGrowth) # sensitivity non-normality +
 ```
 
-> *<span style="color: green">**RP14**: Going back on `rairuoho` dataset. Calculate the correlation between day 6 and day 7. Create you __own__ `my.t.test` function, that you will use to test the effect  of `treatment` on _length_  at various _days_. Interpret.</span>* 
+> *<span style="color: green">**RP14**: Going back on `rairuoho` dataset. Calculate the correlation between day 6 and day 7. Create your __own__ `my.t.test` function, that you will use to test the effect  of `treatment` on _length_  at various _days_. Interpret.</span>* 
 
 
