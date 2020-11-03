@@ -1,0 +1,282 @@
+---
+title: "Fun with R:  Ecological data analysis in R"
+author: "Vianney Denis"
+date: "2020/11/3"
+output:  
+  "html_document":
+   theme: united
+   highlight: tango
+   toc: true
+   toc_depth: 4
+   toc_float: true
+   number_sections: false
+   code_folding: show
+    # ioslides_presentation 
+---
+
+# Topic 6 - Statistics: first steps.
+
+```{r,  eval=T, warning=F, message=F}
+library (psych)
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+library(car)
+```
+
+![](Figures/Sadistics.png)
+
+## Descriptive statistics
+
+Open our `students` data set in Excel and R. Do you know about pivot table in excel? Obviously, the same can be accomplished in R. 
+
+```{r,  eval=T}
+students<-read.table('https://www.dipintothereef.com/uploads/3/7/3/5/37359245/students.txt',header=T, sep="\t", dec='.') # inspect the object created
+
+write.table(students, file = "Data/students.txt", sep = "\t", row.names=T)
+```
+
+Make a quick `summary` of our data set in R.
+
+```{r,  eval=T}
+summary(students)
+```
+
+A more detailed summary can be obtained using the function `describe` from the package `psych`.
+
+```{r,  eval=T}
+describe(students)
+```
+
+The function `describeBy` provides a group-wise summary of the dataset.
+
+```{r,  eval=T}
+describeBy (students,students$gender)
+describeBy (students, list(students$gender,students$population))
+```
+
+
+### Count and proportion
+
+Simple tabulation (count) summary are made using`table`
+
+```{r,  eval=T}
+# One variables
+table(students$gender)
+prop.table (table(students$gender))
+
+# two variables
+table(students$gender, students$shoesize)
+prop.table (table(students$gender, students$shoesize))
+
+# three variables, with nicer formatting
+ftable(students$gender, students$shoesize,students$population)
+```
+
+### `mean`, `median`, `sd`, etc.
+
+You already know how to apply basic function on a vector, create a filter and use it on a subgroup:
+
+```{r,  eval=T}
+mean(students$height)
+ind.male <- students$gender == 'male'
+mean(students$height[ind.male])
+```
+
+**IMPORTANT FUNCTIONS** Common descriptive statistics can be combined in the `aggregate` and `apply` functions. The 'big' difference between the two is  that  the second argument of `aggregate` must be a list while `tapply` can (not mandatory) be a list and that the output of `aggregate` is a data frame while the one of `tapply` is an array.   
+
+```{r,  eval=T}
+aggregate(students$height,list (students$gender),median)
+tapply(students$height,students$gender, median)
+```
+
+The wide family of `apply` functions often represents an alternative to loops. You can read more about these functions online.
+
+> *<span style="color: green">**RP11**: Using the data 'iris' explore how the four traits vary among speces. Use boxplots and make a summary of the data set by species </span>* 
+
+*<span style="color: green"> Calculate the number of observations for each trait and species (many possibilities, be creative). You should get a table of 3 species x 4 traits filled with 50 values</span>*
+
+
+*<span style="color: green"> Calculate median of each variable by `Species`, then calculate the mean by `Species` for the `Sepal.Length` only </span>*
+
+
+```{r class.source = "fold-hide",  eval=F}
+plot1 <-ggplot(iris, aes(x=Species, y=Sepal.Length)) + 
+  geom_boxplot()
+  
+plot2 <-ggplot(iris, aes(x=Species, y=Sepal.Width)) + 
+  geom_boxplot() 
+  
+plot3 <-ggplot(iris, aes(x=Species, y=Petal.Length)) + 
+  geom_boxplot() 
+  
+plot4 <-ggplot(iris, aes(x=Species, y=Petal.Width)) + 
+  geom_boxplot() 
+  
+grid.arrange(plot1, plot2,plot3, plot4, ncol=2)
+describeBy (iris, iris$Species)
+
+
+iris %>% group_by(Species) %>% summarise_each(list(length))
+aggregate(iris[,1:4],by=list(iris$Species), median)
+tapply(iris$Sepal.Length , iris$Species, mean)
+```
+
+
+
+## Statistical testing
+
+Two broad categories: parametric (assuming normal distrbution & homoscedasticity) and non parametric (no assumption of normality).The most important is your **hypothesis**: *H0* represents the null hypothesis - an absence of difference (does not mean there is no difference), *H1* represents the alternative hypothesis - the presence of difference.
+
+### Correlations
+
+Let's first examine what is a correlation. It looks scary but it is actually very easy. 
+
+![](Figures/corr.png)
+
+```{r class.source = "fold-show",  eval=T}
+# dataset 
+x<-students$height
+y<-students$shoesize
+s<-students[,1:2] # a matrix
+# Pearson correlation
+# cor(x,y)
+# cor(s)
+cor.test(x,y)
+```
+
+This relationship is usually represented with it confident interval on a scatter plot.
+
+```{r,  eval=T}
+ggplot(students, aes(x = height, y = shoesize)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red")
+```
+
+This is a *Pearson* correlation (parametric). Non-parametric alterantives also exists such as the *Spearman*. It is based on rank, and monotonic relationship.
+
+```{r,  eval=T}
+# Spearman correlation (monotonic)
+# cor(x,y, method ='spearman')
+cor.test(x,y, method ='spearman')
+```
+
+The example below illustrates on the importance of running both types of correlation. 
+
+```{r,  eval=F}
+w<-(1:100)
+z<-exp(x)
+cor.test(w,z,method='pearson') # super low
+cor.test(w,z,method='spearman') #super high
+```
+
+> *<span style="color: green">**RP12**: Change one value from the student data set and check how the t and p values are affected. Check the change in the confidence interval. </span>* 
+
+### Chi-square test
+
+It is a goodness-of-fit test. Easier to understand with an example:
+
+![](Figures/die.png)
+
+```{r,  eval=T}
+#Cast 240 times a die. We counted occurence of 1,2,3,4,5,6
+die<-data.frame(obs=c(55,44,35,45,31,30), row.names=c('Cast1','Cast2','Cast3','Cast4','Cast5','Cast6'))
+die #Is this die fair? Define H0 and H1.  
+```
+
+Assumption: all results are equally probably (H0, uniform distribution).
+
+```{r,  eval=T}
+chisq.test(die)
+# I am cheating
+```
+
+A common biological application of a Chi-square test is the Hardy-Weinberg equilibrium. Genotypes at the Hardy-Weinberg equilibrium will follow: p2 + 2pq +q2 = 1 when panmixia (random matin, p and q represent allele frequency). In this case, we want to compare our observation to a theoretical distribution.
+
+Let's assume 2 alleles (A and T) with observed genotypes in a population: 750 AA, 50 AT, 200 TT => f(A): 0.775 / f(T)= 0.225. Theoretical distribution should follow: 0.60(p2), 0.5 (2pq), 0.05 (q2) with p2 + 2pq +q2 = 1. Is our population at the HW-equilibrium (H0)?
+
+```{r,  eval=T}
+obs <- c(750, 50, 200)
+exp <- c(0.60, 0.35, 0.05)
+chisq.test (x=obs, p=exp)
+```
+
+Chi-square test can simply be used to compare the distribution of frequencies in two populations: 
+```{r,  eval=T}
+F <- matrix(nrow=4,ncol=2,data=c(33,14, 8,18,31,25,14,12))
+chisq.test(F) # alternative see `fisher.test`
+```
+
+### Student t-test
+
+Several version: one sample compared to a known mean, two samples (with variance equal - Student's or with unequal variance -Welsh's), paired (compare two dependent (e.g. before-after) samples. 
+
+```{r,  eval=T}
+# One sample
+t.test (students$height, mu=170)
+# Two sample (with equal variances)
+t.test (students$height~students$gender, var.equal = TRUE)
+# Two sample (with unequal variances, default option when using t.test) 
+t.test (students$height~students$gender)
+# Two sample paired t.test
+t.test (students$height~students$gender, paired=T)
+```
+
+The *t* statistic is obtained as following in the case of a two samples assuming equal variances:
+
+![](Figures/ttest.png)
+
+> *<span style="color: green">**RP13**: Using `iris`. Does `Sepal.Lenght` differ between `setosa` and `versicolor`? Does `Sepal.Lenght` differe between `virginica`  and `versicolor`? Make a plot, define your hypotheses, test them. </span>* 
+
+```{r class.source = "fold-hide",  eval=F}
+set <- iris[iris$Species == "setosa", ]$Sepal.Length
+ver <- iris[iris$Species == "versicolor", ]$Sepal.Length
+vir <- iris[iris$Species == "virginica", ]$Sepal.Length
+
+setver <- t.test(set, ver, paired = FALSE, alternative = "two.sided", var.equal = FALSE)
+vervir <- t.test(ver, vir, paired = FALSE, alternative = "two.sided", var.equal = FALSE)
+```
+
+### Mann-Whitney and Wilcoxon tests
+
+A non-parametric solution for the comparison of two samples: Mann-Whitney U-test (independent) or Wilcoxon W-test (dependant)
+
+```{r class.source = "fold-show",  eval=T}
+# Normality plot & test
+students$height[6]<-132
+students$height[10]<-310
+students$height[8]<-132
+students$height[9]<-210
+boxplot(height~gender, students)
+qqnorm(students$height) 
+qqline(students$height) 
+shapiro.test(students$height) # data are not normal 
+wilcox.test (students$height~students$gender) 
+```
+
+### Variance tests
+
+Variance tests are used to determine if the variances of two (or more) populations are equal. F-test are generally very sensitive to the non-normality of the data as you can imagine from the previous `boxplot`. The **homoscedasticity** (or homogeneity of variance) is an important condition in parametric statistics.
+
+```{r Fligner test, eval=T}
+# Test of variance: we test HO: homogenous, H1:heterogenous
+fligner.test (students$height ~ students$gender)
+```
+
+Another example using the `ToothGrowth` dataset (`car` package) on multiple groups
+
+
+```{r ToothGrowth, eval=T}
+tg<-ToothGrowth
+tg$dose<-factor(tg$dose)
+boxplot(len~dose*supp, data=tg)
+# also work with: boxplot(len ~ interaction (dose,supp), data=tg)
+# or: plot(len ~ interaction (dose,supp), data=tg)
+bartlett.test(len~interaction (supp,dose),data=ToothGrowth) # sensitivity non-normality +++
+leveneTest(len~interaction (supp,dose),data=ToothGrowth) # sensitivity non-normality ++
+fligner.test(len~interaction (supp,dose),data=ToothGrowth) # sensitivity non-normality +
+```
+
+> *<span style="color: green">**RP14**: Going back on `rairuoho` dataset. Calculate the correlation between day 6 and day 7. Create your __own__ `my.t.test` function, that you will use to test the effect  of `treatment` on _length_  at various _days_. Interpret.</span>* 
+
+

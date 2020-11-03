@@ -1,7 +1,7 @@
 ---
 title: "Fun with R:  Ecological data analysis in R"
 author: "Vianney Denis"
-date: "2020/10/20"
+date: "2020/10/27"
 output:  
   "html_document":
    theme: united
@@ -26,7 +26,7 @@ Today, we will illustrate the use of loop and function by creating a function an
 
 A loop is use to repeat the same task a specific number of time. A loop (whatever its size) has always the same structure, basically as following:  
 
-`for` `(`counter in vector`)``{`task`}`
+`for` `(`counter in vector`){`task`}`
 
 This is `for` loop but `while` and `repeat` loops also exist.
 
@@ -67,7 +67,14 @@ foo.squared2<-foo^2
 plot (foo~foo.squared2)
 ```
 
-Functions in R are vectorized. It means when you applied them to a vector, they will apply to all the elements of this vector. You don't need to say you want top apply something to the first element of this vector, then repeat the same for the second element, etc. (what we did in our loop). A function will usually consider a vector as a block and will apply this task to all elements at once. So, why do we care about loops?
+Functions in R are vectorized. It means when you applied them to a vector, they will apply to all the elements of this vector. You don't need to say you want top apply something to the first element of this vector, then repeat the same for the second element, etc. (what we did in our loop). IN addition, vectrized functions are way faster than making loops. Compare the following with time you need when making a loop:
+
+```{r,  eval=FALSE}
+system.time(
+foo.squared2<-foo^2)
+```
+
+A function will usually consider a vector as a block and will apply this task to all elements at once. So, why do we care about loops?
 
 Simply saying, a loop will have a use when you try to recycle an element and when the task will change form the previous one by being enriched by a new element.
 
@@ -221,8 +228,38 @@ $$N_{t+1}= N_{t}+\left[growth.rate* N_{t}*\left(\frac{100-N_{t}}{100}\right)\rig
 
 ```{r class.source = "fold-hide",  eval=F}
 # Too easy! This time, no solution. However if you click here you are ready for the next step. See below for the population growth of two species interacting
+
+# Solution below
+grow <- function (growth.rate, num_gen) {
+  N <- rep (0,num_gen)
+  generation=rep(0,num_gen)
+  generation[1]=1
+  N[1] <- 10
+  for (i in 2:num_gen) {
+    N[i]= N[i-1]+(growth.rate * N[i-1] * ((100-
+                                             N[i-1])/100))
+    generation [i]=i
+  }
+  plot(N~generation, type='l',lwd=3, ylim=c(1,150))
+}
+grow (0.1,50)
+grow (0.5,50)
+grow (1.3,50)
+grow (2.52,50)
+grow (3,50)
+
+#
+saveGIF({
+  a<-seq(0.1,3.0, 0.05)
+  for (i in 1:length(a)){
+  grow(a[i],50)
+  }
+}, interval = 0.1, ani.width = 950, ani.height = 550)
 ```
 
+*<span style="color: green">Explanation:</span>*
+
+![](Figures/Demo_logi.png)
 
 --------------
 
@@ -278,10 +315,8 @@ text(4,110,"Species 2 alone")
 
 grow(1,2)
 text(6,110,"Both Species competing")
-
-
 ```
 
 
-
+More reading on loops in free online class available [here](https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r)
 
