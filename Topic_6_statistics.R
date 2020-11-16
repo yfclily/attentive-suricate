@@ -1,4 +1,4 @@
-# Topic 5: Statistics
+# Topic 6: Statistics
 
 library (psych)
 library(ggplot2)
