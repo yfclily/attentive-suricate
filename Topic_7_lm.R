@@ -1,12 +1,8 @@
 # Topic 7: Linear Models
 
-library(psych)
-library(agricolae)
-library (multcomp)
-library(pgirmess) 
 library(Hmisc)
 library(corrplot)
-library(car)
+library(MASS)
 
 rm(list=ls()) # clean all objects in memory
 

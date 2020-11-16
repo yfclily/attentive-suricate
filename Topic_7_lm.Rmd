@@ -17,12 +17,9 @@ output:
 # Topic - Linear Models
 
 ```{r,  eval=T, warning=F, message=F}
-library(psych)
-library(agricolae)
-library (multcomp)
-library(pgirmess) 
 library(Hmisc)
 library(corrplot)
+library(MASS)
 library(car)
 ```
 
