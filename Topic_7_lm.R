@@ -3,6 +3,7 @@
 library(Hmisc)
 library(corrplot)
 library(MASS)
+library(car)
 
 rm(list=ls()) # clean all objects in memory
 
