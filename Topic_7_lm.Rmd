@@ -66,12 +66,12 @@ Once, we built a statistically significant model, it’s possible to use it for 
 
 ### Formula and basics
 
-The mathematical formula of the linear regression can be written as $$ y = \beta0 + \beta1*x + \epsilon $$
+The mathematical formula of the linear regression can be written as $$ y = \beta_0 + \beta_1*x + \epsilon $$
 
 where:
 
-+ $\beta0$ and $\beta1$ are known as the regression __beta coefficients__ or __parameters__:
-  + $\beta0$ is the __intercept__ of the regression line; that is the predicted value when _x = 0_.
++ $\beta_0$ and $\beta_1$ are known as the regression __beta coefficients__ or __parameters__:
+  + $\beta_0$ is the __intercept__ of the regression line; that is the predicted value when _x = 0_.
   + $\beta1$ is the __slope__ of the regression line.
   
 + $\epsilon$ is the __error term__ (also known as the __residual errors__), the part of y that can be explained by the regression model
@@ -79,7 +79,7 @@ where:
 The figure below illustrates the linear regression model, where:
 
 + the best-fit regression line is in blue
-+ the intercept ($\beta0$) and the slope ($\beta1$) are shown in green
++ the intercept ($\beta_0$) and the slope ($\beta_1$) are shown in green
 + the error terms ($\epsilon$) are represented by vertical red lines
 
 ![](Figures/linear-regression.png)
@@ -92,9 +92,9 @@ The average variation of points around the fitted regression line is called the 
 
 Since the mean error term is zero, the outcome variable y can be approximately estimated as follow:
 
-$$y= \beta0+\beta1*x$$
+$$y= \beta_0+\beta_1*x$$
 
-Mathematically, the beta coefficients ($\beta0$ and $\beta1$) are determined so that the RSS is as minimal as possible. This method of determining the beta coefficients is technically called __least squares__ regression or __ordinary least squares__ (OLS) regression.
+Mathematically, the beta coefficients ($\beta_0$ and $\beta_1$) are determined so that the RSS is as minimal as possible. This method of determining the beta coefficients is technically called __least squares__ regression or __ordinary least squares__ (OLS) regression.
 
 Once, the beta coefficients are calculated, a t-test is performed to check whether or not these coefficients are significantly different from zero. A non-zero beta coefficients means that there is a significant relationship between the predictors ($x$) and the outcome variable ($y$).
 
@@ -102,7 +102,7 @@ Once, the beta coefficients are calculated, a t-test is performed to check wheth
 
 The simple linear regression tries to find the best line to predict $y$ on the basis of $x$.
 
-In our `iris` data set, a linear model equation can be written as follow: $Petal.Width = b0 + b1 * Petal.Length$
+In our `iris` data set, a linear model equation can be written as follow: $Petal.Width = \beta_0 + \beta_1 * Petal.Length$
 
 The R function `lm` can be used to determine the beta coefficients of the linear model:
 
@@ -110,7 +110,7 @@ The R function `lm` can be used to determine the beta coefficients of the linear
 model1 <- lm(Petal.Width ~ Petal.Length, data = iris)
 model1
 ```
-The results show the intercept and the beta coefficient for the `Petal.Length` variable
+The results show the intercept ($\beta_0$) and the slope ($\beta_1$), i.e. the  beta coefficients for the `Petal.Length` variable
 
 ```{r,  eval=T, warning=F, message=F}
 ggplot(iris, aes(x = Petal.Length, y = Petal.Width)) +
@@ -124,10 +124,10 @@ From the output above:
 
 + the estimated regression line equation can be written as follow: $Petal.Width = -0.3631 + 0.4158*Petal.Length$
 
-+ the intercept ($\beta0$) is $-0.3631$. It can be interpreted as the predicted width of petal for a length of petal equal to zero. Regression through the origin is when you force the intercept of a regression model to equal zero. It’s also known as fitting a model without an intercept (e.g., the intercept-free linear model $y = \beta1*x$ is equivalent to the model $y = \beta0 + \beta1*x$ with $\beta0=0$). Knowing that the true relationship between your predictors and the expected value of your dependent variable has to pass through the origin would be a good reason for forcing the estimated relationship through the origin if you knew for certain what the true relationship was (very rare cases wher it is justfied).
++ the intercept ($\beta_0$) is $-0.3631$. It can be interpreted as the predicted width of petal for a length of petal equal to zero. Regression through the origin is when you force the intercept of a regression model to equal zero. It’s also known as fitting a model without an intercept (e.g., the intercept-free linear model $y = \beta_1*x$ is equivalent to the model $y = \beta_0 + \beta_1*x$ with $\beta_0=0$). Knowing that the true relationship between your predictors and the expected value of your dependent variable has to pass through the origin would be a good reason for forcing the estimated relationship through the origin if you knew for certain what the true relationship was (very rare cases where it is justified).
 
 
-+ the regression beta coefficient for the variable Petal.Length (\beta1), also known as the slope, is $0.4158$. This means that, for a given $Petal.Length$, we can expect an increase of $0.4158$ units in $Petal.Width$. 
++ the regression beta coefficient for the variable `Petal.Length` ($\beta1$), also known as the slope, is $0.4158$. This means that, for one unit of $Petal.Length$, we can expect an increase of $0.4158$ units in $Petal.Width$. 
 
 ### Model assessment
 
@@ -145,9 +145,9 @@ summary(model1)
 
 The summary outputs shows 6 components, including:
 
-+ **Call** Shows the function call used to compute the regression model.
-+ **Residuals** Provide a quick view of the distribution of the residuals, which by definition have a mean zero. Therefore, the median should not be far from zero, and the minimum and maximum should be roughly equal in absolute value.
-+ **Coefficients** Shows the regression beta coefficients and their statistical significance. Predictor variables, that are significantly associated to the outcome variable, are marked by stars.
++ **Call** shows the function call used to compute the regression model.
++ **Residuals** provide a quick view of the distribution of the residuals, which by definition have a mean zero. Therefore, the median should not be far from zero, and the minimum and maximum should be roughly equal in absolute value.
++ **Coefficients** shows the regression beta coefficients and their statistical significance. Predictor variables, that are significantly associated to the outcome variable, are marked by stars.
 + **Residual standard error** (RSE), **R-squared** (R2) and the **F-statistic** are metrics that are used to check how well the model fits to our data.
 
 #### Coefficients significance
@@ -165,10 +165,10 @@ For a given predictor, the t-statistic (and its associated p-value) tests whethe
 
 The statistical hypotheses are as follow:
 
-+ Null hypothesis (H0): the coefficients are equal to zero (i.e., no relationship between x and y)
-+ Alternative Hypothesis (Ha): the coefficients are not equal to zero (i.e., there is some relationship between $x$ and $y$)
++ Null hypothesis (H~0~): the coefficients are equal to zero (i.e., no relationship between x and y)
++ Alternative Hypothesis (H~1~): the coefficients are not equal to zero (i.e., there is some relationship between $x$ and $y$)
 
-Mathematically, for a given beta coefficient ($\beta$), the t-test is computed as $t = (\beta - 0)/SE(\beta)$, where $SE(\beta)$ is the $\beta$ of the coefficient b. The t-statistic measures the number of standard deviations that b is away from 0. Thus a large t-statistic will produce a small p-value.
+Mathematically (no need to remember), for a given beta coefficient ($\beta$), the t-test is computed as $t = (\beta - 0)/SE(\beta)$, where $SE(\beta)$ is the $\beta$ of the coefficient b. The t-statistic measures the number of standard deviations that $\beta$ is away from 0. Thus a large t-statistic will produce a small p-value.
 
 The higher the t-statistic (and the lower the p-value), the more significant the predictor. The symbols to the right visually specifies the level of significance. The line below the table shows the definition of these symbols; one star means 0.01 < p < 0.05. The more the stars beside the variable’s p-value, the more significant the variable.
 
@@ -182,7 +182,7 @@ The standard error measures the variability/accuracy of the beta coefficients. I
 
 For example, the 95% confidence interval for the coefficient $\beta1$ is defined as $\beta1 +/- 2*SE(\beta1)$, where:
 
-the lower limits of $\beta1 = \beta1 - 2*SE(\beta1) = 0.415 - 2*0.009 = 0.397$
+the lower limits of $\beta_1 = \beta_1 - 2*SE(\beta_1) = 0.415 - 2*0.009 = 0.397$
 
 the upper limits of $\beta1 = \beta1 + 2*SE(\beta1) = 0.415 - 2*0.009 = 0.435$
 
@@ -203,15 +203,15 @@ The overall quality of the linear regression fit can be assessed using the follo
 
 1. **The Residual Standard Error (RSE)**
 
-The RSE (also known as the model sigma) is the residual variation, representing the average variation of the observations points around the fitted regression line. This is the standard deviation of residual errors.
+The **RSE** (also known as the model sigma) is the **residual variation**, representing the average variation of the observations points around the fitted regression line. This is the **standard deviation of residual errors**.
 
-RSE provides an absolute measure of patterns in the data that can’t be explained by the model. When comparing two models, the model with the small RSE is a good indication that this model fits the best the data.
+RSE provides an absolute measure of patterns in the **data that can’t be explained by the model**. When comparing two models, the model with the small RSE is a good indication that this model fits the best the data.
 
 Dividing the RSE by the average value of the outcome variable will give you the prediction error rate, which should be as small as possible.
 
-In our example, RSE = 0.2065, meaning that the observed Petal.width values deviate from the true regression line by approximately 0.2065 units in average.
+In our example, RSE = `0.2065`, meaning that the observed Petal.width values deviate from the true regression line by approximately `0.2065` units in average.
 
-Whether or not an RSE of 0.2065 units is an acceptable prediction error is subjective and depends on the problem context. However, we can calculate the percentage error. In our data set, the mean value of Petal.Width is 1.1993, and so the percentage error is 0.2065/1.1993 = 17%.
+Whether or not an RSE of `0.2065` units is an acceptable prediction error is subjective and depends on the problem context. However, we can calculate the percentage error. In our data set, the mean value of Petal.Width is 1.1993, and so the percentage error is 0.2065/1.1993 = 17%.
 
 ```{r,  eval=T, warning=F, message=F}
 sigma(model1)*100/mean(iris$Petal.Width)
@@ -219,11 +219,11 @@ sigma(model1)*100/mean(iris$Petal.Width)
 
 2. **The R-squared ($R^2$)**
 
-The R-squared $R^2$ ranges from 0 to 1 and represents the proportion of information (i.e. variation) in the data that can be explained by the model. The adjusted R-squared adjusts for the degrees of freedom.
+The **R-squared** $R^2$ ranges from 0 to 1 and represents the **proportion of information (i.e. variation) in the data that can be explained by the model**. The **adjusted R-squared adjusts for the degrees of freedom**.
 
-The $R^2$ measures, how well the model fits the data. For a simple linear regression, $R^2$ is the square of the Pearson correlation coefficient.
+The $R^2$ measures, how well the model fits the data. For a simple linear regression, $R^2$ is the square of the **Pearson correlation coefficient**.
 
-A high value of R2 is a good indication. However, as the value of $R^2$ tends to increase when more predictors are added in the model, such as in multiple linear regression model, you should mainly consider the adjusted R-squared, which is a penalized $R^2$ for a higher number of predictors.
+A high value of R2 is a good indication. However, as the value of $R^2$ tends to increase when more predictors are added in the model, such as **in multiple linear regression model, you should mainly consider the adjusted R-squared**, which is a penalized $R^2$ for a higher number of predictors.
 
 + An (adjusted) $R^2$ that is close to 1 indicates that a large proportion of the variability in the outcome has been explained by the regression model.
 
@@ -231,17 +231,17 @@ A high value of R2 is a good indication. However, as the value of $R^2$ tends to
 
 3. **F-statistic**
 
-The F-statistic gives the overall significance of the model. It assess whether at least one predictor variable has a non-zero coefficient.
+The **F-statistic** gives the overall significance of the model. It assess whether **at least one predictor variable has a non-zero coefficient**.
 
 In a simple linear regression, this test is not really interesting since it just duplicates the information in given by the t-test, available in the coefficient table. In fact, the F test is identical to the square of the t-test: $1882 = (43.387)^2$. This is true in any model with 1 degree of freedom.
 
-The F-statistic becomes more important once we start using multiple predictors as in multiple linear regression.
+The F-statistic becomes **more important** once we start **using multiple predictors** as in multiple linear regression.
 
 A large F-statistic will corresponds to a statistically significant p-value (p < 0.05). In our example, the F-statistic equal 1882 producing a p-value of < 2.2e-16, which is highly significant.
 
 ## Multiple linear regression
 
-**Multiple linear regression** is just an extension of simple linear regression used to predict an outcome variable ($y$) on the basis of multiple distinct predictor variables ($x$).
+**Multiple linear regression** is just an **extension of simple linear regression** used to predict an outcome variable ($y$) on the basis of multiple distinct predictor variables ($x$).
 
 With three predictor variables ($x$), the prediction of $y$ is expressed by the following equation:
 
@@ -251,7 +251,7 @@ The “$\beta$” values are called the regression weights (or beta coefficients
 
 ### Building our model
 
-We want to build a model for estimating Petal.Width based on data we get on Petal.Length, Sepal.Length, and Sepal.Width. 
+We want to build a model for estimating `Petal.Width` based on data we get on `Petal.Length`, `Sepal.Length`, and `Sepal.Width`. 
 
 
 $$Petal.Width = \beta_0 + \beta_1*Petal.Length + \beta_2*Sepal.Length + \beta_3*Sepal.Width$$
@@ -265,7 +265,7 @@ summary(model2)
 
 ### Interpretation
 
-The first step in interpreting the multiple regression analysis is to examine the F-statistic and the associated p-value, at the bottom of model summary.
+The first step in interpreting the multiple regression analysis is to examine the F-statistic and the associated p-value, at the bottom of the model summary.
 
 In our example, it can be seen that p-value of the F-statistic is `p-value: < 2.2e-16`, which is highly significant. This means that, at least, one of the predictor variables is significantly related to the outcome variable.
 
@@ -277,12 +277,11 @@ summary(model2)$coefficient
 
 For a given  predictor, the t-statistic evaluates whether or not there is significant association between this predictor and the outcome variable, that is whether the beta coefficient of the predictor is significantly different from zero.
 
-It can be seen that, changes in `Petal.Length`,  `Sepal.Width` and `Sepal.Length`  are significantly associated to changes in `Petal.Width`. For a given predictor variable, the coefficient ($\beta$) can be interpreted as the average effect on $y$ of a one unit increase in predictor, holding all other predictors fixed.
+It can be seen that, changes in `Petal.Length`,  `Sepal.Width` and `Sepal.Length`  are all significantly associated to changes in `Petal.Width`. For a given predictor variable, the coefficient ($\beta$) can be interpreted as the average effect on $y$ of a one unit increase in predictor, holding all other predictors fixed.
 
-For example, for a fixed values of `Sepal.Width` and `Sepal.Length`, and increase of one unit of `Petal.Length` increase `Petal.Width` of 0.52408 unit, on average (vs. 0.415755 unit in our example using a simple linear regression)
+For example, for a fixed values of `Sepal.Width` and `Sepal.Length`, and increase of one unit of `Petal.Length` increase `Petal.Width` of `0.52408` unit on average (vs. `0.415755` unit in our example using a simple linear regression)
 
-
-If a predictor was not significant in our multiple regression model, it means that its change will not significantly affect `Petal.Width`. Therefore, it is possible to remove it from the model. The selection can be done forward or backward.
+If a predictor was not significant in our multiple regression model, it means that its change will not significantly affect `Petal.Width`. Therefore, it is possible to remove it from the model. The selection can be done **forward** or **backward**.
 
 As we saw earlier, the confidence interval of the model coefficient can be extracted as follow:  
 
@@ -294,10 +293,9 @@ confint(model2)
 
 As we have seen in simple linear regression, the overall quality of the model can be assessed by examining the R-squared ($R^2$) and Residual Standard Error (RSE).
 
-
 1. **The R-squared ($R^2$)**
 
-In multiple linear regression, the $R$ represents the correlation coefficient between the observed values of the outcome variable ($y$) and the fitted (i.e., predicted) values of $y$. For this reason, the value of R will always be positive and will range from zero to one.
+In multiple linear regression, the $R$ represents the correlation coefficient between the observed values of the outcome variable ($y$) and the fitted (i.e., predicted) values of $y$. For this reason, the value of $R$ will always be positive and will range from zero to one.
 
 $R^2$ represents the proportion of variance, in the outcome variable y, that may be predicted by knowing the value of the $x$ variables. An $R^2$ value close to 1 indicates that the model explains a large portion of the variance in the outcome variable.
 
@@ -307,7 +305,7 @@ The adjustment in the “Adjusted R-Squared” value in the summary output is a 
 
 2. **The Residual Standard Error (RSE).**
 
-As mentioned ealier, the RSE estimate gives a measure of error of prediction. The lower the RSE, the more accurate the model (on the data in hand).
+As mentioned earlier, the RSE estimate gives a measure of error of prediction. The lower the RSE, the more accurate the model (on the data in hand).
 
 The error rate can be estimated by dividing the RSE by the mean outcome variable:
 
@@ -315,7 +313,7 @@ The error rate can be estimated by dividing the RSE by the mean outcome variable
 sigma(model2)/mean(iris$Petal.Width)
 ```
 
-Which only slightly increase our prediction in comparison with using a single predictor, the 'Petal.Length` (16 vs 17 %). A parcimonial choice may be to retain a fewer single predictors if the information they bring is not important enough in our prediction.
+Which only slightly increase our prediction in comparison with using a single predictor, the 'Petal.Length` (16 vs 17 %). A parcimonial choice may be to retain  fewer  predictors if the information they bring is not important enough in our prediction.
 
 ### Model selection 
 
@@ -339,12 +337,12 @@ model5 <-  update(model2,  ~. -Sepal.Length)
 
 **Information Criteria: AIC/BIC **
 
- An information criterion balances the fitness of a model with the number of predictors employed. Hence, it determines objectively the best model as the one that minimizes the information criterion. Two common criteria are the Bayesian Information Criterion (BIC) and the Akaike Information Criterion (AIC). Both are based on a **balance between the model fitness and its complexity**:
+ An information criterion balances the fitness of a model with the number of predictors employed. Hence, it determines objectively the best model as the one that minimizes the information criterion. Two common criteria are the **Bayesian Information Criterion (BIC)** and the **Akaike Information Criterion (AIC)**. Both are based on a **balance between the model fitness and its complexity**:
 
-$BIC(model)=-2*loglik(model) + npar(model) * log(n)$
+$BIC(model)=-2*logLik(model) + npar(model) * log(n)$
 
-where $lik(model)$  is the likelihood of the model (how well the model fits the data) and $npar(model)$ is the number of parameters of the model, $k+2$ in the case of a multiple linear regression model with $k$ predictors.The AIC replaces $log(n)$
-by $2$, so it penalizes less complexer models. This is one of the reasons why BIC is preferred by some practitioners for model comparison. Also, because is consistent in selecting the true model: if enough data is provided, the BIC is guaranteed to select the data-generating model among a list of candidate models.
+where $Lik(model)$  is the likelihood of the model (how well the model fits the data) and $npar(model)$ is the number of parameters of the model, $k+2$ in the case of a multiple linear regression model with $k$ predictors.The AIC replaces $log(n)$
+by $2$, so it penalizes less complex models. This is one of the reasons why BIC is preferred by some practitioners for model comparison. Also, because is consistent in selecting the true model: if enough data is provided, the BIC is guaranteed to select the data-generating model among a list of candidate models.
 
 Both BIC and AIC can be computed in `R` through the functions `BIC` and `AIC`. They take a model as the input. The lower the better with a rule of thumb = 2 
 
@@ -358,12 +356,12 @@ Let’s go back to the selection of predictors. If we have $k$  predictors, a na
 
 ```{r,  eval=T, warning=F, message=F}
 #Stepwise Selection based on AIC
-step <- stepAIC(model3, direction='both')
+step <- stepAIC(model3, direction='backward')
 summary(step)
 
 #Stepwise Selection with BIC
 n = dim(iris[,1:4])[1]
-stepBIC = stepAIC(model3,k=log(n))
+stepBIC = stepAIC(model3,k=log(n), direction='backward')
 summary(stepBIC)
 ```
 
@@ -442,18 +440,18 @@ p.val<-rcorr(as.matrix(rairuoho[,1:3]))$P
 corrplot(corr,type='upper',method='color', addCoef.col = "black", p.mat=as.matrix(p.val), sig.level = 0.05,diag=F)
 ```
 
-Here we can see what we already knew that Sepal.Length and Petal.Length are highly linearly related. One could be removed. However, is not enough to inspect pair by pair correlations in order to get rid of multicollinearity.A better approach is to compute the Variance **Inflation Factor** (VIF) of each coefficient $\beta_j$. This is measure of how linearly dependent is $X_j$ with the rest of predictors:
+Here we can see what we already knew that `Sepal.Length` and `Petal.Length` are highly linearly related. One could be removed. However, it is not enough to inspect pair by pair correlations in order to get rid of multicollinearity.A better approach is to compute the **Variance Inflation Factor** (VIF) of each coefficient $\beta_j$. This is measure of how linearly dependent is $X_j$ with the rest of predictors:
 
 
 $$\text{VIF}(\beta_j)=\frac{1}{1-R^2_{X_j|X_{-j}}}$$
 
 where $R^2_{X_j|X_{-j}}$ is the $R^2$ from a regression of $X_j$ into the remaining predictors. The next rule of thumb gives direct insight into which predictors are multicollinear:
 
-> + VIF close to 1: absence of multicollinearity.
-> + **VIF larger than 5 or 10: problematic amount of multicollinearity**. Advised to remove the predictor with largest VIF.
+ + **VIF close to 1**: absence of multicollinearity.
+ + **VIF larger than 5 or 10**: multicolinearity **problematic**.  Advised to remove the predictor with largest VIF.
 
 
-VIF is called by `vif` and takes as argument a linear model
+VIF is called by function `vif` and takes as an argument a linear model
 
 ```{r,  eval=T, warning=F, message=F}
 vif(model3)
