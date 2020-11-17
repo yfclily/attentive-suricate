@@ -33,7 +33,7 @@ sigma(model1)*100/mean(iris$Petal.Width)
 
 ## Multiple linear regression
 ### Computation
-model2 <- lm(Petal.Width ~ Petal.Length + Sepal.Width + Sepal.Length + Petal.Width , data = iris)
+model2 <- lm(Petal.Width ~ Petal.Length + Sepal.Width + Sepal.Length, data = iris)
 summary(model2)
 summary(model2)$coefficient
 confint(model2)

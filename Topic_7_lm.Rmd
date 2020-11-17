@@ -74,7 +74,7 @@ where:
   + $\beta_0$ is the __intercept__ of the regression line; that is the predicted value when _x = 0_.
   + $\beta1$ is the __slope__ of the regression line.
   
-+ $\epsilon$ is the __error term__ (also known as the __residual errors__), the part of y that can be explained by the regression model
++ $\epsilon$ is the __error term__ (also known as the __residual errors__)
 
 The figure below illustrates the linear regression model, where:
 
@@ -259,7 +259,7 @@ You can compute the model in R as follow:
 
 
 ```{r,  eval=T, warning=F, message=F}
-model2 <- lm(Petal.Width ~ Petal.Length + Sepal.Width + Sepal.Length + Petal.Width , data = iris)
+model2 <- lm(Petal.Width ~ Petal.Length + Sepal.Width + Sepal.Length, data = iris)
 summary(model2)
 ```
 
