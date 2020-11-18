@@ -26,7 +26,9 @@ model1 <- lm(Petal.Width ~ Petal.Length, data = iris)
 model1
 ggplot(iris, aes(x = Petal.Length, y = Petal.Width)) +
   geom_point() +
-  stat_smooth(method = "lm", col = "blue")
+  stat_smooth(method = "lm", col = "blue")+
+  xlim(0,7)+
+  ylim(-1,3)
 summary(model1)
 confint(model1)
 sigma(model1)*100/mean(iris$Petal.Width)

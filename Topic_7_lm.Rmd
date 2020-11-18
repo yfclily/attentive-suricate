@@ -16,6 +16,8 @@ output:
 
 # Topic - Linear Models
 
+# Mistake in ~ . in model3 and fwd 
+
 ```{r,  eval=T, warning=F, message=F}
 library(Hmisc)
 library(corrplot)
@@ -168,7 +170,7 @@ The statistical hypotheses are as follow:
 + Null hypothesis (H~0~): the coefficients are equal to zero (i.e., no relationship between x and y)
 + Alternative Hypothesis (H~1~): the coefficients are not equal to zero (i.e., there is some relationship between $x$ and $y$)
 
-Mathematically (no need to remember), for a given beta coefficient ($\beta$), the t-test is computed as $t = (\beta - 0)/SE(\beta)$, where $SE(\beta)$ is the $\beta$ of the coefficient b. The t-statistic measures the number of standard deviations that $\beta$ is away from 0. Thus a large t-statistic will produce a small p-value.
+Mathematically (no need to remember), for a given beta coefficient ($\beta$), the t-test is computed as $t = (\beta - 0)/SE(\beta)$, where $SE(\beta)$ is the SE of the coefficient $\beta$. The t-statistic measures the number of standard deviations that $\beta$ is away from 0. Thus a large t-statistic will produce a small p-value.
 
 The higher the t-statistic (and the lower the p-value), the more significant the predictor. The symbols to the right visually specifies the level of significance. The line below the table shows the definition of these symbols; one star means 0.01 < p < 0.05. The more the stars beside the variable’s p-value, the more significant the variable.
 
@@ -349,6 +351,7 @@ Both BIC and AIC can be computed in `R` through the functions `BIC` and `AIC`. T
 
 ```{r,  eval=T, warning=F, message=F}
 BIC(model3); BIC(model4);BIC(model5)
+model3 <- lm(Petal.Width ~., data = iris[,1:4])
 AIC(model3); AIC(model4);AIC(model5)
 ```
 
