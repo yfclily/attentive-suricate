@@ -22,6 +22,11 @@ library(corrplot)
 library(MASS)
 library(car)
 library(interactions)
+library(yarrr)
+library(tidyr)
+library(readr)
+library(lme4)
+library (lmerTest)
 ```
 
 
@@ -473,12 +478,12 @@ James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. An In
 
 ## Anova models
 
-Confused when hearing the terms linear regression, linear model, and ANOVA? Let’s put an end to this: they’re all fundamentally the same thing!
+Difference between linear regression, linear model, and ANOVA? Fundamentally, they’re all fundamentally the same thing!
 
-Linear regression and linear model are complete synonyms, and we usually use these terms when we’re quantifying the effect of a **continuous** explanatory variable on a **continuous** response variable: what is the change in `Y` for a 1 unit change in `X`? We  did this for the `iris` data: what is the `Petal.width` increase when `Sepal.Length` and `Sepal.width` increase?
+Linear regression and linear model are complete synonyms, and we usually use these terms when we’re quantifying the effect of a **continuous** explanatory variable on a **continuous** response variable: the change in $Y$ for a 1 unit change in $X$? We  did this using the `iris` data set: what is the increase of $Petal.width$ when $Sepal.Length$ and $Sepal.width$ increase?
 
 
-Now enters the ANOVA, which stands for Analysis of Variance. We usually talk about an ANOVA when we’re quantifying the effect of a **discrete**, or **categorical** explanatory variable on a **continuous** response variable. We just did with the apples: how does the mean yield vary depending on the spacing category? It is also a linear model, but instead of getting a slope that allows us to predict the yield for any value of spacing, we get an estimate of the yield for each category.
+Now arrives the **ANOVA**, which stands for **Analysis of Variance**. We usually talk about an ANOVA when we’re quantifying the effect of a **discrete**, or **categorical** explanatory variable on a **continuous** response variable. How does the mean $Petal.Width$ vary depending on the iris $Species$ category? It is also a linear model, but instead of getting a slope that allows us to predict the $Petal.width$ for any value of $Sepal.Length$ or $Sepal.width$, we get an estimate of the $Petal.width$ for each $Species$.
 
 ANOVA is a linear regression. You can run the `anova` function on a linear model object and see how you get the same p-value.
 
@@ -489,15 +494,14 @@ summary(iris.lm)
 anova(iris.lm)
 ```
 
-When do you conduct an ANOVA? You conduct an ANOVA when you are testing the effect of one or more nominal (aka **factor**) **independent** variable(s) on a numerical **dependent** variable. A nominal (factor) variable is one that contains a finite number of categories with no inherent order.
+An ANOVA tests the effect of one or more nominal (aka **factor**) **independent** variable(s) on a numerical **dependent** variable. A nominal (factor) variable is one that contains a finite number of categories with no inherent order.
 
-If you only include one independent variable, this is called a **One-way ANOVA**. If you include two independent variables, this is called a **Two-way ANOVA**. If you include three independent variables, etc. 
+If you only include one independent variable, this is called a **One-way ANOVA**. If you include two independent variables, this is called a **Two-way ANOVA**. If you include three independent variables, this is called (...), etc. 
 
+The `poopdeck` data set (package `yarrrr`, Phillips 2018) is a dataframe containing the amount of time it took to clean both `parrot` and `shark` poop from the deck of a boat using three different cleaning agents `a`, `b`, `c`. That's daily measurement.
 
-`poopdeck` dataset: a dataframe containing the amount of time it took to clean both `parrot` and `shark` poop from the deck using three different cleaning solutions `a`, `b`, `c - Package `yarrr`,  Phillips (2018). 
 
 ```{r,  eval=T, warning=F, message=F}
-library(yarrr)
 pirateplot(formula = time ~ cleaner + type,
            data = poopdeck,
            ylim = c(0, 150),
@@ -513,30 +517,30 @@ Using those data, we can use ANOVA to answer four separate questions:
 
 Question|Analysis|Formula
 --------|--------|-------
-Is there a difference between the different cleaners on cleaning time (ignoring poop type)?|One way ANOVA|`time ~ cleaner`
-Is there a difference between the different poop types on cleaning time (ignoring which cleaner is used)|One-way ANOVA|`time ~ type`
-Is there a *unique* effect of the cleaner or poop types on cleaning time?|Two-way ANOVA|`time ~ cleaner + type`
-Does the effect of cleaner depend on the poop type?|Two-way ANOVA with *interaction* term|`time ~ cleaner * type`
+Is there a difference between the different cleaning agents on the cleaning time (ignoring poop type)?|One way ANOVA|`time ~ cleaner`
+Is there a difference between the different poop types on cleaning time (ignoring which cleaning agent is used)|One-way ANOVA|`time ~ type`
+Is there a *unique* effect of the cleaning agent or poop types on cleaning time?|Two-way ANOVA|`time ~ cleaner + type`
+Does the effect of cleaning agent depend on the poop type?|Two-way ANOVA with *interaction* term|`time ~ cleaner * type`
 
 
 ### Full-factorial between-subjects ANOVA
 
 There are many types of ANOVAs that depend on the type of data you are analyzing. In fact, there are so many types of ANOVAs that there are entire books explaining differences between one type and another.
-Here, we’ll cover just one type of ANOVAs called *full-factorial, between-subjects ANOVAs*. These are the simplest types of ANOVAs which are used to analyze a standard experimental design. In a full-factorial, between-subjects ANOVA, participants (aka, source of data) are randomly assigned to a unique combination of factors – where a combination of factors means a specific experimental condition. In the `poopdeck` dataset, 2 species and 3 cleaning solution give us 2 x 3 blocks with observations. This full-factorial between-subjects ANOVAs are the 'standard' ANOVAs.
+Here, we’ll cover just one type of ANOVAs called **full-factorial, between-subjects ANOVAs**. These are the simplest types of ANOVAs (and easiest to explain) which are used to analyze a standard experimental design. In a full-factorial, between-subjects ANOVA, observations (data) are  assigned to a unique combination of factors – where a combination of factors means a specific experimental condition. In the `poopdeck` dataset, 2 species and 3 cleaning agents give us 2 x 3 blocks with observations. This full-factorial between-subjects ANOVAs are the **standard** ANOVAs.
  
-**How does it work**
+**Concepts**
 
-As we mentioned, ANOVA stands for “Analysis of variance.” At first glance, this sounds like a strange name to give to a test that you use to find differences in **means**, not differences in **variances**. However, ANOVA actually uses variances to determine whether or not there are ‘real’ differences in the means of groups. Specifically, it looks at how variable data are within groups and compares that to the variability of data between groups. If the *between*-group variance is large compared to the *within* group variance, the ANOVA will conclude that the groups do differ in their means. If the between-group variance is small compared to the within group variance, the ANOVA will conclude that the groups are all the same. 
+As we mentioned, ANOVA stands for analysis of **variance**. It may sound like a strange name to give to a test that you use to find differences in **means**, not differences in **variances**. However, ANOVA actually uses variances to determine whether or not there are real differences in the means of groups. Specifically, it looks at how variable data are within groups and compares that to the variability of data between groups. If the **between-group variance** is large compared to the **within-group variance**, the ANOVA will conclude that the groups **differ** in their means. If the **between-group variance** is small compared to the **within-group variance**, the ANOVA will conclude that the groups are all the **same**. 
 
 ![](Figures/ns-anova.png)
 
-*How ANOVAs work. ANOVA compares the variability between groups (i.e.; the differences in the group means) to the variability within groups (i.e.; how much individuals generally differ from each other). If the variability between groups is small compared to the variability between groups, ANOVA will return a non-significant result – suggesting that the groups are not really different. If the variability between groups is large compared to the variability within groups, ANOVA will return a significant result – indicating that the groups are really different.*
+*ANOVA compares the variability between groups (i.e.; the differences in the group means) to the variability within groups (i.e.; how much individuals generally differ from each other). If the variability between groups is small compared to the variability between groups, ANOVA will return a non-significant result – suggesting that the groups are not really different. If the variability between groups is large compared to the variability within groups, ANOVA will return a significant result – indicating that the groups are really different.*
 
 ### ANOVA in 4 steps
 
 A standard ANOVA can be summarized in 4 steps:
 
-1. Create an ANOVA object using the `aov` function. In the `aov` function, specify the independent and dependent variable(s) with a formula with the format `y ~ x1 + x2` where y is the dependent variable, and x1, x2 … are one (more more) factor independent variables. The function `aov` combines a `lm` and `anova` functions together. 
+1. Create an ANOVA object using the `aov` function. In the `aov` function, specify the independent and dependent variable(s) with a formula with the format `y ~ x1 + x2` where y is the dependent variable, and x1, x2 … are one (more more) factor independent variables. The function `aov` combines `lm` and `anova` functions together. 
 
 ```{r,  eval=F, warning=F, message=F}
 # Step 1: Create an aov object
@@ -567,7 +571,7 @@ summary(mod.lm)
 
 ### One-way ANOVA
 
-We’ll set cleaning `time` as the dependent variable and the `cleaner` type  as the independent variable. We can represent the data as follow:
+We’ll set cleaning `time` as the dependent variable and the `cleaner` agent type  as the independent variable. We can represent the data as follow, which help at examining the group we are comparing:
 
 ```{r,  eval=T, warning=F, message=F}
 pirateplot(time ~ cleaner, 
@@ -577,25 +581,25 @@ pirateplot(time ~ cleaner,
                   main = "formula = time ~ cleaner")
 ```
 
-From the plot, it looks like cleaners a and b are the same, and cleaner c is a bit faster. To test this, we’ll create an ANOVA object with `aov`. Because time is the dependent variable and cleaner is the independent variable, we’ll set the formula to `formula = time ~ cleaner`
+Just from the plot, it is obvious that the cleaning agents `a` and `b` are about the same, and it looks a little bit faster when using the cleaning agent `c`. This is just visual, to test it. We’ll create an ANOVA object with `aov`. Because time is the dependent variable and cleaner is the independent variable, we’ll set the formula to `formula = time ~ cleaner`. Our hypotheses are the following: *H_0*, no difference in time between cleaning agents | *H_1*, at least one difference in time between cleaning agents.
 
 ```{r,  eval=T, warning=F, message=F}
 # Step 1: aov object with time as DV and cleaner as IV
 cleaner.aov <- aov(formula = time ~ cleaner, data = poopdeck)
 ```
 
-Now, to see a full ANOVA summary table of the ANOVA object, apply the `summary` to the ANOVA object from Step 1
+Now, to see a full ANOVA summary table of the ANOVA object, apply the `summary` to the ANOVA object from Step 1:
 
 ```{r,  eval=T, warning=F, message=F}
 # Step 2: Look at the summary of the anova object
 summary(cleaner.aov)
 ```
 
-The main result from our table is that we have a significant effect of cleaner on cleaning time F(2, 597) = 5.29, p = 0.005. Carefuly examine the Df.
+The main result from our table is that we have a significant effect of cleaner on cleaning time. H_0 is rejected and we accepted H_1. The results of an ANOVA are usually reported as following. F(2, 597) = 5.29, p = 0.005.  Carefully examine the degrees of freedom, they tell you a lot about your data set!
 
-However, the ANOVA table does not tell us which levels of the independent variable differ. In other words, we don’t know which cleaner is better than which. To answer this, we need to conduct a **post-hoc** test.
+However, the ANOVA table does not tell us which levels of the independent variable differ. In other words, we don’t know which cleaning agent is better than which ones. To answer this, we need to conduct a **post-hoc** test.
 
-If you’ve found a significant effect of a factor, you can then do post-hoc tests to test the difference between each all pairs of levels of the independent variable. There are many types of pairwise comparisons that make different assumptions. One of the most common post-hoc tests for standard ANOVAs is the Tukey Honestly Significant Difference (HSD) test. To do an HSD test, apply the `TukeyHSD` function to your ANOVA object as follows:
+If you’ve found a significant effect of a factor, you can then do **post-hoc** tests to test the difference between all pairs of levels of the independent variable. There are many types of **pairwise comparisons** that rely on different assumptions. One of the most common post-hoc tests for standard ANOVAs is the Tukey **Honestly Significant Difference (HSD)** test. To do an HSD test, apply the `TukeyHSD` function to your ANOVA object as follows:
 
 
 ```{r,  eval=T, warning=F, message=F}
@@ -603,9 +607,9 @@ If you’ve found a significant effect of a factor, you can then do post-hoc tes
 TukeyHSD(cleaner.aov)
 ```
 
-This table shows us pair-wise differences between each group pair. The `diff` column shows us the mean differences between groups (which thankfully are identical to what we found in the summary of the regression object before), a confidence interval for the difference, and a p-value testing the null hypothesis that the group differences are not different.
+This table shows us the pair-wise differences between each group pair. The `diff` column shows us the **mean differences between groups** (of course, identical to what we found in the summary of the regression object before), a **confidence interval** for the difference, and a **p-value** testing the null hypothesis that the group differences are not different.
 
-I almost always find it helpful to combine an ANOVA summary table with a regression summary table. Because ANOVA is just a special case of regression (where all the independent variables are factors), you’ll get the same results with a regression object as you will with an ANOVA object. However, the format of the results are different and frequently easier to interpret.
+it is always helpful to combine an **ANOVA summary** table with a **regression summary** table. Because ANOVA is just a special case of regression (where all the independent variables are factors), you’ll get the same results with a regression object as you will with an ANOVA object. However, the format of the results are different and frequently easier to interpret using an ANOVA tables.
 
 To create a regression object, go back to a `lm` function. 
 
@@ -615,17 +619,18 @@ cleaner.lm <- lm(formula = time ~ cleaner, data = poopdeck)
 summary(cleaner.lm)
 ```
 
-As you can see, the regression table does not give us tests for each variable like the ANOVA table does. Instead, it tells us how different each level of an independent variable is from a default value. You can tell which value of an independent variable is the default variable just by seeing which value is missing from the table. In this case, I don’t see a coefficient for cleaner a, so that must be the default value.
+As you can see, the regression table does not give us tests for each variable like the ANOVA table does. Instead, it tells us how different each level of an independent variable is from a default value. You can tell which value of an independent variable is the default variable just by seeing which value is missing from the table. In this case, I don’t see a coefficient for cleaning agent `a`, so that must be the default value.
 
-The intercept in the table tells us the mean of the default value. In this case, the mean time of cleaner a was 66.02. The coefficients for the other levels tell us that cleaner b is, on average 0.42 minutes faster than cleaner a, and cleaner c is on average 6.94 minutes faster than cleaner a. Not surprisingly, these are the same differences we saw in the Tukey HSD test!
+The intercept in the table tells us the mean of the default value. In this case, the mean time of cleaner a was **66.02**. The coefficients for the other levels tell us that cleaner b is, on average **0.42** minutes faster than cleaner a, and cleaner c is on average **6.94** minutes faster than cleaner a. Not surprisingly, these are the same differences we saw in the Tukey HSD test!
 
 
 ### Two-way ANOVA
 
-To conduct a two-way ANOVA or more, just include additional independent variables in the regression model formula with the `+` sign as we did ealier in our regression models. That’s it. All the steps are the same. Let’s conduct a two-way ANOVA with both cleaner and type as independent variables. To do this, we’ll set `formula = time ~ cleaner + type`.
+To conduct a two-way ANOVA (or more), just include additional independent variables in the regression model formula with the `+` sign as we did earlier in our regression models. That’s it. All the steps are the same. Let’s conduct a two-way ANOVA with both `cleaner` and `type` as independent variables. To do this, we’ll set `formula = time ~ cleaner + type`.
 
 
 ```{r,  eval=T, warning=F, message=F}
+# Step 1: aov object with time as DV and cleaner and type as IV
 cleaner.type.aov <- aov(formula = time ~ cleaner + type, data = poopdeck)
 ```
 
@@ -649,13 +654,13 @@ cleaner.type.lm <- lm(formula = time ~ cleaner + type, data = poopdeck)
 summary(cleaner.type.lm)
 ```
 
-Now we need to interpret the results in respect to two default values (here, cleaner = a and type = parrot). The intercept means that the average time for cleaner a on parrot poop was 54.36 minutes. Additionally, the average time to clean shark poop was 23.33 minutes slower than when cleaning parrot poop.
+Now we need to interpret the results in respect to two default values (here, cleaning agent = `a` and type = `parrot`). The intercept means that the average time for cleaning agent `a` on `parrot` poop was 54.36 minutes. Additionally, the average time to clean `shark` poop was 23.33 minutes slower than when cleaning `parrot` poop.
 
 **Interactions** 
 
-Adding an interaction term in your regression model can be important, but you need to carefully think if it is justified and what you could expect about it.Interactions between variables test whether or not the effect of one variable depends on another variable. For example, we could use an interaction to answer the question: *Does the effect of cleaners depend on the type of poop they are used to clean?* To include interaction terms in an ANOVA, just use an asterix (`*`) instead of the plus (`+`) between the terms in your formula. Note that when you include an interaction term in a regression object, R will automatically include the main effects as well.
+Adding an interaction term in your regression model can be important, but you need to carefully think if it is justified and what you could expect about it. Interactions between variables test whether or not the effect of one variable depends on another variable. For example, we could use an interaction to answer the question: *Does the effect of cleaning agent depend on the type of poop they are used to clean?* To include interaction terms in an ANOVA, just use an asterix (`*`) instead of the plus (`+`) between the terms in your formula. Note that when you include an interaction term in a regression object, R will automatically include the main effects as well.
 
-Let’s repeat our previous ANOVA with two independent variables, but now we’ll include the interaction between cleaner and type. To do this, we’ll set the formula to `time ~ cleaner * type`.
+Let’s repeat our previous ANOVA with two independent variables, but now we’ll include the interaction between cleaning agent and poop type. To do this, we’ll set the formula to `time ~ cleaner * type`.
 
 ```{r,  eval=T, warning=F, message=F}
 # Step 1: Create ANOVA object with interactions
@@ -674,13 +679,11 @@ cleaner.type.int.lm <- lm(formula = time ~ cleaner * type, data = poopdeck)
 summary(cleaner.type.int.lm)
 ```
 
-Again, to interpret this table, we first need to know what the default values are. We can tell this from the coefficients that are ‘missing’ from the table. Because I don’t see terms for `cleanera` or `typeparrot`, this means that `cleaner = "a"` and `type = "parrot"` are the defaults. Again, we can interpret the coefficients as differences between a level and the default. It looks like for parrot poop, cleaners b and c both take more time than cleaner a (the default). Additionally, shark poop tends to take much longer than parrot poop to clean (the estimate for typeshark is positive).
+Again, to interpret this table, we first need to know what the default values are. We can tell this from the coefficients that are ‘missing’ from the table. Because you don’t see terms for `cleanera` or `typeparrot`, this means that cleaning agent `a` and  `parrot` poop type are the defaults. Again, we can interpret the coefficients as differences between a level and the default. It looks like for `parrot` poop, cleaning agents `b` and `c` both take more time than agent `a` (the default). Additionally, `shark` poop tends to take much longer than `parrot` poop to clean (the estimate for `typeshark` is positive).
 
-The interaction terms tell us how the effect of cleaners `changes` when one is cleaning shark poop. The negative estimate (-16.96) for `cleanerb:typeshark` means that cleaner b is, on average 16.96 minutes `faster` when cleaning shark poop compared to parrot poop. Because the previous estimate for cleaner b (for parrot poop) was just 8.06, this suggests that cleaner b is `slower` than cleaner a for parrot poop, but `faster` than cleaner a for shark poop. Same thing for cleaner c which simply has stronger effects in both directions.
+The interaction terms tell us how the effect of `cleaner` changes when one is cleaning shark poop. The negative estimate (-16.96) for `cleanerb:typeshark` means that cleaner b is, on average 16.96 minutes `faster` when cleaning shark poop compared to parrot poop. Because the previous estimate for the cleaning agent `b` (for `parrot` poop) was just 8.06, this suggests that the efficacy  of the cleaner `b` is less than agent `a` on `parrot` poop, but higher than agent `a` on `shark` poop. Same thing for cleaner `c` which simply has stronger effects in both directions. 
 
-You can see, it becomes quickly much more complicated to interpret. Think carefully if interactions are justified. 
-
-The package `interaction` provides several functions that can help at looking at the coefficients and to interpret in a more easy way the results.
+You can see, it becomes quickly much more complicated to interpret. Therefore you should carefully think if interactions are justified (literature, understanding, etc). The package `interaction` provides several functions that can help at looking at the coefficients and to interpret in a more easy way the results.
 
 ```{r,  eval=T, warning=F, message=F}
 cat_plot(cleaner.type.int.lm, pred = cleaner, modx = type, interval = TRUE)
@@ -702,10 +705,12 @@ car::Anova(fitiris, type = 3)
 
 ### Type I, II, and III ANOVAs
 
-It turns out that there is not just one way to calculate ANOVAs. In fact, there are three different types - called, Type 1, 2, and 3 (or Type I, II and III). These types differ in how they calculate variability (specifically the **sums of of squares**). If your data is relatively **BALANCED**, meaning that there are relatively equal numbers of observations in each group, then all three types will give you the same answer. However, if your data are **UNBALANCED**, meaning that some groups of data have many more observations than others, then you need to use Type II or Type III.
+https://besjournals.onlinelibrary.wiley.com/doi/pdf/10.1111/j.1365-2656.2009.01634.x
+
+It turns out that there is not just one way to calculate ANOVAs. In fact, there are three different types - called, Type 1, 2, and 3 (or Type I, II and III). These types differ in how they calculate variability (specifically the **sums of of squares**). If your data is relatively **BALANCED**, meaning that there are relatively equal numbers of observations in each group, then all three types will give you the same answer. However, if your data are **UNBALANCED**, meaning that some groups of data have many more observations than others, then you need to use Type II or Type III. The **ANCOVA** model is an expection wher this issue must be considered.
 
 
-The standard `aov` function in base-R uses **Type I** sums of squares. Therefore, it is only appropriate when your data are **BALANCED**. If your data are **UNBALANCED**, you should conduct an ANOVA with Type II or Type III sums of squares. To do this, you can use the `Anova` function in the `car` package. The `Anova` function has an argument called type that allows you to specify the type of ANOVA you want to calculate.
+The standard `aov` function in `base` package uses **Type I** sums of squares. Therefore, it is appropriate when your data are **BALANCED**. If your data are **UNBALANCED**, you should consider an ANOVA with Type II or Type III sums of squares. To do this, you can use the `Anova` function in the `car` package. The `Anova` function has an argument called type that allows you to specify the type of ANOVA you want to calculate.
 
 First, create a regression object with `lm`. As you’ll see, the `Anova` function requires you to enter a regression object as the main argument, and not a formula and dataset. That is, you need to first create a regression object from the data with `lm` (or `glm`), and then enter that object into the `Anova` function. 
 
@@ -720,6 +725,7 @@ Now that I’ve created the regression object `time.lm`, I can calculate the thr
 ```{r,  eval=T, warning=F, message=F}
 # Type I ANOVA - aov()
 time.I.aov <- aov(time.lm)
+# or anova(time.lm)
 
 # Type II ANOVA - Anova(type = 2)
 time.II.aov <- car::Anova(time.lm, type = 2)
@@ -737,22 +743,23 @@ To see if your data are balanced, you can use the function:
 with(poopdeck, table(cleaner, type)) 
 ```
 
-As you can see, in the poopdeck data, the observations are perfectly balanced, so it doesn’t matter which type of ANOVA we use to analyse the data.
+As you can see, in the `poopdeck` data set, the observations are perfectly balanced (see previously the justifcation for **full-factorial, between-subjects ANOVAs**) , so it doesn’t matter which type of ANOVA we use to analyze the data.
 
-For more detail on the different types, check out https://mcfromnz.wordpress.com/2011/03/02/anova-type-iiiiii-ss-explained/.
+For more detail on the different types, check out [here](https://mcfromnz.wordpress.com/2011/03/02/anova-type-iiiiii-ss-explained/) for a techincal discussion. Also check [Hector et al. (2010)](https://besjournals.onlinelibrary.wiley.com/doi/pdf/10.1111/j.1365-2656.2009.01634.x) for a discussion on the topic in the field of ecology and evolution.
  
+
+**A quick summary**
 ![](Figures/anova-type.png)
  
 ### Additional information and assumption
 
-You can get a lot of interesting information from ANOVA objects. To see everything that’s stored in one, run the command on an ANOVA object. For example, here’s what’s in our last ANOVA object:
+You can get a lot of interesting information from ANOVA objects. To see everything that’s stored in one ANOVA, run `names` on an ANOVA object. For example, here’s what’s in our last ANOVA object (note the `contrasts` that may be important to know when applying Type II, or III ANOVA):
 
 ```{r,  eval=T, warning=F, message=F}
 names(cleaner.type.int.aov)
 ```
 
-
-For example, the `fitted.values` contains the model fits for the dependent variable (time) for every observation in our dataset. We can add these fits back to the dataset. For example, let’s get the model fitted values from both the interaction model (`cleaner.type.aov`) and the non-interaction model (`cleaner.type.int.aov`) and assign them to new columns in our dataframe:
+For example, the `fitted.values` contains the model fits for the dependent variable (`time`) for every observation in our dataset. We can add these fits back to the dataset. For example, let’s get the model fitted values from both the interaction model (`cleaner.type.aov`) and the non-interaction model (`cleaner.type.int.aov`) and assign them to new columns in our dataframe:
 
 ```{r,  eval=T, warning=F, message=F}
 poopdeck$int.fit <- cleaner.type.int.aov$fitted.values
@@ -766,18 +773,18 @@ mean(abs(poopdeck$int.fit - poopdeck$time))
 mean(abs(poopdeck$me.fit - poopdeck$time))
 ```
 
-As you can see, the interaction model was off from the data by `15.35` minutes on average, while the main effects model was off from the data by `16.54` on average. This is not surprising as the interaction model is more complex than the main effects only model. However, just because the interaction model is better at fitting the data doesn’t necessarily mean that the interaction is either meaningful or reliable.
+As you can see, the **interaction model** was off from the data by `15.35` minutes on average, while the **main effects model** was off from the data by `16.54` on average. This is not surprising as the interaction model is more complex than the main effects only model. However, b careful, just because the interaction model is better at fitting the data doesn’t necessarily mean that the interaction is either meaningful or reliable.
 
-#### Testing you assumptions 
+#### Model assumptions 
 
-The `residuals` values are obviously available in your anova object. We previously saw how to examine graphically those residuals for the normality and homoscedasticity. Let's test them her:
+The `residuals` are available in your anova object. We previously saw how to examine graphically those residuals for **normality** and **homoscedasticity**. Let's test them here from our anova object:
 
 ```{r,  eval=T, warning=F, message=F}
-shapiro.test(cleaner.type.int.aov$residuals)
-bartlett.test(cleaner.type.int.aov$residuals ~ interaction(cleaner, type), data = poopdeck)
+shapiro.test(cleaner.type.int.aov$residuals) # test our residuals vs a normal distribution
+bartlett.test(cleaner.type.int.aov$residuals ~ interaction(cleaner, type), data = poopdeck) # test variance of our residuals in the different groups.
 ```
 
-The null hypothesis of normal distribution and homoscedasticity are accepted: there is no significant difference (p > 0.05) from a normal distribution and significant heterogeneity
+The null hypothesis of **normal distribution** and **homoscedasticity** are accepted: there is no significant difference (p > 0.05) from a normal distribution and no significant heterogeneity
 
 #### Transformations
 
@@ -789,51 +796,48 @@ Checking the assumptions of regression models is critical to look at possible is
 
 In addition to transformation of the response variable, we can also consider transformations of predictor variables. Sometimes these transformations can help with violation of model assumptions, and other times they can be used to simply fit a more flexible model (e.g. log, polynomials). 
 
-
-Below is a linear model equation where the original dependent variable, y, has been natural log transformed. That is, the natural log has been taken of each individual value of y, and that is being used as the dependent variable.
+Below is a linear model equation where the original dependent variable $y$, has been natural log transformed. That is, the natural log has been taken of each individual value of $y$ and that is being used as the dependent variable.
 
 $$ln(y_i) = \beta_0 + \beta_1x_1 + \beta_1x_1 + \beta_2x_2 + ... + \epsilon_i$$ 
-The linear model with the log transformation is providing an equation for an individual value of ln(y). We could also write it as follows, where we are modeling the mean of ln(y) (note the error term is no longer present):
+The linear model with the log transformation is providing an equation for an individual value of ln(y). We could also write it as follows, where we are modeling the mean of $ln(y)$ (note the error term is no longer present):
 
 $$\mu_{ln(y)} = \beta_0 + \beta_1x_1 + \beta_1x_1 + \beta_2x_2 + ... $$
-This makes the difference a bit clearer. When we transform the data in a linear model, we are no longer claiming that y is normally distributed around a mean, given the x values — we are claiming that our new outcome variable, ln(yi), is normally distributed.
+This makes the difference a bit clearer. When we transform the data in a linear model, we are no longer claiming that $y$ is normally distributed around a mean, given the $x$ values — we are claiming that our new outcome variable, $ln(y_i)$, is normally distributed.
 
-This topic is extensively cover in online documentation in order for your model to follwo the assumption of normality and homescedasticity. In addition, that may be because your data are from a Gaussian family.
+This topic is extensively cover in online documentation in order for your model to meet the assumptions of normality and homoscedasticity. In addition,  a violation of thes assumption may originate because your data simpy does not belong to a Gaussian family
 
 
 ## Data distribution and link function
 
-Here is a brief summary of the data distributions you might encounter most often.
+Here is a brief summary of the data distributions you might encounter most often (especially in ecology):
 
-+ Gaussian - Continuous data (normal distribution and homoscedasticity assumed)
++ Gaussian - **Continuous** data (**normal** distribution and **homoscedasticity** assumed)
 
-+ Poisson - Count abundance data (integer values, zero-inflated data, left-skewed data)
++ Poisson - **Count** abundance data (integer values, **zero-inflated** data, **left-skewed** data)
 
-+ Binomial - Binary variables (TRUE/FALSE, 0/1, presence/absence data)
++ Binomial - **Binary** variables (TRUE/FALSE, 0/1, presence/absence data)
 
-Choosing the right statistical test for your analysis is an important step about which you should think carefully. It could be frustrating to spend tons of time running models, plotting their results and writing them up only to realise that all along you should have used *e.g. a Poisson distribution instead of a Gaussian one*.
+Choosing the right **family**  for your analysis is important and should you should think carefully about it before building your model. It could be frustrating to spend tons of time running models, plotting their results and writing them up only to realise that all along you should have used *e.g.* a Poisson distribution instead of a Gaussian one.
 
 ![](Figures/distribution.png)
 **Generalized linear models (GLM)**  — and generalized linear mixed models —are called generalized linear because they connect a model’s outcome to its predictors in a linear way. The function used to make this connection is called a link function. Link functions sounds like an exotic term, but they’re actually much simpler than they sound.
 
-
 For example, **Poisson regression** (commonly used for outcomes that are counts) makes use of a natural log link function as follows:
-
 
 $$ln(\mu_y) = \beta_0 + \beta_1x_1 + \beta_1x_1 + \beta_2x_2 + ...$$ 
 
-Clearly, there is not a direct linear relationship of the x variables to the average count, but there is a “sort of linear” relationship happening: a function of the mean of y is related to a linear combination of x variables. In other words, the linear model has now been generalized to a bigger type of situation.
+Clearly, there is not a direct linear relationship of the $x$ variables to the average count, but there is a “sort of linear” relationship happening: a function of the mean of $y$ is related to a linear combination of $x$ variables. In other words, the linear model has now been generalized to a bigger type of situation.
 
 This can lead to confusion, though, because on the surface it looks very similar to what happens when we transform the dependent variable in a linear model, like a linear regression as previously mentioned
 
-The key thing to understand is that the **natural log link function** is a function of the **mean of y**, not the **y values** themselves as previously mentioned
+The key thing to understand is that the **natural log link function** is a function of the **mean of $y$**, not the **$y$ values** themselves as previously mentioned
 
 
-General linear model met all the assumptions: normal distribution, homoscedasticity, etc. Howvere, quite often in ecology and environmental science that is not the case and then we use different data distributions. Here we will talk about a Poisson and a binomial distribution. To use them, we need to run generalised linear models.
+**General linear model** met all the assumptions: normal distribution, homoscedasticity, etc. However, quite often in ecology and environmental science that is not the case and then we use different data distributions. Here we will talk about **Poisson** and **binomial** distribution. To use them, we need to run **generalised linear models** using the function `glm`.
 
 ### A model with a Poisson distribution
 
-Import the `shagLPI.csv` dataset and check it’s summary using `summary(shagLPI)`. The data represent population trends for European Shags on the Isle of May and are available from the [Living Planet Index](https://livingplanetindex.org/home/index).
+Import the `shagLPI` dataset and check it’s summary using `summary(shagLPI)`. The data represent population trends for European Shags on the Isle of May and are available from the [Living Planet Index](https://livingplanetindex.org/home/index).
 
 ![](Figures/shag.jpg)
 
@@ -844,7 +848,7 @@ shag.hist <- ggplot(shag, aes(pop)) + geom_histogram()
 shag.hist
 ```
 
-Our pop variable represents count abundance data, i.e. integer values (whole European Shags!) so a Poisson distribution is appropriate here. Often count abundance data are zero-inflated and skewed towards the right. Here our data are not like that, but if they were, a Poisson distribution would still have been appropriate.
+Our pop variable represents count abundance data, *i.e.* integer values (whole European Shags) so a Poisson distribution is appropriate here. Often count abundance data are zero-inflated and skewed towards the right. Here our data are not like that, but if they were, a Poisson distribution would still have been appropriate.
 
 ```{r,  eval=T, warning=F, message=F}
 shag.m <- glm(pop ~ year, family = poisson, data = shag)
@@ -862,11 +866,11 @@ shag.p <- ggplot(shag, aes(x = year, y = pop)) +
 shag.p
 ```
 
-*Figure 1.* European shag abundance on the Isle of May, Scotland, between 1970 and 2006. Points represent raw data and model fit represents a generalised linear model with 95% confidence intervals.
+*European shag abundance on the Isle of May, Scotland, between 1970 and 2006. Points represent raw data and model fit represents a generalised linear model with 95% confidence intervals.*
 
 ### A model with a Poisson distribution
 
-We will now work this the `Weevil_damage.csv`. We can examine if damage to Scot’s pine by weevils (a binary, `TRUE`/`FALSE` variable) varies based on the block in which the trees are located. You can imagine that different blocks represent different Scot’s pine populations, and perhaps some of them will be particularly vulnerable to weevils? Because of the binary nature of the response variable (true or false), a binomial model is appropriate here.
+We will now work this the `Weevil_damage`. We can examine if damage to Scot’s pine by weevils (a binary, `TRUE`/`FALSE` variable) varies based on the block in which the trees are located. You can imagine that different blocks represent different Scot’s pine populations, and perhaps some of them will be particularly vulnerable to weevils? Because of the binary nature of the response variable (true or false), a binomial model is appropriate here.
 
 ![](Figures/weevils.jpg)
 
@@ -879,13 +883,12 @@ summary(weevil.m)
 
 The probability of a pine tree enduring damage from weevils does vary significantly based on the block in which the tree was located. 
 
-You won’t get a R squared value to assess the goodness of fit of your model, but you can get at that by looking at the difference between the Null deviance (variability explained by a null model, e.g. `glm(damage_T_F ~ 1, family = binomial, data = Weevil_damage)` and the Residual deviance, e.g. the amount of variability that remains after you’ve explained some away by your explanatory variable. In short, the bigger the reduction in deviance, the better a job your model is doing at explaining a relationship.
+You won’t get a R squared value to assess the goodness of fit of your model, but you can get at that by looking at the difference between the Null deviance (variability explained by a null model, *e.g.* `glm(damage_T_F ~ 1, family = binomial, data = Weevil_damage)` and the Residual deviance, *e.g.* the amount of variability that remains after you’ve explained some away by your explanatory variable. In short, the bigger the reduction in deviance, the better a job your model is doing at explaining a relationship.
 
 
+## Taking Account the Random Effects
 
-## Taking Account the Random Effects - Mixed effects
-
-A random effect can be used in the case of paired data or repeated measures. As an example, if we are measuring the length of several individual plants, the measurements are paired within each individual.  That is, we want to statistically match the length at different days of one individual, since we supposed we may have difference in the initial length and therefor different growth. Therefore, in this case, the variable 'Individual' must be include in the model as a random variable. Often, we want to disregard the effect of this random fectore (e.g. individual difference) to focus on another one (e.g. growth itself). Each Individual could be thought of has a block including a measurement for the length.
+A **random effect** can be used in the case of **paired data** or **repeated measures**. As an example, if we are measuring the **length** of several **individual** plants, the measurements are paired within each individual.  That is, we want to statistically match the length at different days of one individual, since we supposed we may have difference in the initial length and therefore different growth. Therefore, in this case, the variable 'individual' must be include in the model as a random variable. Often, we want to disregard the effect of this random factor (e.g. individual difference) to focus on another one (e.g. growth itself). Each Individual could be thought of has a block including a measurement for the length.
 
 The concept of random variables is not easy to get, so it is okay to not completely understand the full concept at this point. Whether a variable should be considered a **fixed** or **random** variable will also depend on the interpretation of the person doing the analysis, adding sometime one layer of subjectivity.
 
@@ -893,11 +896,9 @@ The concept of random variables is not easy to get, so it is okay to not complet
 
 When a model includes both fixed effects and random effects, it is called a *mixed effects model*.
 
-For more complex models, specifying random effects can become difficult.  Random effects can be crossed with one another or can be nested within one another.  Also, correlation structures for the random effects can be specified.  However, here, we will just keep it simple using an example with our `rairuoho` data set.
+For more complex models, specifying random effects can become difficult.  Random effects can be **crossed** with one another or can be **nested** within one another.  Also, **correlation structures** for the random effects can be specified.  However, here, we will just keep it simple using an example with our `rairuoho` data set.
 
 ```{r,  eval=T, warning=F, message=F}
-library(tidyr)
-library(readr)
 rairuoho<-read.table('Data/rairuoho.txt',header=T, sep="\t", dec=".")
 rairuoho$ID<-rownames(rairuoho)
 rai<-rairuoho %>% pivot_longer(day3:day8, names_to = "day", values_to = "length")
@@ -905,20 +906,17 @@ rai$day<-parse_number(rai$day)
 rai
 ```
 
-We want to examine the length of the plant (y) as a function of the day (x). In this case, the initial size of the plant varies. It become obvious that each teh growth of each pant should be examine individually.
+We want to examine the length of the plant ($y$) as a function of the day ($x$). In this case, the initial size of the plant varies. It become obvious that the growth of each pant should be examined individually.
 
 #### Mixed model with `lmer`
 
-One way to construct a mixed effects model for interval/ratio data is with the function `lmer` from the package `lme4` package. However you will not get the p-value of the overall model, because you need to carefully think on how to extract this information because of the complexity of the input you can have.
+One way to construct a mixed effects model for interval/ratio data is with the function `lmer` from the package `lme4` package. However you will not get the **p-value** of the overall model, because you need to carefully think on how to extract this information because of the complexity of the input you can have.
 
-Notice the grammar in the lmer function that defines the model:  the term (1|Individual) is added to the model to indicate that Individual is the random term.
+Notice the grammar in the `lmer` function that defines the model:  the term `(1|Individual)` is added to the model to indicate that `Individual` is the random term.
 
-As a technical note, the 1 indicates that an intercept is to be fitted for each level of the random variable.
-
-As another technical note, REML stands for restricted maximum likelihood.  It is a method of fitting the model, and is often considered better than fitting with a conventional ML (maximum likelihood) method.
+As a technical note, the 1 indicates that an intercept is to be fitted for each level of the random variable. As another technical note, `REML` stands for restricted maximum likelihood.  It is a method of fitting the model, and is often considered better than fitting with a conventional ML (maximum likelihood) method.
 
 ```{r,  eval=T, warning=F, message=F}
-library(lme4)
 lmer.rai<-lmer(length ~ day + (1|ID), data=rai, REML=TRUE) # REML default
 summary(lmer.rai)
 ```
@@ -927,7 +925,6 @@ One way to extract the p-value is by using the `lmerTest` package to produce an 
 
 
 ```{r,  eval=T, warning=F, message=F}
-library(lme4)
 lmer.rai<-lmer(length ~ day + (1|ID), data=rai, REML=TRUE) # REML default
 summary(lmer.rai)
 ```
@@ -935,17 +932,16 @@ summary(lmer.rai)
 The `rand` function from the `lmerTest` package will test the random effects in the model
 
 ```{r,  eval=T, warning=F, message=F}
-library (lmerTest)
 rand(lmer.rai)
 ```
 
-In addition,  The `lmerTest` package is used to produce an analysis of variance with p-values for model effects. However, in our case, a simple linear regression with a random factor, we will use another function to extract teh p-value from our model.
+In addition,  The `lmerTest` package is used to produce an analysis of variance with p-values for model effects. However, in our case, a simple linear regression with a random factor, we will use another function to extract the p-value from our model.
 
 #### Mixed model with `nmle`
 
 We will use the function `lme` form the package `nmle`
 
-Notice the grammar in the `lme` function that defines the model is slightly different form the previous exempl:  the option `random = ~1|ID` is added to the model to indicate that `ID` is the random term.
+Notice the grammar in the `lme` function that defines the model is slightly different form the previous example:  the option `random = ~1|ID` is added to the model to indicate that `ID` is the random term.
 
 ```{r,  eval=F, warning=F, message=F}
 #install.packages("https://cran.r-project.org/src/contrib/nlme_3.1-150.tar.gz", repos=NULL, type="source", ask=FALSE)
@@ -962,6 +958,6 @@ anova (lme.rai, lm.rai)
 
 **Random Intercept and slope model** 
 
-the "~1" specifies the random intercept and "Day|ID" would allow the slope to vary among  individuals. However,it starts to be much more advanced parametrization. 
+the "~1" specifies the random intercept and "Day|ID" would allow the slope to vary among  individuals. However,it starts to be much more advanced. You may find entire book on mixed effect model in R.  
 
 
