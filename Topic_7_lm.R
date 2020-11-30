@@ -10,6 +10,7 @@ library(tidyr)
 library(readr)
 library(lme4)
 library (lmerTest)
+library(nlme)
 
 rm(list=ls()) # clean all objects in memory
 
@@ -175,8 +176,7 @@ summary(lmer.rai)
 anova(lmer.rai)
 rand(lmer.rai)
 
-#### Mixed model with `nmle`
-#install.packages("https://cran.r-project.org/src/contrib/nlme_3.1-150.tar.gz", repos=NULL, type="source", ask=FALSE)
-#lme.rai = lme(length ~ day, random=~1|ID, data=rai)
-#summary(lme.rai)
+#### Mixed model with `nlme`
+lme.rai = lme(length ~ day, random=~1|ID, data=rai)
+summary(lme.rai)
 

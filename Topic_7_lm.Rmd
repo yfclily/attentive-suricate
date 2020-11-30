@@ -16,8 +16,6 @@ output:
 
 # Topic - Linear Models
 
-# Mistake in ~ . in model3 and fwd 
-
 ```{r,  eval=T, warning=F, message=F}
 library(Hmisc)
 library(corrplot)
@@ -29,6 +27,7 @@ library(tidyr)
 library(readr)
 library(lme4)
 library (lmerTest)
+library(nlme)
 ```
 
 
@@ -939,21 +938,20 @@ rand(lmer.rai)
 
 In addition,  The `lmerTest` package is used to produce an analysis of variance with p-values for model effects. However, in our case, a simple linear regression with a random factor, we will use another function to extract the p-value from our model.
 
-#### Mixed model with `nmle`
+#### Mixed model with `nlme`
 
-We will use the function `lme` form the package `nmle`
+We will use the function `lme` form the package `nlme`
 
 Notice the grammar in the `lme` function that defines the model is slightly different form the previous example:  the option `random = ~1|ID` is added to the model to indicate that `ID` is the random term.
 
-```{r,  eval=F, warning=F, message=F}
-#install.packages("https://cran.r-project.org/src/contrib/nlme_3.1-150.tar.gz", repos=NULL, type="source", ask=FALSE)
+```{r,  eval=T, warning=F, message=F}
 lme.rai = lme(length ~ day, random=~1|ID, data=rai)
 summary(lme.rai)
 ```
 
 The random effects in the model can be tested by comparing the model to a model fitted with just the fixed effects and excluding the random effects. 
 
-```{r,  eval=F, warning=F, message=F}
+```{r,  eval=T, warning=F, message=F}
 lm.rai<-lm(length ~ day, data= rai)
 anova (lme.rai, lm.rai)
 ```
