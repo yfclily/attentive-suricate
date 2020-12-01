@@ -1329,29 +1329,13 @@ window.initializeCodeFolding = function(show) {
 
 }
 </script>
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -1361,16 +1345,14 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -1379,9 +1361,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  background-color: #f8f8f8; }
+  { background-color: #f8f8f8; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -1931,9 +1913,9 @@ div.tocify {
 <div id="update" class="section level3">
 <h3>Update</h3>
 <p>If you already have R on your computer, an alternative is to just run (<span style="color: red">it will tell you if your R version is out-of-date </span>):</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(installr)) {</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="kw">install.packages</span>(<span class="st">&quot;installr&quot;</span>); <span class="kw">require</span>(installr)} </span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">updateR</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(installr)) {</a>
+<a class="sourceLine" id="cb1-2" title="2">  <span class="kw">install.packages</span>(<span class="st">&quot;installr&quot;</span>); <span class="kw">require</span>(installr)} </a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">updateR</span>()</a></code></pre></div>
 <p>This will start the updating process of your R installation. It will check for newer versions, and if one is available, will guide you through the decisions you need to make.</p>
 <p>You may have to choose a CRAN mirror if it is your first download. This is just a copy of the CRAN archives. Choose one in Taiwan, it is usually a bit faster to download and install.</p>
 </div>
@@ -1943,19 +1925,19 @@ div.tocify {
 <ul>
 <li>Install the package <code>abc</code></li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;abc&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># all information after `#` is ignored, this is VERY important and use to comment your code.</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;abc&quot;</span>) <span class="co"># I am installing the package &#39;abc&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">install.packages</span>(<span class="st">&quot;abc&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># all information after `#` is ignored, this is VERY important and use to comment your code.</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">install.packages</span>(<span class="st">&quot;abc&quot;</span>) <span class="co"># I am installing the package &#39;abc&#39;</span></a></code></pre></div>
 <ul>
 <li>Use the package <code>abc</code></li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(<span class="st">&quot;abc&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">library</span>(<span class="st">&quot;abc&quot;</span>)</a></code></pre></div>
 <p>To do every time you wanna use the package: load your package</p>
 <blockquote>
 <p><em><span style="color: green"><strong>RP1</strong>: Install and load the package </span></em> <code>vegan</code></p>
 </blockquote>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">install.packages</span>(<span class="st">&#39;vegan&#39;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">library</span>(<span class="st">&#39;vegan&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">install.packages</span>(<span class="st">&#39;vegan&#39;</span>)</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="kw">library</span>(<span class="st">&#39;vegan&#39;</span>)</a></code></pre></div>
 <p>If you don’t know the name of the package:</p>
 <ul>
 <li><p>use task views available at <a href="http://cran.r-project.org/web/views" class="uri">http://cran.r-project.org/web/views</a> that group packages to subject areas such environmetrics, multivariate, etc.</p></li>
@@ -1968,66 +1950,66 @@ div.tocify {
 <ul>
 <li>a quick summary on how to use the function <code>median</code></li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>?median</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">?median</a></code></pre></div>
 <ul>
 <li>a detailed summary on the use of the function `median```</span></li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>?median</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="co"># or</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">help</span>(median)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">?median</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co"># or</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="kw">help</span>(median)</a></code></pre></div>
 <ul>
 <li>it will give you all functions with median in their description</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>??median</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">??median</a></code></pre></div>
 </div>
 <div id="working-directory" class="section level3">
 <h3>Working directory</h3>
 <p>It is a good practice to create a working directory (folder) where you will store all your file. In general, each project will have its working directory including data set, script, plot, etc</p>
 <p>Use of working directory. Retrieve it using:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">getwd</span>() <span class="co">#get the location of your working directory</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">getwd</span>() <span class="co">#get the location of your working directory</span></a></code></pre></div>
 <p>Set it up using:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">setwd</span>()</span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="co">#get the location of your working directory</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">setwd</span>()</a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="co">#get the location of your working directory</span></a></code></pre></div>
 </div>
 <div id="quit-r" class="section level3">
 <h3>Quit R</h3>
 <p><strong>File -&gt; Exit</strong> or use the console:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">q</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">q</span>()</a></code></pre></div>
 <p>Saving the workspace image will allow you to save all objects created in the R memory into your working directory (.Rdata). It also saves all commands given during the session (.Rhistory).</p>
 <p>Quit without saving for now.</p>
 </div>
 <div id="list" class="section level3">
 <h3>List</h3>
 <p><code>ls()</code> will list all the objects in the memory.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>a&lt;-<span class="st">&#39;corals&#39;</span> <span class="co"># create an object &#39;a&#39; containing &#39;corals&#39;</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a>b&lt;-<span class="st">&#39;are&#39;</span> <span class="co"># create an object &#39;b&#39; containing &#39;are&#39;</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a>c&lt;-<span class="st">&#39;cool&#39;</span><span class="co"># create an object &#39;c&#39; containing &#39;cool&#39;</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a>ls <span class="co"># list objects &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">a&lt;-<span class="st">&#39;corals&#39;</span> <span class="co"># create an object &#39;a&#39; containing &#39;corals&#39;</span></a>
+<a class="sourceLine" id="cb13-2" title="2">b&lt;-<span class="st">&#39;are&#39;</span> <span class="co"># create an object &#39;b&#39; containing &#39;are&#39;</span></a>
+<a class="sourceLine" id="cb13-3" title="3">c&lt;-<span class="st">&#39;cool&#39;</span><span class="co"># create an object &#39;c&#39; containing &#39;cool&#39;</span></a>
+<a class="sourceLine" id="cb13-4" title="4">ls <span class="co"># list objects &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</span></a></code></pre></div>
 <p>You can clean the objects present in the memory using:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>()) <span class="co"># rm: remove ls: list of all objects present in memory</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>()) <span class="co"># rm: remove ls: list of all objects present in memory</span></a></code></pre></div>
 <p><strong>Tip</strong>: Use CTRL+L to clean your screen when you want to make it clear. It does not remove the objects in memory.</p>
 </div>
 <div id="calculator" class="section level3">
 <h3>Calculator</h3>
 <p>R is a calculator:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="dv">3</span><span class="op">+</span><span class="dv">2</span> <span class="co"># addition</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="dv">3-2</span> <span class="co"># substraction</span></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="dv">3</span><span class="op">*</span><span class="dv">2</span> <span class="co"># multiplication</span></span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="dv">3</span><span class="op">/</span><span class="dv">2</span> <span class="co"># division</span></span>
-<span id="cb15-5"><a href="#cb15-5"></a><span class="dv">3</span><span class="op">^</span><span class="dv">3</span> <span class="co"># power</span></span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="kw">log</span>(<span class="dv">2</span>) <span class="co"># logarithm</span></span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="kw">exp</span>(<span class="dv">2</span>) <span class="co"># exponential</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a>(<span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span>) <span class="op">/</span><span class="st"> </span><span class="dv">4</span> <span class="co"># define priority using () or {} </span></span>
-<span id="cb15-9"><a href="#cb15-9"></a>pi<span class="op">*</span><span class="dv">4</span> <span class="co"># common function</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="dv">3</span><span class="op">+</span><span class="dv">2</span> <span class="co"># addition</span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="dv">3-2</span> <span class="co"># substraction</span></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="dv">3</span><span class="op">*</span><span class="dv">2</span> <span class="co"># multiplication</span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="dv">3</span><span class="op">/</span><span class="dv">2</span> <span class="co"># division</span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="dv">3</span><span class="op">^</span><span class="dv">3</span> <span class="co"># power</span></a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="kw">log</span>(<span class="dv">2</span>) <span class="co"># logarithm</span></a>
+<a class="sourceLine" id="cb15-7" title="7"><span class="kw">exp</span>(<span class="dv">2</span>) <span class="co"># exponential</span></a>
+<a class="sourceLine" id="cb15-8" title="8">(<span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span>) <span class="op">/</span><span class="st"> </span><span class="dv">4</span> <span class="co"># define priority using () or {} </span></a>
+<a class="sourceLine" id="cb15-9" title="9">pi<span class="op">*</span><span class="dv">4</span> <span class="co"># common function</span></a></code></pre></div>
 <p>R is case sensitive <span style="color: blue"><code>pi</code></span> will work, whereas <span style="color: blue"><code>Pi</code></span> will not </span></p>
 </div>
 <div id="reading" class="section level3">
 <h3>Reading</h3>
 <p>To be able to work with a dataset (and make calculation based on it), it has to be import as an object in the memory of R. Many formats can be used (.xls, .spss, SAS, etc.). To start with, we will use and .xlsx file, but quickly we will turn toward less heavy format. Note the distinction between <strong>reading</strong> a file and <strong>importing</strong> a file.</p>
 <p>My file <code>reef_fish</code> is an .xlsx file located in the file ‘Data’ of my working directory.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">library</span>(readxl) <span class="co"># I am loading a package (library) allowing me to read .xls file</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">read_excel</span>(<span class="st">&#39;Data/reef_fish.xlsx&#39;</span>) <span class="co"># I am reading my file</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a>fish&lt;-<span class="kw">read_excel</span>(<span class="st">&#39;Data/reef_fish.xlsx&#39;</span>) <span class="co"># I am importing my file in an object called &#39;fish&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">library</span>(readxl) <span class="co"># I am loading a package (library) allowing me to read .xls file</span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="kw">read_excel</span>(<span class="st">&#39;Data/reef_fish.xlsx&#39;</span>) <span class="co"># I am reading my file</span></a>
+<a class="sourceLine" id="cb16-3" title="3">fish&lt;-<span class="kw">read_excel</span>(<span class="st">&#39;Data/reef_fish.xlsx&#39;</span>) <span class="co"># I am importing my file in an object called &#39;fish&#39;</span></a></code></pre></div>
 <p>More commonly, we will use .txt file (lighter) and the function `read.table’. But often you will need to think at several ‘arguments’:</p>
 <ul>
 <li>What is the name of the data file (with the extension)?</li>
@@ -2035,13 +2017,13 @@ div.tocify {
 <li>What is the delimiter between the columns (tab, space, comma or semicolon)?</li>
 <li>What is the character used for decimal points (dot, comma)?</li>
 </ul>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>fish&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/reef_fish.txt&#39;</span>, <span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, <span class="dt">dec=</span><span class="st">&#39;.&#39;</span>) <span class="co"># reading txt file</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">fish&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/reef_fish.txt&#39;</span>, <span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, <span class="dt">dec=</span><span class="st">&#39;.&#39;</span>) <span class="co"># reading txt file</span></a></code></pre></div>
 <p>Check <code>?read.table</code> for all arguments you can specify within this function</p>
 <p>Instead or working in a working directory, you can also target directly your file (check your file properties) or an url.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>fish&lt;-<span class="kw">read.table</span> (<span class="st">&quot;D:/.../Topic 1/Data/reef_fish.txt&quot;</span>,<span class="dt">header =</span> <span class="ot">TRUE</span>,<span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>)<span class="co"># long version</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>fish&lt;-<span class="kw">read.table</span>(<span class="st">&quot;taiwan.txt&quot;</span>, <span class="ot">TRUE</span>, <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>,<span class="st">&quot;.&quot;</span>)<span class="co"># you can also shorten some part once you get use to it, but be careful when using this</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">fish&lt;-<span class="kw">read.table</span> (<span class="st">&quot;D:/.../Topic 1/Data/reef_fish.txt&quot;</span>,<span class="dt">header =</span> <span class="ot">TRUE</span>,<span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>)<span class="co"># long version</span></a>
+<a class="sourceLine" id="cb18-2" title="2">fish&lt;-<span class="kw">read.table</span>(<span class="st">&quot;taiwan.txt&quot;</span>, <span class="ot">TRUE</span>, <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>,<span class="st">&quot;.&quot;</span>)<span class="co"># you can also shorten some part once you get use to it, but be careful when using this</span></a></code></pre></div>
 <p>You can also use `file.choose()’ to locate dircetly the file or or computer or alternatively import data from the R menu.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>fish&lt;-<span class="kw">read.table</span>(<span class="kw">file.choose</span> (), <span class="dt">header =</span> <span class="ot">TRUE</span>,<span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">fish&lt;-<span class="kw">read.table</span>(<span class="kw">file.choose</span> (), <span class="dt">header =</span> <span class="ot">TRUE</span>,<span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>)</a></code></pre></div>
 <p><strong>Note_1</strong>: in all cases creation of a file with the same name ‘fish’ will replace the one previously created.</p>
 <p><strong>Note_2</strong>: two operators <code>&lt;-</code> and <code>=</code> can be used to import data. While longer, I favor <code>&lt;-</code> in the creation of object to avoid confusion with mathematical operator.</p>
 </div>
@@ -2081,8 +2063,8 @@ div.tocify {
 </ul>
 <p>Among the many advantages of RStudio, you will appreciate the user-adjustable interface (see Options&gt;Appearance&gt;Layout), the auto-synthax, the suggestion <code>function {package}</code> together a brief description of its use.</p>
 <p>Using our <code>fish</code> dataset, write a code to import data as an object <code>fish</code> then copy the following ‘plot’ command in in your script. Run the script, and observe the result.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>fish&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/reef_fish.txt&#39;</span>, <span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, <span class="dt">dec=</span><span class="st">&#39;.&#39;</span>)</span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">barplot</span>(fish<span class="op">$</span>richness, <span class="dt">main=</span><span class="st">&quot;Top 10 reef fish Richness (Allen, 2000)&quot;</span>, <span class="dt">horiz=</span><span class="ot">TRUE</span>, <span class="dt">names.arg=</span>fish<span class="op">$</span>country, <span class="dt">cex.names=</span><span class="fl">0.5</span>, <span class="dt">las=</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">fish&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/reef_fish.txt&#39;</span>, <span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, <span class="dt">dec=</span><span class="st">&#39;.&#39;</span>)</a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="kw">barplot</span>(fish<span class="op">$</span>richness, <span class="dt">main=</span><span class="st">&quot;Top 10 reef fish Richness (Allen, 2000)&quot;</span>, <span class="dt">horiz=</span><span class="ot">TRUE</span>, <span class="dt">names.arg=</span>fish<span class="op">$</span>country, <span class="dt">cex.names=</span><span class="fl">0.5</span>, <span class="dt">las=</span><span class="dv">1</span>)</a></code></pre></div>
 <p><strong>Note</strong>: you can easily export the resulting plot as and image, a pdf, or to copy it to your clipboard.</p>
 </div>
 </div>
@@ -2110,7 +2092,7 @@ div.tocify {
 <h4>macOS</h4>
 <p>Follow the instructions below or view this <a href="https://www.youtube.com/watch?v=9LQhwETCdwY&amp;ab_channel=SarahStevens">video tutorial</a>.</p>
 <ol style="list-style-type: decimal">
-<li><p>Go to this <a href="https://sourceforge.net/projects/git-osx-installer/files/">list</a> and download an installer for Git.</p>
+<li>Go to this <a href="https://sourceforge.net/projects/git-osx-installer/files/">list</a> and download an installer for Git.
 <ul>
 <li>If you are using OS X 10.9 and higher, choose the most recent version for “mavericks”.</li>
 <li>If you are using an earlier version of OS X, choose the most recent version for “snow leopard”.</li>
@@ -2154,9 +2136,9 @@ div.tocify {
 <ul>
 <li>After rendering course file in RStudio, you can review it. Each week, you will prepare a short example based on what you learned in the previous class - or how to extended it. At the beginning of each class, a presenter will be randomly selected to illustrate what he prepared (5-10 minutes). The algorithm below will decide who will present. You may present several time in the semester (lucky) or none (unlucky), so always be ready. You will prepare your summary in .Rmd format</li>
 </ul>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">library</span>(dplyr)</span>
-<span id="cb21-2"><a href="#cb21-2"></a>list_student&lt;-<span class="kw">c</span>(<span class="st">&#39;沈敬家&#39;</span>,<span class="st">&#39;Ya-Fang CHENG&#39;</span>,<span class="st">&#39;Ling-Lan HSU&#39;</span>,<span class="st">&#39;Yen-Ting CHEN&#39;</span>,<span class="st">&#39;Tsai-Hsuan HSU&#39;</span>,<span class="st">&#39;Yu-Wen CHEN&#39;</span>,<span class="st">&#39;Che-Yueh LIN&#39;</span>,<span class="st">&#39;Kong-Mei SHUET&#39;</span>,<span class="st">&#39;Wu-Chiao LIAO&#39;</span>,<span class="st">&#39;Mariana REYES&#39;</span>,<span class="st">&#39;Chi-Le KO&#39;</span>,<span class="st">&#39;San-Pei LEE&#39;</span>)</span>
-<span id="cb21-3"><a href="#cb21-3"></a><span class="kw">sample</span>(list_student, <span class="dv">1</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">library</span>(dplyr)</a>
+<a class="sourceLine" id="cb21-2" title="2">list_student&lt;-<span class="kw">c</span>(<span class="st">&#39;沈敬家&#39;</span>,<span class="st">&#39;Ya-Fang CHENG&#39;</span>,<span class="st">&#39;Ling-Lan HSU&#39;</span>,<span class="st">&#39;Yen-Ting CHEN&#39;</span>,<span class="st">&#39;Tsai-Hsuan HSU&#39;</span>,<span class="st">&#39;Yu-Wen CHEN&#39;</span>,<span class="st">&#39;Che-Yueh LIN&#39;</span>,<span class="st">&#39;Kong-Mei SHUET&#39;</span>,<span class="st">&#39;Wu-Chiao LIAO&#39;</span>,<span class="st">&#39;Mariana REYES&#39;</span>,<span class="st">&#39;Chi-Le KO&#39;</span>,<span class="st">&#39;San-Pei LEE&#39;</span>)</a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="kw">sample</span>(list_student, <span class="dv">1</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>Next week: install and load a package, set up your working directory, load a dataset and look for some help on the application of a given function</p>
 <ul>
 <li>Final project: research projects (2-3 students) must be ready <strong>one</strong> week before the end of the semester. A final report (.Rmd) will be send to the instructor 1 week before the final, and students will present their research on our last week together. The report will follow the format of a scientific publication but the style of the introduction and discussion can used bullet point to emphasize the methodology and the results. Topic is free, but a small proposal (1-2 pages, .Rmd) must be submitted before mid-term. Mid-term week will be dedicated to a discussion of the <strong>research project</strong>. Topics are free (not necessarily restricted to Ecology), and you are welcome to develop your own experiment but you can also use online published datasets which you will reinterpret.</li>

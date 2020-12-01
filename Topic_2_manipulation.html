@@ -1329,13 +1329,29 @@ window.initializeCodeFolding = function(show) {
 
 }
 </script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -1345,14 +1361,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -1361,9 +1379,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  { background-color: #f8f8f8; }
+  {  background-color: #f8f8f8; }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ef2929; } /* Alert */
 code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
@@ -1662,21 +1680,21 @@ div.tocify {
 <h1><strong>Topic 2 - Data manipulation</strong></h1>
 <p>Data manipulation involves modifying data to make it easier to read and to be more organized. We manipulate data for analysis and visualization. It is also used with the term ‘data exploration’ which involves organizing data using available sets of variables.</p>
 <p>At times, the data collection process done by machines involves a lot of errors and inaccuracies in reading. Data manipulation is also used to remove these inaccuracies and make data more accurate and precise.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span> (datasets) <span class="co"># load the dataset package</span></a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>()) <span class="co"># remove objects already present</span></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw">data</span>(iris) <span class="co"># load iris dataset</span></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="kw">ls</span>() <span class="co"># the function data import an object &#39;iris&#39;</span></a>
-<a class="sourceLine" id="cb1-5" title="5">iris <span class="co"># print the object</span></a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="kw">fix</span>(iris) <span class="co"># open a speadsheet on the object</span></a>
-<a class="sourceLine" id="cb1-7" title="7"><span class="kw">summary</span>(iris) <span class="co"># summarize the object</span></a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="kw">class</span>(iris) <span class="co"># give the class of the object</span></a>
-<a class="sourceLine" id="cb1-9" title="9"><span class="kw">str</span>(iris) <span class="co"># examine the structure of the object</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span> (datasets) <span class="co"># load the dataset package</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>()) <span class="co"># remove objects already present</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">data</span>(iris) <span class="co"># load iris dataset</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">ls</span>() <span class="co"># the function data import an object &#39;iris&#39;</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>iris <span class="co"># print the object</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">fix</span>(iris) <span class="co"># open a speadsheet on the object</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">summary</span>(iris) <span class="co"># summarize the object</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">class</span>(iris) <span class="co"># give the class of the object</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="kw">str</span>(iris) <span class="co"># examine the structure of the object</span></span></code></pre></div>
 <p>The object `iris’ is a data.frame and is composed of 5 variables and 150 observations. Four variables are numeric, one is a factor made of 3 levels.</p>
 <p>Other object types and structures also exist: data frame, factor, integer, matrix, etc. but more on this later (it is long and boring, yet important)</p>
 <div id="row-and-column-selection" class="section level2">
 <h2>Row and column selection</h2>
 <p>Let’s assume an online dataframe reporting the height and shoesize of 10 Taiwanese students:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">students&lt;-<span class="kw">read.table</span>(<span class="st">&#39;https://www.dipintothereef.com/uploads/3/7/3/5/37359245/students.txt&#39;</span>,<span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&#39;.&#39;</span>) <span class="co"># inspect the object created</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>students&lt;-<span class="kw">read.table</span>(<span class="st">&#39;https://www.dipintothereef.com/uploads/3/7/3/5/37359245/students.txt&#39;</span>,<span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&#39;.&#39;</span>) <span class="co"># inspect the object created</span></span></code></pre></div>
 <p>A single column (height) is needed for further processing. This is accomplished by using the <code>$</code> operator. A column is selected by putting together on the same line the:</p>
 <ul>
 <li>name of the object</li>
@@ -1684,16 +1702,16 @@ div.tocify {
 <li>name of the column</li>
 </ul>
 <p>Here the column <code>height</code> can be selected using: <code>students$height</code>. The same column can be extracted using the subscript which is denoted by the square brackets after the object name <code>students[,1]</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">class</span>(students<span class="op">$</span>height)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw">class</span>(students[,<span class="dv">1</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">class</span>(students<span class="op">$</span>height)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">class</span>(students[,<span class="dv">1</span>])</span></code></pre></div>
 <p>This column is an integer: a whole number (not a fractional number) that can be positive, negative, or zero. This can be converted as a numerical using the function: `as.numeric’</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">students<span class="op">$</span>height&lt;-<span class="kw">as.numeric</span>(students<span class="op">$</span>height) <span class="co"># assigned numerical value to this column</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="kw">class</span>(students<span class="op">$</span>height) <span class="co"># check the change was made</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>students<span class="op">$</span>height&lt;-<span class="kw">as.numeric</span>(students<span class="op">$</span>height) <span class="co"># assigned numerical value to this column</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">class</span>(students<span class="op">$</span>height) <span class="co"># check the change was made</span></span></code></pre></div>
 <p>Extracting a row can obly be accomplished with a subsecript. Therefore, to extract the first row of our dataframe:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">students[<span class="dv">1</span>,] <span class="co">#extract the first row of the table</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>students[<span class="dv">1</span>,] <span class="co">#extract the first row of the table</span></span></code></pre></div>
 <p>Following the same methods, check the results of:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">students[<span class="dv">1</span>,<span class="dv">1</span>] <span class="co"># element in the first row, first column</span></a>
-<a class="sourceLine" id="cb6-2" title="2">students<span class="op">$</span>height[<span class="dv">1</span>] <span class="co"># first element in our vector height</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>students[<span class="dv">1</span>,<span class="dv">1</span>] <span class="co"># element in the first row, first column</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>students<span class="op">$</span>height[<span class="dv">1</span>] <span class="co"># first element in our vector height</span></span></code></pre></div>
 <p><span style="color: red">Always remember <code>object[no. row, no. column]</code></span></p>
 </div>
 <div id="sub-setting" class="section level2">
@@ -1702,67 +1720,67 @@ div.tocify {
 <ol style="list-style-type: decimal">
 <li>Add a condition and check whether or not the observation (row) is for female students:</li>
 </ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">students<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;female&quot;</span> <span class="co"># check which information is for female</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>students<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;female&quot;</span> <span class="co"># check which information is for female</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Create a filter, here I called it <code>f</code>:</li>
 </ol>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">f&lt;-students<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;female&quot;</span> <span class="co"># create a &#39;filter&#39; called f</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>f&lt;-students<span class="op">$</span>gender<span class="op">==</span><span class="st">&quot;female&quot;</span> <span class="co"># create a &#39;filter&#39; called f</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Apply my filter using subsript, I want to extract only the rows that contain data for female students. I put the results in a new object call <code>female</code>:</li>
 </ol>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">females&lt;-students[f,] <span class="co"># filter our &#39;students&#39; dataset</span></a>
-<a class="sourceLine" id="cb9-2" title="2">females</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>females&lt;-students[f,] <span class="co"># filter our &#39;students&#39; dataset</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>females</span></code></pre></div>
 <p>It selected 5 students. The dimensions of my new data frame is a table of 5 obs. by 4 col. Column names <code>colnames</code> remained unchanged, but I have now only 5 names for the rows <code>rownames</code>. I can rename my <code>rownames</code> by combining names into a vector <code>c</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">dim</span>(females) <span class="co"># size of my new data frame</span></a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="kw">colnames</span>(females) <span class="co"># names of the columns</span></a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="kw">rownames</span>(females) <span class="co"># names of the rows</span></a>
-<a class="sourceLine" id="cb10-4" title="4"><span class="kw">rownames</span>(females)&lt;-<span class="kw">c</span>(<span class="st">&#39;Vanessa&#39;</span>, <span class="st">&#39;Vicky&#39;</span>, <span class="st">&#39;Marianna&#39;</span>, <span class="st">&#39;Joyce&#39;</span>, <span class="st">&#39;Victoria&#39;</span>)</a>
-<a class="sourceLine" id="cb10-5" title="5">females</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">dim</span>(females) <span class="co"># size of my new data frame</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">colnames</span>(females) <span class="co"># names of the columns</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="kw">rownames</span>(females) <span class="co"># names of the rows</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="kw">rownames</span>(females)&lt;-<span class="kw">c</span>(<span class="st">&#39;Vanessa&#39;</span>, <span class="st">&#39;Vicky&#39;</span>, <span class="st">&#39;Marianna&#39;</span>, <span class="st">&#39;Joyce&#39;</span>, <span class="st">&#39;Victoria&#39;</span>)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>females</span></code></pre></div>
 <blockquote>
 <p><em><span style="color: green"><strong>RP2</strong>: Using our <code>iris</code> data set, create three different data set corresponding to the three species designated in the column <code>Species</code></span></em></p>
 </blockquote>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">levels</span>(iris<span class="op">$</span>Species)</a>
-<a class="sourceLine" id="cb11-2" title="2">setf&lt;-iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&quot;setosa&quot;</span></a>
-<a class="sourceLine" id="cb11-3" title="3">setosa&lt;-iris[setf,]</a>
-<a class="sourceLine" id="cb11-4" title="4">verf&lt;-iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&quot;versicolor&quot;</span></a>
-<a class="sourceLine" id="cb11-5" title="5">versicolor&lt;-iris[verf,] </a>
-<a class="sourceLine" id="cb11-6" title="6">virf&lt;-iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&quot;virginica&quot;</span></a>
-<a class="sourceLine" id="cb11-7" title="7">virginica&lt;-iris[virf,] </a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">levels</span>(iris<span class="op">$</span>Species)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>setf&lt;-iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&quot;setosa&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>setosa&lt;-iris[setf,]</span>
+<span id="cb11-4"><a href="#cb11-4"></a>verf&lt;-iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&quot;versicolor&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>versicolor&lt;-iris[verf,] </span>
+<span id="cb11-6"><a href="#cb11-6"></a>virf&lt;-iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&quot;virginica&quot;</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a>virginica&lt;-iris[virf,] </span></code></pre></div>
 </div>
 <div id="sample" class="section level2">
 <h2>Sample</h2>
 <p>The function <code>sample</code> is used to generate a sample of a specific size from a vector or a dataset, eithre with or without replacement.</p>
 <p>The basic syntax of the <code>sample</code> function is as follows:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">sample</span>(data, size, <span class="dt">replace =</span> <span class="ot">FALSE</span>, <span class="dt">prob =</span> <span class="ot">NULL</span>)</a>
-<a class="sourceLine" id="cb12-2" title="2"><span class="co">#get source code</span></a>
-<a class="sourceLine" id="cb12-3" title="3"><span class="co"># View(sample) OR getAnywhere(sample()) </span></a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">sample</span>(data, size, <span class="dt">replace =</span> <span class="ot">FALSE</span>, <span class="dt">prob =</span> <span class="ot">NULL</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co">#get source code</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="co"># View(sample) OR getAnywhere(sample()) </span></span></code></pre></div>
 <p>To select randomly two individuals in our<code>students</code> dataset, I first need to define the size of my target, create a filter with my random selection of individuals, then apply my filter on my <code>students</code> dataset:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">nrow</span>(students) <span class="co"># number of rows in student, same as dim(students)[1] </span></a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(students) <span class="co"># create a vector from 1 to nrow(students) observation: 10</span></a>
-<a class="sourceLine" id="cb13-3" title="3">stuf&lt;-<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(students), <span class="dv">2</span>) <span class="co"># filter randonly 2 students on my 10 students</span></a>
-<a class="sourceLine" id="cb13-4" title="4">stuf <span class="co"># my two students</span></a>
-<a class="sourceLine" id="cb13-5" title="5">students[stuf,] <span class="co"># apply my filter</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">nrow</span>(students) <span class="co"># number of rows in student, same as dim(students)[1] </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(students) <span class="co"># create a vector from 1 to nrow(students) observation: 10</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>stuf&lt;-<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(students), <span class="dv">2</span>) <span class="co"># filter randonly 2 students on my 10 students</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a>stuf <span class="co"># my two students</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>students[stuf,] <span class="co"># apply my filter</span></span></code></pre></div>
 </div>
 <div id="sorting" class="section level2">
 <h2>Sorting</h2>
 <p>Sorting a data frame is done by combining command <code>order</code> with a subscript. Like for sub-setting, we first need to create a vector that will tell into which order the rows of the table need to be arranged:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">ind1&lt;-<span class="kw">order</span> (students<span class="op">$</span>height ) <span class="co"># create the vector of order: ind1</span></a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="kw">rownames</span>(students) <span class="co"># the first ind &#39;1 | height 167&#39; should move at position 5</span></a>
-<a class="sourceLine" id="cb14-3" title="3">students [ind1,] <span class="co"># sorting my data with my vector of order, check ind.1 is at position 5 </span></a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>ind1&lt;-<span class="kw">order</span> (students<span class="op">$</span>height ) <span class="co"># create the vector of order: ind1</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">rownames</span>(students) <span class="co"># the first ind &#39;1 | height 167&#39; should move at position 5</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a>students [ind1,] <span class="co"># sorting my data with my vector of order, check ind.1 is at position 5 </span></span></code></pre></div>
 <p>All can be combined into 1 line, without creating a vector order:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">students[<span class="kw">order</span>(students<span class="op">$</span>height),]</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>students[<span class="kw">order</span>(students<span class="op">$</span>height),]</span></code></pre></div>
 <p>You can now guess what the following vectors will do:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">ind2&lt;-<span class="kw">order</span>(<span class="op">-</span>students<span class="op">$</span>height)</a>
-<a class="sourceLine" id="cb16-2" title="2">ind3&lt;-<span class="kw">order</span>(students<span class="op">$</span>height,<span class="dt">decreasing =</span>T)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>ind2&lt;-<span class="kw">order</span>(<span class="op">-</span>students<span class="op">$</span>height)</span>
+<span id="cb16-2"><a href="#cb16-2"></a>ind3&lt;-<span class="kw">order</span>(students<span class="op">$</span>height,<span class="dt">decreasing =</span>T)</span></code></pre></div>
 </div>
 <div id="recoding" class="section level2">
 <h2>Recoding</h2>
 <p>Recoding is replacing values with new ones. Values in a varaible can be recoded using the command <code>ifelse</code>. Le’s recode our <code>gender</code> variable with different colors in order to have male=blue and female=red. Note ‘equal to’ is given with the operator <code>==</code></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">colors&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>gender<span class="op">==</span><span class="st">&#39;male&#39;</span>, <span class="st">&#39;blue&#39;</span>,<span class="st">&#39;red&#39;</span>) <span class="co"># if condition is true it will take the value &#39;blue&#39;, if not the value &#39;red&#39; </span></a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>colors&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>gender<span class="op">==</span><span class="st">&#39;male&#39;</span>, <span class="st">&#39;blue&#39;</span>,<span class="st">&#39;red&#39;</span>) <span class="co"># if condition is true it will take the value &#39;blue&#39;, if not the value &#39;red&#39; </span></span></code></pre></div>
 <p>You can create an new column:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">students<span class="op">$</span>colors&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>gender<span class="op">==</span><span class="st">&#39;male&#39;</span>,<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;red&#39;</span>) <span class="co"># create a new column</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>students<span class="op">$</span>colors&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>gender<span class="op">==</span><span class="st">&#39;male&#39;</span>,<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;red&#39;</span>) <span class="co"># create a new column</span></span></code></pre></div>
 <p>Or replace the existing one:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">students<span class="op">$</span>gender&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>gender<span class="op">==</span><span class="st">&#39;male&#39;</span>, <span class="st">&#39;blue&#39;</span>,<span class="st">&#39;red&#39;</span>) <span class="co"># replace an existing column</span></a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>students<span class="op">$</span>gender&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>gender<span class="op">==</span><span class="st">&#39;male&#39;</span>, <span class="st">&#39;blue&#39;</span>,<span class="st">&#39;red&#39;</span>) <span class="co"># replace an existing column</span></span></code></pre></div>
 <p>More operators, which can be combined together:</p>
 <p><code>==</code> equal to</p>
 <p><code>&gt;=</code> equal to or greater than</p>
@@ -1770,22 +1788,22 @@ div.tocify {
 <p><code>!=</code> not equal to</p>
 <p><code>&amp;</code> and</p>
 <p><code>|</code> or</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">students<span class="op">$</span>height <span class="op">&lt;=</span><span class="st"> </span><span class="dv">165</span> <span class="co"># students shorter or equal to 165 cm</span></a>
-<a class="sourceLine" id="cb20-2" title="2">students<span class="op">$</span>shoesize <span class="op">&lt;</span><span class="st"> </span><span class="dv">37</span> <span class="co"># students with shoes size less than 37</span></a>
-<a class="sourceLine" id="cb20-3" title="3">students<span class="op">$</span>height <span class="op">&lt;=</span><span class="st"> </span><span class="dv">165</span> <span class="op">&amp;</span><span class="st"> </span>students<span class="op">$</span>shoesize <span class="op">&lt;</span><span class="st"> </span><span class="dv">37</span> <span class="co"># students with height and shoes size &lt;37</span></a>
-<a class="sourceLine" id="cb20-4" title="4">students<span class="op">$</span>dual.cond&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>height<span class="op">&lt;=</span><span class="dv">165</span> <span class="op">&amp;</span><span class="st"> </span>students<span class="op">$</span>shoesize<span class="op">&lt;</span><span class="dv">37</span>,<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;red&#39;</span>) <span class="co"># Use with ifelse()</span></a>
-<a class="sourceLine" id="cb20-5" title="5">students <span class="co"># only one student follow the two conditions</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>students<span class="op">$</span>height <span class="op">&lt;=</span><span class="st"> </span><span class="dv">165</span> <span class="co"># students shorter or equal to 165 cm</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>students<span class="op">$</span>shoesize <span class="op">&lt;</span><span class="st"> </span><span class="dv">37</span> <span class="co"># students with shoes size less than 37</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a>students<span class="op">$</span>height <span class="op">&lt;=</span><span class="st"> </span><span class="dv">165</span> <span class="op">&amp;</span><span class="st"> </span>students<span class="op">$</span>shoesize <span class="op">&lt;</span><span class="st"> </span><span class="dv">37</span> <span class="co"># students with height and shoes size &lt;37</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a>students<span class="op">$</span>dual.cond&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>height<span class="op">&lt;=</span><span class="dv">165</span> <span class="op">&amp;</span><span class="st"> </span>students<span class="op">$</span>shoesize<span class="op">&lt;</span><span class="dv">37</span>,<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;red&#39;</span>) <span class="co"># Use with ifelse()</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a>students <span class="co"># only one student follow the two conditions</span></span></code></pre></div>
 <blockquote>
 <p><em><span style="color: green"><strong>RP3</strong>: Reverse variable <code>gender</code> with <code>male</code> and <code>female</code> by replacing color names. Delete extra variables created to come back to our orignal table (the variable received <code>NULL</code>). Using the <code>iris</code> dataset create a new variable with flower colors. Iris setosa is purple.Iris versicolor is blue. Iris virginica is pink. Sort individuals by decreasing <code>Sepal.Width</code>. Hypothesize on the use of this trait to discriminate the species.</span></em></p>
 </blockquote>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co">#`students` dataset</span></a>
-<a class="sourceLine" id="cb21-2" title="2">students<span class="op">$</span>gender&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>gender<span class="op">==</span><span class="st">&#39;blue&#39;</span>,<span class="st">&#39;male&#39;</span>,<span class="st">&#39;female&#39;</span>)</a>
-<a class="sourceLine" id="cb21-3" title="3">students<span class="op">$</span>colors&lt;-<span class="ot">NULL</span></a>
-<a class="sourceLine" id="cb21-4" title="4">students<span class="op">$</span>dual.cond&lt;-<span class="ot">NULL</span></a>
-<a class="sourceLine" id="cb21-5" title="5"></a>
-<a class="sourceLine" id="cb21-6" title="6"><span class="co"># `iris` dataset</span></a>
-<a class="sourceLine" id="cb21-7" title="7">iris<span class="op">$</span>colors&lt;-<span class="kw">ifelse</span>(iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&#39;setosa&#39;</span>,<span class="st">&#39;purple&#39;</span>, <span class="kw">ifelse</span>(iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&#39;versicolor&#39;</span>,<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;pink&#39;</span>))</a>
-<a class="sourceLine" id="cb21-8" title="8">iris[<span class="kw">order</span>(iris<span class="op">$</span>Sepal.Width, <span class="dt">decreasing =</span> T),]</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co">#`students` dataset</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>students<span class="op">$</span>gender&lt;-<span class="kw">ifelse</span>(students<span class="op">$</span>gender<span class="op">==</span><span class="st">&#39;blue&#39;</span>,<span class="st">&#39;male&#39;</span>,<span class="st">&#39;female&#39;</span>)</span>
+<span id="cb21-3"><a href="#cb21-3"></a>students<span class="op">$</span>colors&lt;-<span class="ot">NULL</span></span>
+<span id="cb21-4"><a href="#cb21-4"></a>students<span class="op">$</span>dual.cond&lt;-<span class="ot">NULL</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a></span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="co"># `iris` dataset</span></span>
+<span id="cb21-7"><a href="#cb21-7"></a>iris<span class="op">$</span>colors&lt;-<span class="kw">ifelse</span>(iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&#39;setosa&#39;</span>,<span class="st">&#39;purple&#39;</span>, <span class="kw">ifelse</span>(iris<span class="op">$</span>Species<span class="op">==</span><span class="st">&#39;versicolor&#39;</span>,<span class="st">&#39;blue&#39;</span>,<span class="st">&#39;pink&#39;</span>))</span>
+<span id="cb21-8"><a href="#cb21-8"></a>iris[<span class="kw">order</span>(iris<span class="op">$</span>Sepal.Width, <span class="dt">decreasing =</span> T),]</span></code></pre></div>
 </div>
 <div id="package-dplyr" class="section level2">
 <h2>Package <code>dplyr</code></h2>
@@ -1802,69 +1820,69 @@ div.tocify {
 <div id="select" class="section level3">
 <h3><code>select</code></h3>
 <p>It is used to select data by its column name. We can select any number of columns in a number of ways. For example:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">library</span> (dplyr)</a>
-<a class="sourceLine" id="cb22-2" title="2">selected &lt;-<span class="st"> </span><span class="kw">select</span>(iris, Sepal.Length, Sepal.Width, Petal.Length) <span class="co">#To select the following columns</span></a>
-<a class="sourceLine" id="cb22-3" title="3"><span class="kw">head</span>(selected) <span class="co"># print the beginning of the data set created</span></a>
-<a class="sourceLine" id="cb22-4" title="4">selected1 &lt;-<span class="st"> </span><span class="kw">select</span>(iris, Sepal.Length<span class="op">:</span>Petal.Length) <span class="co">#To select all columns from Sepal.Length to Petal.Length</span></a>
-<a class="sourceLine" id="cb22-5" title="5"><span class="kw">head</span>(selected1, <span class="dv">4</span>) <span class="co">#To print first four rows of the data set created                       </span></a>
-<a class="sourceLine" id="cb22-6" title="6">selected1 &lt;-<span class="st"> </span><span class="kw">select</span>(iris,<span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">5</span>)) <span class="co">#To select columns with numeric indexes</span></a>
-<a class="sourceLine" id="cb22-7" title="7"><span class="kw">head</span>(selected1)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">library</span> (dplyr)</span>
+<span id="cb22-2"><a href="#cb22-2"></a>selected &lt;-<span class="st"> </span><span class="kw">select</span>(iris, Sepal.Length, Sepal.Width, Petal.Length) <span class="co">#To select the following columns</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">head</span>(selected) <span class="co"># print the beginning of the data set created</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a>selected1 &lt;-<span class="st"> </span><span class="kw">select</span>(iris, Sepal.Length<span class="op">:</span>Petal.Length) <span class="co">#To select all columns from Sepal.Length to Petal.Length</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a><span class="kw">head</span>(selected1, <span class="dv">4</span>) <span class="co">#To print first four rows of the data set created                       </span></span>
+<span id="cb22-6"><a href="#cb22-6"></a>selected1 &lt;-<span class="st"> </span><span class="kw">select</span>(iris,<span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">5</span>)) <span class="co">#To select columns with numeric indexes</span></span>
+<span id="cb22-7"><a href="#cb22-7"></a><span class="kw">head</span>(selected1)</span></code></pre></div>
 <p>We used <code>-</code> to hide a particular column</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">selected &lt;-<span class="st"> </span><span class="kw">select</span>(iris, <span class="op">-</span>Sepal.Length, <span class="op">-</span>Sepal.Width)</a>
-<a class="sourceLine" id="cb23-2" title="2"><span class="kw">head</span>(selected)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>selected &lt;-<span class="st"> </span><span class="kw">select</span>(iris, <span class="op">-</span>Sepal.Length, <span class="op">-</span>Sepal.Width)</span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="kw">head</span>(selected)</span></code></pre></div>
 </div>
 <div id="filter" class="section level3">
 <h3><code>filter</code></h3>
 <p>It is used to find rows with matching criteria. It also works like the select() function, i.e., we pass a data frame along with a condition separated by a comma. For example:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="co">#To select the first 3 rows with Species as setosa</span></a>
-<a class="sourceLine" id="cb24-2" title="2">filtered &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span> )</a>
-<a class="sourceLine" id="cb24-3" title="3"><span class="kw">head</span>(filtered,<span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co">#To select the first 3 rows with Species as setosa</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>filtered &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span> )</span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="kw">head</span>(filtered,<span class="dv">3</span>)</span></code></pre></div>
 <p>And for dual conditions:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="co">#To select the last 5 rows with Species as versicolor and Sepal width more than 3</span></a>
-<a class="sourceLine" id="cb25-2" title="2">filtered1 &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, Species <span class="op">==</span><span class="st"> &quot;versicolor&quot;</span>, Sepal.Width <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb25-3" title="3"><span class="kw">tail</span>(filtered1)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co">#To select the last 5 rows with Species as versicolor and Sepal width more than 3</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>filtered1 &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, Species <span class="op">==</span><span class="st"> &quot;versicolor&quot;</span>, Sepal.Width <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>)</span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="kw">tail</span>(filtered1)</span></code></pre></div>
 </div>
 <div id="mutate" class="section level3">
 <h3><code>mutate</code></h3>
 <p>It creates new columns and preserves the existing columns in a dataset. For example:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co">#To create a column “Greater.Half” which stores TRUE if given condition is TRUE</span></a>
-<a class="sourceLine" id="cb26-2" title="2">col1 &lt;-<span class="st"> </span><span class="kw">mutate</span>(iris, <span class="dt">Greater.Half =</span> Sepal.Width <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>Sepal.Length)</a>
-<a class="sourceLine" id="cb26-3" title="3"><span class="kw">tail</span>(col1)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co">#To create a column “Greater.Half” which stores TRUE if given condition is TRUE</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>col1 &lt;-<span class="st"> </span><span class="kw">mutate</span>(iris, <span class="dt">Greater.Half =</span> Sepal.Width <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>Sepal.Length)</span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="kw">tail</span>(col1)</span></code></pre></div>
 <p>To check how many flower satisfy this condition, the output of the function <code>table{base}</code> is a contingency table:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw">table</span>(col1<span class="op">$</span>Greater.Half)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">table</span>(col1<span class="op">$</span>Greater.Half)</span></code></pre></div>
 </div>
 <div id="arrange" class="section level3">
 <h3><code>arrange</code></h3>
 <p>It is used to sort rows by variables in both an ascending and descending order. For example:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co">#To arrange Sepal Width in ascending order</span></a>
-<a class="sourceLine" id="cb28-2" title="2">arranged &lt;-<span class="st"> </span><span class="kw">arrange</span>(col1, Sepal.Width)</a>
-<a class="sourceLine" id="cb28-3" title="3"><span class="kw">head</span>(arranged)</a>
-<a class="sourceLine" id="cb28-4" title="4"><span class="co">#To arrange Sepal Width in descending order</span></a>
-<a class="sourceLine" id="cb28-5" title="5">arranged &lt;-<span class="st"> </span><span class="kw">arrange</span>(col1, <span class="kw">desc</span>(Sepal.Width))</a>
-<a class="sourceLine" id="cb28-6" title="6"><span class="kw">head</span>(arranged)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co">#To arrange Sepal Width in ascending order</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>arranged &lt;-<span class="st"> </span><span class="kw">arrange</span>(col1, Sepal.Width)</span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="kw">head</span>(arranged)</span>
+<span id="cb28-4"><a href="#cb28-4"></a><span class="co">#To arrange Sepal Width in descending order</span></span>
+<span id="cb28-5"><a href="#cb28-5"></a>arranged &lt;-<span class="st"> </span><span class="kw">arrange</span>(col1, <span class="kw">desc</span>(Sepal.Width))</span>
+<span id="cb28-6"><a href="#cb28-6"></a><span class="kw">head</span>(arranged)</span></code></pre></div>
 </div>
 <div id="summarise" class="section level3">
 <h3><code>summarise</code></h3>
 <p>It is used to find insights(mean, median, mode, etc.) from a dataset. It reduces multiple values down to a single value. For example:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">summarised &lt;-<span class="st"> </span><span class="kw">summarise</span>(arranged, <span class="dt">Mean.Width =</span> <span class="kw">mean</span>(Sepal.Width))</a>
-<a class="sourceLine" id="cb29-2" title="2"><span class="kw">head</span>(summarised)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>summarised &lt;-<span class="st"> </span><span class="kw">summarise</span>(arranged, <span class="dt">Mean.Width =</span> <span class="kw">mean</span>(Sepal.Width))</span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="kw">head</span>(summarised)</span></code></pre></div>
 </div>
 <div id="group_by" class="section level3">
 <h3><code>group_by</code></h3>
 <p>It is done to group observations within a dataset by one or more variables. Most data operations are performed on groups defined by variables. For example:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="co">#To find mean sepal width by Species, we use grouping as follows</span></a>
-<a class="sourceLine" id="cb30-2" title="2">gp &lt;-<span class="st"> </span><span class="kw">group_by</span>(iris,Species)</a>
-<a class="sourceLine" id="cb30-3" title="3">mn &lt;-<span class="st"> </span><span class="kw">summarise</span>(gp,<span class="dt">Mean.Sepal =</span> <span class="kw">mean</span>(Sepal.Width))</a>
-<a class="sourceLine" id="cb30-4" title="4">mn</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co">#To find mean sepal width by Species, we use grouping as follows</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>gp &lt;-<span class="st"> </span><span class="kw">group_by</span>(iris,Species)</span>
+<span id="cb30-3"><a href="#cb30-3"></a>mn &lt;-<span class="st"> </span><span class="kw">summarise</span>(gp,<span class="dt">Mean.Sepal =</span> <span class="kw">mean</span>(Sepal.Width))</span>
+<span id="cb30-4"><a href="#cb30-4"></a>mn</span></code></pre></div>
 </div>
 </div>
 <div id="pipe-operator" class="section level2">
 <h2>Pipe operator</h2>
 <p>Pipe operator lets us wrap multiple functions together. It is denoted as <code>%&gt;%</code>. It can be used with functions like <code>filter</code>, <code>select</code>, <code>arrange</code>, <code>summarise</code>, <code>group_by</code>, etc. For example:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="co">#To get rows with the following conditions</span></a>
-<a class="sourceLine" id="cb31-2" title="2">iris <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span>,Sepal.Width <span class="op">&gt;</span><span class="st"> </span><span class="fl">3.8</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">#To get rows with the following conditions</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a>iris <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span>,Sepal.Width <span class="op">&gt;</span><span class="st"> </span><span class="fl">3.8</span>)</span></code></pre></div>
 <p>To find mean Sepal Length by Species, we use pipe operator as follows:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">iris  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Species) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">Mean.Length =</span> <span class="kw">mean</span>(Sepal.Length))</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>iris  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Species) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">Mean.Length =</span> <span class="kw">mean</span>(Sepal.Length))</span></code></pre></div>
 <blockquote>
 <p><em><span style="color: green"> <strong>Challenge</strong>: the data set <code>rairuoho</code>provides growth data for 8 days in different treatments. Reformat the table in order to have the <code>day</code> as a variable with 6 levels together with another variable called length. You may use another famous package for data manipulation <code>tidyr</code> and the function <code>gather()</code>. Current variables are given as:</span></em></p>
 </blockquote>
@@ -1877,8 +1895,8 @@ div.tocify {
 <p><em><span style="color: green">- <code>spatial1</code>: vertical location of the plot </span></em></p>
 <p><em><span style="color: green">- <code>spatial2</code>: horizontal location of the plot </span></em></p>
 <p><em><span style="color: green">extra variable <code>row</code> and <code>column</code> can be removed</span></em></p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">rairuoho&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/rairuoho.txt&#39;</span>,<span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>)</a>
-<a class="sourceLine" id="cb33-2" title="2"><span class="kw">head</span>(rairuoho)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>rairuoho&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/rairuoho.txt&#39;</span>,<span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>)</span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="kw">head</span>(rairuoho)</span></code></pre></div>
 </div>
 <div id="package-tidyr" class="section level2">
 <h2>Package <code>tidyr</code></h2>
@@ -1887,17 +1905,19 @@ div.tocify {
 <div id="pivot-data" class="section level3">
 <h3>Pivot data</h3>
 <p>Dai &amp; Horng (2009) summarize the coral diversity around Taiwan. <code>TW_corals</code> displays scleractinian coral richness by coral reef regions:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">TW_corals&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/tw_corals.txt&#39;</span>,<span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>)</a>
-<a class="sourceLine" id="cb34-2" title="2">TW_corals</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>TW_corals&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/tw_corals.txt&#39;</span>,<span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>)</span>
+<span id="cb34-2"><a href="#cb34-2"></a>TW_corals</span></code></pre></div>
 <pre><code>##   Southern_TW Northern_TW Eastern_TW Ludao Lanyu Xiaoliuqiu Penghu_North
 ## 1         280         136        210   250   248        239          107
 ##   Penghu_East Penghu_Inner Penghu.South Dongsha Taiping Northern_Is
 ## 1          84           75           99     229     163         112</code></pre>
 <p>This wide table can be easily reformat into a long table as we did before:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="kw">library</span>(tidyr)</a>
-<a class="sourceLine" id="cb36-2" title="2">TW_corals_long &lt;-<span class="st"> </span>TW_corals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(Southern_TW<span class="op">:</span>Northern_Is, <span class="dt">names_to =</span> <span class="st">&quot;Region&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Richness&quot;</span>)</a>
-<a class="sourceLine" id="cb36-3" title="3">TW_corals_long &lt;-TW_corals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">everything</span>(), <span class="dt">names_to =</span> <span class="st">&quot;Region&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Richness&quot;</span>)</a>
-<a class="sourceLine" id="cb36-4" title="4">TW_corals_long </a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">library</span>(tidyr)</span></code></pre></div>
+<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
+## when loading &#39;dplyr&#39;</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>TW_corals_long &lt;-<span class="st"> </span>TW_corals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(Southern_TW<span class="op">:</span>Northern_Is, <span class="dt">names_to =</span> <span class="st">&quot;Region&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Richness&quot;</span>)</span>
+<span id="cb38-2"><a href="#cb38-2"></a>TW_corals_long &lt;-TW_corals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">everything</span>(), <span class="dt">names_to =</span> <span class="st">&quot;Region&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Richness&quot;</span>)</span>
+<span id="cb38-3"><a href="#cb38-3"></a>TW_corals_long </span></code></pre></div>
 <pre><code>## # A tibble: 13 x 2
 ##    Region       Richness
 ##    &lt;chr&gt;           &lt;int&gt;
@@ -1915,8 +1935,8 @@ div.tocify {
 ## 12 Taiping           163
 ## 13 Northern_Is       112</code></pre>
 <p>The reverse operation can be made using <code>pivot_wider</code>:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">TW_corals_wide &lt;-<span class="st"> </span><span class="kw">pivot_wider</span>(TW_corals_long, <span class="dt">names_from =</span> Region, <span class="dt">values_from =</span> Richness) </a>
-<a class="sourceLine" id="cb38-2" title="2">TW_corals_wide</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>TW_corals_wide &lt;-<span class="st"> </span><span class="kw">pivot_wider</span>(TW_corals_long, <span class="dt">names_from =</span> Region, <span class="dt">values_from =</span> Richness) </span>
+<span id="cb40-2"><a href="#cb40-2"></a>TW_corals_wide</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 13
 ##   Southern_TW Northern_TW Eastern_TW Ludao Lanyu Xiaoliuqiu Penghu_North
 ##         &lt;int&gt;       &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;int&gt;      &lt;int&gt;        &lt;int&gt;
@@ -1929,8 +1949,8 @@ div.tocify {
 <div id="advanced-pivot-options" class="section level3">
 <h3>Advanced pivot options</h3>
 <p>Here’s a subset of median income by sex and by work experience for 2017 in four states in US and Taiwan (real data).</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1">income&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/metoo.txt&#39;</span>,<span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>, <span class="dt">na.strings =</span> <span class="st">&quot;n/a&quot;</span>)</a>
-<a class="sourceLine" id="cb40-2" title="2">income</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>income&lt;-<span class="kw">read.table</span>(<span class="st">&#39;Data/metoo.txt&#39;</span>,<span class="dt">header=</span>T, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">dec=</span><span class="st">&quot;.&quot;</span>, <span class="dt">na.strings =</span> <span class="st">&quot;n/a&quot;</span>)</span>
+<span id="cb42-2"><a href="#cb42-2"></a>income</span></code></pre></div>
 <pre><code>##           state male_fulltime male_other female_fulltime female_other
 ## 1         Maine          4194       1508            3337         1148
 ## 2 Massachusetts          5505       1547            4486         1248
@@ -1939,12 +1959,12 @@ div.tocify {
 ## 5        Taiwan          1806         NA            1510           NA</code></pre>
 <p>At first glance, it might seem that we have three variables as in the earlier example, but upon closer examination, we see that we can tease out two variables from the column names: sex (<code>male</code> and <code>female</code>) and work experience (<code>fulltime</code> and <code>other</code>).</p>
 <p><code>pivot_longer</code> has an argument, <code>names_sep</code>, that is passed the character that is used to delimit the two variable values. In our example, this character is <code>_</code>. Since the column values will be split across two variables we will also need to pass two column names to the <code>names_to</code> argument.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1">income_long &lt;-<span class="st"> </span>income <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span>state, </a>
-<a class="sourceLine" id="cb42-2" title="2">                         <span class="dt">names_to =</span> <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>,<span class="st">&quot;work&quot;</span>), </a>
-<a class="sourceLine" id="cb42-3" title="3">                         <span class="dt">names_sep =</span> <span class="st">&quot;_&quot;</span>, </a>
-<a class="sourceLine" id="cb42-4" title="4">                         <span class="dt">values_to =</span> <span class="st">&quot;income&quot;</span>)</a>
-<a class="sourceLine" id="cb42-5" title="5">                         </a>
-<a class="sourceLine" id="cb42-6" title="6">income_long</a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>income_long &lt;-<span class="st"> </span>income <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span>state, </span>
+<span id="cb44-2"><a href="#cb44-2"></a>                         <span class="dt">names_to =</span> <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>,<span class="st">&quot;work&quot;</span>), </span>
+<span id="cb44-3"><a href="#cb44-3"></a>                         <span class="dt">names_sep =</span> <span class="st">&quot;_&quot;</span>, </span>
+<span id="cb44-4"><a href="#cb44-4"></a>                         <span class="dt">values_to =</span> <span class="st">&quot;income&quot;</span>)</span>
+<span id="cb44-5"><a href="#cb44-5"></a>                         </span>
+<span id="cb44-6"><a href="#cb44-6"></a>income_long</span></code></pre></div>
 <pre><code>## # A tibble: 20 x 4
 ##    state         sex    work     income
 ##    &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;     &lt;int&gt;
@@ -1969,9 +1989,9 @@ div.tocify {
 ## 19 Taiwan        female fulltime   1510
 ## 20 Taiwan        female other        NA</code></pre>
 <p>Obviously, the reverse is possible:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1">income_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="kw">c</span>(sex,work), </a>
-<a class="sourceLine" id="cb44-2" title="2">            <span class="dt">values_from =</span> income,</a>
-<a class="sourceLine" id="cb44-3" title="3">            <span class="dt">names_sep =</span> <span class="st">&quot;.&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>income_long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="kw">c</span>(sex,work), </span>
+<span id="cb46-2"><a href="#cb46-2"></a>            <span class="dt">values_from =</span> income,</span>
+<span id="cb46-3"><a href="#cb46-3"></a>            <span class="dt">names_sep =</span> <span class="st">&quot;.&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 5 x 5
 ##   state         male.fulltime male.other female.fulltime female.other
 ##   &lt;chr&gt;                 &lt;int&gt;      &lt;int&gt;           &lt;int&gt;        &lt;int&gt;
@@ -1984,11 +2004,11 @@ div.tocify {
 <div id="separating-elements" class="section level3">
 <h3>Separating elements</h3>
 <p>The <code>tidyr</code> package offers other functions not directly tied to pivoting. For example, to split a column into two or more columns based on a column’s delimited value, use the <code>separate</code> function.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="co"># Let&#39;s first create a delimited table</span></a>
-<a class="sourceLine" id="cb46-2" title="2">income.long &lt;-<span class="st"> </span>income <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="dv">-1</span>, </a>
-<a class="sourceLine" id="cb46-3" title="3">                         <span class="dt">names_to =</span> <span class="st">&quot;var1&quot;</span>, </a>
-<a class="sourceLine" id="cb46-4" title="4">                         <span class="dt">values_to =</span> <span class="st">&quot;income&quot;</span>)</a>
-<a class="sourceLine" id="cb46-5" title="5">income.long</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="co"># Let&#39;s first create a delimited table</span></span>
+<span id="cb48-2"><a href="#cb48-2"></a>income.long &lt;-<span class="st"> </span>income <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="dv">-1</span>, </span>
+<span id="cb48-3"><a href="#cb48-3"></a>                         <span class="dt">names_to =</span> <span class="st">&quot;var1&quot;</span>, </span>
+<span id="cb48-4"><a href="#cb48-4"></a>                         <span class="dt">values_to =</span> <span class="st">&quot;income&quot;</span>)</span>
+<span id="cb48-5"><a href="#cb48-5"></a>income.long</span></code></pre></div>
 <pre><code>## # A tibble: 20 x 3
 ##    state         var1            income
 ##    &lt;chr&gt;         &lt;chr&gt;            &lt;int&gt;
@@ -2012,11 +2032,11 @@ div.tocify {
 ## 18 Taiwan        male_other          NA
 ## 19 Taiwan        female_fulltime   1510
 ## 20 Taiwan        female_other        NA</code></pre>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1"><span class="co"># Split var1 column into two columns</span></a>
-<a class="sourceLine" id="cb48-2" title="2">income.sep &lt;-<span class="st"> </span>income.long <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">separate</span>(<span class="dt">col =</span> var1, </a>
-<a class="sourceLine" id="cb48-3" title="3">                    <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, </a>
-<a class="sourceLine" id="cb48-4" title="4">                    <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;work&quot;</span>))</a>
-<a class="sourceLine" id="cb48-5" title="5">income.sep</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="co"># Split var1 column into two columns</span></span>
+<span id="cb50-2"><a href="#cb50-2"></a>income.sep &lt;-<span class="st"> </span>income.long <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">separate</span>(<span class="dt">col =</span> var1, </span>
+<span id="cb50-3"><a href="#cb50-3"></a>                    <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, </span>
+<span id="cb50-4"><a href="#cb50-4"></a>                    <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;work&quot;</span>))</span>
+<span id="cb50-5"><a href="#cb50-5"></a>income.sep</span></code></pre></div>
 <pre><code>## # A tibble: 20 x 4
 ##    state         sex    work     income
 ##    &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;     &lt;int&gt;
@@ -2043,7 +2063,7 @@ div.tocify {
 </div>
 <div id="splitting-rows" class="section level3">
 <h3>Splitting rows</h3>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1">income.long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate_rows</span>(var1, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>income.long <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate_rows</span>(var1, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 40 x 3
 ##    state         var1     income
 ##    &lt;chr&gt;         &lt;chr&gt;     &lt;int&gt;
@@ -2069,45 +2089,45 @@ div.tocify {
 <div id="numeric" class="section level4">
 <h4>Numeric</h4>
 <p>The numeric data type is probably the simplest. It consists of numbers such as integers (e.g. 1 ,-3 ,33 ,0) or doubles (e.g. 0.3, 12.4, -0.04, 1.0). For example, to create a numeric (double) vector we can type:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1.0</span>, <span class="fl">-3.4</span>, <span class="dv">2</span>, <span class="fl">140.1</span>)</a>
-<a class="sourceLine" id="cb52-2" title="2"><span class="kw">mode</span>(x)</a></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1.0</span>, <span class="fl">-3.4</span>, <span class="dv">2</span>, <span class="fl">140.1</span>)</span>
+<span id="cb54-2"><a href="#cb54-2"></a><span class="kw">mode</span>(x)</span></code></pre></div>
 <pre><code>## [1] &quot;numeric&quot;</code></pre>
 <p>To assess if the number is stored as an integer or a double use the <code>typeof</code> function.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1"><span class="kw">typeof</span>(x)</a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="kw">typeof</span>(x)</span></code></pre></div>
 <pre><code>## [1] &quot;double&quot;</code></pre>
 <p>Note that removing the fraction part of a number when creating a numeric object does not necessarily create an integer. For example, creating what seems to be an integer object returns double when queried by <code>typeof</code>:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">x &lt;-<span class="st"> </span><span class="dv">4</span></a>
-<a class="sourceLine" id="cb56-2" title="2"><span class="kw">typeof</span>(x)</a></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>x &lt;-<span class="st"> </span><span class="dv">4</span></span>
+<span id="cb58-2"><a href="#cb58-2"></a><span class="kw">typeof</span>(x)</span></code></pre></div>
 <pre><code>## [1] &quot;double&quot;</code></pre>
 <p>To force R to recognize a value as an integer add an upper case <code>L</code> to the number.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1">x &lt;-<span class="st"> </span>4L</a>
-<a class="sourceLine" id="cb58-2" title="2"><span class="kw">typeof</span>(x)</a></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>x &lt;-<span class="st"> </span>4L</span>
+<span id="cb60-2"><a href="#cb60-2"></a><span class="kw">typeof</span>(x)</span></code></pre></div>
 <pre><code>## [1] &quot;integer&quot;</code></pre>
 </div>
 <div id="character" class="section level4">
 <h4>Character</h4>
 <p>The character data type consists of letters or words such as “a”, “f”, “project”, “house value”.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;project&quot;</span>, <span class="st">&quot;house value&quot;</span>)</a>
-<a class="sourceLine" id="cb60-2" title="2"><span class="kw">typeof</span>(x)</a></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="st">&quot;project&quot;</span>, <span class="st">&quot;house value&quot;</span>)</span>
+<span id="cb62-2"><a href="#cb62-2"></a><span class="kw">typeof</span>(x)</span></code></pre></div>
 <pre><code>## [1] &quot;character&quot;</code></pre>
 <p>Characters can also consist of numbers represented as characters. The distinction between a character representation of a number and a numeric one is important. For example, if we have two numeric vectors <code>x</code> and <code>y</code> such as</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1">x &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb62-2" title="2">y &lt;-<span class="st"> </span><span class="fl">5.3</span></a></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a>x &lt;-<span class="st"> </span><span class="dv">3</span></span>
+<span id="cb64-2"><a href="#cb64-2"></a>y &lt;-<span class="st"> </span><span class="fl">5.3</span></span></code></pre></div>
 <p>and we choose to sum the two variables, we get:</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">x <span class="op">+</span><span class="st"> </span>y</a></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a>x <span class="op">+</span><span class="st"> </span>y</span></code></pre></div>
 <pre><code>## [1] 8.3</code></pre>
 <p>If we repeat these steps but instead choose to represent the numbers ‘3’ and ‘5.3’ as characters we get the following error message:</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" title="1">x &lt;-<span class="st"> &quot;3&quot;</span></a>
-<a class="sourceLine" id="cb65-2" title="2">y &lt;-<span class="st"> &quot;5.3&quot;</span></a>
-<a class="sourceLine" id="cb65-3" title="3"><span class="co"># Error in x + y: non-numeric argument to binary operator</span></a></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a>x &lt;-<span class="st"> &quot;3&quot;</span></span>
+<span id="cb67-2"><a href="#cb67-2"></a>y &lt;-<span class="st"> &quot;5.3&quot;</span></span>
+<span id="cb67-3"><a href="#cb67-3"></a><span class="co"># Error in x + y: non-numeric argument to binary operator</span></span></code></pre></div>
 <p>Note the use of quotes to force numbers to character mode.</p>
 </div>
 <div id="logical" class="section level4">
 <h4>Logical</h4>
 <p>Logical values can take on one of two values: <code>TRUE</code> or <code>FALSE</code>. These can also be represented as <code>1</code> or <code>0</code>. For example, to create a logical vector of 4 elements, you can type</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)</span></code></pre></div>
 <p>or</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1">x &lt;-<span class="st"> </span><span class="kw">as.logical</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1"></a>x &lt;-<span class="st"> </span><span class="kw">as.logical</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</span></code></pre></div>
 <p>Note that in both cases, <code>typeof</code> returns logical. Also note that the <code>1</code>’s and <code>0</code>’s in the last example are converted to <code>TRUE</code>’s and <code>FALSE</code>’s internally.</p>
 </div>
 </div>
@@ -2117,43 +2137,43 @@ div.tocify {
 <div id="factor" class="section level4">
 <h4>Factor</h4>
 <p><strong>Factors</strong> are normally used to group variables into a fixed number of unique categories or <strong>levels</strong>. For example, a dataset may be grouped by gender or month of the year. Such data are usually loaded into R as a numeric or character data type requiring that they be converted to a factor using the <code>as.factor</code> function.</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" title="1">a &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;U&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;U&quot;</span>)</a>
-<a class="sourceLine" id="cb68-2" title="2">a.fact &lt;-<span class="st"> </span><span class="kw">as.factor</span>(a)</a></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a>a &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;U&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;F&quot;</span>, <span class="st">&quot;U&quot;</span>)</span>
+<span id="cb70-2"><a href="#cb70-2"></a>a.fact &lt;-<span class="st"> </span><span class="kw">as.factor</span>(a)</span></code></pre></div>
 <p>Note that <code>a</code> is of <code>character</code> data type.</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1"><span class="kw">typeof</span>(a)</a></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1"></a><span class="kw">typeof</span>(a)</span></code></pre></div>
 <pre><code>## [1] &quot;character&quot;</code></pre>
 <p>However, the derived object <code>a.fact</code> is now stored as an <code>integer</code>!</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" title="1"><span class="kw">typeof</span>(a.fact)</a></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1"></a><span class="kw">typeof</span>(a.fact)</span></code></pre></div>
 <pre><code>## [1] &quot;integer&quot;</code></pre>
 <p>Yet, when displaying the contents of <code>a.fact</code> we see character values.</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" title="1">a.fact</a></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1"></a>a.fact</span></code></pre></div>
 <pre><code>##  [1] M F F U F M M M F U
 ## Levels: F M U</code></pre>
 <p>How can this be? Well, <code>a.fact</code> is a more complicated object than the simple objects created thus far in that the factor is storing additional information not seen in its output. This hidden information is stored in <strong>attributes</strong>. To view these hidden attributes, use the <code>attributes</code> function.</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" title="1"><span class="kw">attributes</span>(a.fact)</a></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1"></a><span class="kw">attributes</span>(a.fact)</span></code></pre></div>
 <pre><code>## $levels
 ## [1] &quot;F&quot; &quot;M&quot; &quot;U&quot;
 ## 
 ## $class
 ## [1] &quot;factor&quot;</code></pre>
 <p>There are two attributes: <code>levels</code> and <code>class</code>. The levels attribute lists the three unique values in <code>a.fact</code>. The order in which these levels are listed reflect their <em>numeric</em> representation. So in essence, <code>a.fact</code> is storing each value as an integer that points to one of the three unique levels. The unique levels of a factor, and the order in which they are stored can be extracted using the <code>levels</code> function.</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1"><span class="kw">levels</span>(a.fact)</a></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1"></a><span class="kw">levels</span>(a.fact)</span></code></pre></div>
 <pre><code>## [1] &quot;F&quot; &quot;M&quot; &quot;U&quot;</code></pre>
 <p>Remember, the order in which the levels are displayed match their integer representation. If we wanted them in a different order (i.e. U first followed by F then M) we would need to modify them by recreating the factor object as follows:</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" title="1"><span class="kw">factor</span>(a, <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&quot;U&quot;</span>,<span class="st">&quot;F&quot;</span>,<span class="st">&quot;M&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1"></a><span class="kw">factor</span>(a, <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&quot;U&quot;</span>,<span class="st">&quot;F&quot;</span>,<span class="st">&quot;M&quot;</span>))</span></code></pre></div>
 <pre><code>##  [1] M F F U F M M M F U
 ## Levels: U F M</code></pre>
 <p>This can be important when you will try to rearrange a plot.</p>
 <blockquote>
 <p>*<span style="color: green"><strong>RP4</strong>: Understanding the factors and their levels is critical, especially when you will subset. Let’s explore together why using our <code>iris</code> dataset</p>
 </blockquote>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" title="1">iris.sel&lt;-<span class="st"> </span><span class="kw">subset</span>(iris, Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span> <span class="op">|</span><span class="st"> </span>Species <span class="op">==</span><span class="st"> &quot;virginica&quot;</span>) <span class="co"># let&#39;s subset two species</span></a>
-<a class="sourceLine" id="cb81-2" title="2"><span class="kw">levels</span>(iris.sel<span class="op">$</span>Species) <span class="co"># the 3 species are still there</span></a>
-<a class="sourceLine" id="cb81-3" title="3"><span class="kw">boxplot</span>(Petal.Width <span class="op">~</span><span class="st"> </span>Species, iris.sel, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>) <span class="co"># This can be a nuisance when plotting the data subset</span></a>
-<a class="sourceLine" id="cb81-4" title="4"></a>
-<a class="sourceLine" id="cb81-5" title="5">iris.sel<span class="op">$</span>Species &lt;-<span class="st"> </span><span class="kw">droplevels</span>(iris.sel<span class="op">$</span>Species)</a>
-<a class="sourceLine" id="cb81-6" title="6"><span class="kw">levels</span>(iris.sel<span class="op">$</span>Species)</a>
-<a class="sourceLine" id="cb81-7" title="7"><span class="kw">boxplot</span>(Petal.Width <span class="op">~</span><span class="st"> </span>Species, iris.sel, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1"></a>iris.sel&lt;-<span class="st"> </span><span class="kw">subset</span>(iris, Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span> <span class="op">|</span><span class="st"> </span>Species <span class="op">==</span><span class="st"> &quot;virginica&quot;</span>) <span class="co"># let&#39;s subset two species</span></span>
+<span id="cb83-2"><a href="#cb83-2"></a><span class="kw">levels</span>(iris.sel<span class="op">$</span>Species) <span class="co"># the 3 species are still there</span></span>
+<span id="cb83-3"><a href="#cb83-3"></a><span class="kw">boxplot</span>(Petal.Width <span class="op">~</span><span class="st"> </span>Species, iris.sel, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>) <span class="co"># This can be a nuisance when plotting the data subset</span></span>
+<span id="cb83-4"><a href="#cb83-4"></a></span>
+<span id="cb83-5"><a href="#cb83-5"></a>iris.sel<span class="op">$</span>Species &lt;-<span class="st"> </span><span class="kw">droplevels</span>(iris.sel<span class="op">$</span>Species)</span>
+<span id="cb83-6"><a href="#cb83-6"></a><span class="kw">levels</span>(iris.sel<span class="op">$</span>Species)</span>
+<span id="cb83-7"><a href="#cb83-7"></a><span class="kw">boxplot</span>(Petal.Width <span class="op">~</span><span class="st"> </span>Species, iris.sel, <span class="dt">horizontal =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p><strong>ALWAYS</strong> CHECK THE DATA TYPE AND STRUCTRE OF YOUR DATA SET!</p>
 </div>
 <div id="date" class="section level4">
@@ -2163,16 +2183,16 @@ div.tocify {
 <div id="na-and-null" class="section level4">
 <h4>NA and NULL</h4>
 <p>You will find that many data files contain missing or unknown values. It may be tempting to assign these missing or unknown values a <code>0</code> but doing so can lead to many undesirable results when analyzing the data. R has two placeholders for such elements: <code>NA</code> and <code>NULL</code></p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">23</span>, <span class="ot">NA</span>, <span class="fl">1.2</span>, <span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">23</span>, <span class="ot">NA</span>, <span class="fl">1.2</span>, <span class="dv">5</span>)</span></code></pre></div>
 <p><code>NA</code> (Not Available) is a missing value indicator. It suggests that a value should be present but is unknown.</p>
 <p>The <code>NULL</code> object also represents missing values but its interpretation is slightly different in that it suggests that the value does not exist or that it’s not measurable.</p>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" title="1">y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">23</span>, <span class="ot">NULL</span>, <span class="fl">1.2</span>, <span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1"></a>y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">23</span>, <span class="ot">NULL</span>, <span class="fl">1.2</span>, <span class="dv">5</span>)</span></code></pre></div>
 <p>Remember when we previously removed the variables that we did not want to exist in our <code>students</code> dataset.The difference between <code>NA</code> and <code>NULL</code> may seem subtle, but their interpretation in some functions can lead to different outcomes. For example, when computing the mean of <code>x</code>, R returns an <code>NA</code> value:</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" title="1"><span class="kw">mean</span>(x)</a></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="kw">mean</span>(x)</span></code></pre></div>
 <pre><code>## [1] NA</code></pre>
 <p>This serves as a check to remind the user that one of the elements is missing. This can be overcome by setting the <code>na.rm</code> parameter to <code>TRUE</code> as in <code>mean(x, na.rm=T)</code> in which case R ignores the missing value.</p>
 <p>A <code>NULL</code> object, on the other hand, is treated differently. Since <code>NULL</code> implies that a value should not be present, R no longer feels the need to treat such element as questionable and allows the mean value to be computed:</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" title="1"><span class="kw">mean</span>(y)</a></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="kw">mean</span>(y)</span></code></pre></div>
 <pre><code>## [1] 9.733333</code></pre>
 <p>It’s more common to find data tables with missing elements populated with <code>NA</code>’s than <code>NULL</code>’s so unless you have a specific reason to use <code>NULL</code> as a missing value placeholder, use <code>NA</code> instead.</p>
 </div>
@@ -2184,84 +2204,84 @@ div.tocify {
 <div id="atomic-vectors" class="section level4">
 <h4>(Atomic) vectors</h4>
 <p>The <strong>atomic vector</strong> (or <strong>vector</strong> for short) is the simplest data structure in R which consists of an ordered set of values of the same type and or class (e.g. numeric, character, date, etc…). A vector can be created using the combine function c() as in</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">674</span> , <span class="dv">4186</span> , <span class="dv">5308</span> , <span class="dv">5083</span> , <span class="dv">6140</span> , <span class="dv">6381</span>)</a>
-<a class="sourceLine" id="cb88-2" title="2">x</a></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">674</span> , <span class="dv">4186</span> , <span class="dv">5308</span> , <span class="dv">5083</span> , <span class="dv">6140</span> , <span class="dv">6381</span>)</span>
+<span id="cb90-2"><a href="#cb90-2"></a>x</span></code></pre></div>
 <pre><code>## [1]  674 4186 5308 5083 6140 6381</code></pre>
 <p>As we seen before, a vector object is an indexable collection of values which allows one to access a specific index number. For example, to access the third element of x, type:</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" title="1">x[<span class="dv">3</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a>x[<span class="dv">3</span>]</span></code></pre></div>
 <pre><code>## [1] 5308</code></pre>
 <p>You can also select a subset of elements by index values using the combine function c().</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" title="1">x[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>)]</a></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a>x[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>)]</span></code></pre></div>
 <pre><code>## [1]  674 5308 5083</code></pre>
 <p>Or, if you are interested in a range of indexed values such as index 2 through 4, use the : operator.</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" title="1">x[<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a>x[<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>]</span></code></pre></div>
 <pre><code>## [1] 4186 5308 5083</code></pre>
 <p>You can also assign new values to a specific index. For example, we can replace the second value in vector <code>x</code> with <code>0</code>.</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" title="1">x[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb96-2" title="2">x</a></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a>x[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb98-2"><a href="#cb98-2"></a>x</span></code></pre></div>
 <pre><code>## [1]  674    0 5308 5083 6140 6381</code></pre>
 <p>Note that a vector can store any data type such as characters.</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;all&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;olive&quot;</span>)</a>
-<a class="sourceLine" id="cb98-2" title="2">x</a></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;all&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;olive&quot;</span>)</span>
+<span id="cb100-2"><a href="#cb100-2"></a>x</span></code></pre></div>
 <pre><code>## [1] &quot;all&quot;   &quot;b&quot;     &quot;olive&quot;</code></pre>
 <p>However, a vector can only be of one type. For example, you cannot mix numeric and character types as follows:</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" title="1">x &lt;-<span class="st"> </span><span class="kw">c</span>( <span class="fl">1.2</span>, <span class="dv">5</span>, <span class="st">&quot;Rt&quot;</span>, <span class="st">&quot;2000&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>( <span class="fl">1.2</span>, <span class="dv">5</span>, <span class="st">&quot;Rt&quot;</span>, <span class="st">&quot;2000&quot;</span>)</span></code></pre></div>
 <p>In such a situation, R will convert the element types to the <strong>highest common mode</strong> following the order <strong>NULL</strong> &lt; <strong>logical</strong> &lt; <strong>integer</strong> &lt; <strong>double</strong> &lt; <strong>character</strong>. In our working example, the elements are coerced to character:</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" title="1"><span class="kw">typeof</span>(x)</a></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1"></a><span class="kw">typeof</span>(x)</span></code></pre></div>
 <pre><code>## [1] &quot;character&quot;</code></pre>
 </div>
 <div id="matrices-and-arrays" class="section level4">
 <h4>Matrices and arrays</h4>
 <p>Matrices in R can be thought of as vectors indexed using two indices instead of one. For example, the following line of code creates a 3 by 3 matrix of randomly generated values. The parameters ‘nrow’ and ‘ncol’ define the matrix dimension and the function ‘runif’ generates the nine random numbers that populate this matrix.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" title="1">m &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(<span class="dv">9</span>,<span class="dv">0</span>,<span class="dv">10</span>), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb103-2" title="2">m</a></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1"></a>m &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(<span class="dv">9</span>,<span class="dv">0</span>,<span class="dv">10</span>), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb105-2"><a href="#cb105-2"></a>m</span></code></pre></div>
 <pre><code>##          [,1]     [,2]     [,3]
-## [1,] 4.839229 8.124235 3.548142
-## [2,] 8.042690 2.955123 8.489048
-## [3,] 2.461616 2.044795 9.653701</code></pre>
+## [1,] 7.190854 8.540161 4.604514
+## [2,] 2.601987 9.885055 8.600231
+## [3,] 5.987066 1.027804 1.372945</code></pre>
 <p>If a higher dimension vector is desired, then use the <code>array</code> function to generate the n-dimensional object. A 3x3x3 array can be created as follows:</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" title="1">m &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">runif</span>(<span class="dv">27</span>,<span class="dv">0</span>,<span class="dv">10</span>), <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb105-2" title="2">m</a></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1"></a>m &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">runif</span>(<span class="dv">27</span>,<span class="dv">0</span>,<span class="dv">10</span>), <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb107-2"><a href="#cb107-2"></a>m</span></code></pre></div>
 <pre><code>## , , 1
 ## 
-##           [,1]     [,2]      [,3]
-## [1,] 0.6650191 3.582174 4.0727428
-## [2,] 6.2256509 1.684170 5.4505728
-## [3,] 2.8697602 8.215482 0.4839686
+##            [,1]     [,2]      [,3]
+## [1,] 0.02283351 5.288562 0.6215715
+## [2,] 3.70796253 6.632892 1.8098108
+## [3,] 9.06336313 3.732831 0.3551083
 ## 
 ## , , 2
 ## 
-##          [,1]     [,2]     [,3]
-## [1,] 0.781396 5.488284 5.956212
-## [2,] 2.262075 1.569707 1.088991
-## [3,] 1.423449 4.029581 2.918906
+##          [,1]     [,2]        [,3]
+## [1,] 9.935724 6.186165 9.225500517
+## [2,] 6.178948 8.347606 0.005608988
+## [3,] 2.134916 9.421587 3.971885182
 ## 
 ## , , 3
 ## 
-##          [,1]      [,2]     [,3]
-## [1,] 1.107605 3.7011555 1.558901
-## [2,] 5.709231 7.7615071 1.864757
-## [3,] 3.921286 0.9144141 8.734187</code></pre>
+##          [,1]     [,2]     [,3]
+## [1,] 2.715819 8.473992 9.947887
+## [2,] 1.014522 2.086183 4.581049
+## [3,] 8.407143 9.779854 4.152148</code></pre>
 <p>Matrices and arrays can store numeric or character data types, but they cannot store both.</p>
 </div>
 <div id="data-frames" class="section level4">
 <h4>Data frames</h4>
 <p>A <strong>data frame</strong> is what comes closest to our perception of a data table. It’s an extension of the matrix object in that, unlike a matrix, a data frame can <em>mix</em> data types across columns (e.g. both numeric and character columns can coexist in a data frame) but data type remains the same across rows.</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" title="1">name   &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a1&quot;</span>, <span class="st">&quot;a2&quot;</span>, <span class="st">&quot;b3&quot;</span>)</a>
-<a class="sourceLine" id="cb107-2" title="2">value1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">23</span>, <span class="dv">4</span>, <span class="dv">12</span>)</a>
-<a class="sourceLine" id="cb107-3" title="3">value2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">45</span>, <span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb107-4" title="4">dat    &lt;-<span class="st"> </span><span class="kw">data.frame</span>(name, value1, value2)</a>
-<a class="sourceLine" id="cb107-5" title="5">dat</a></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1"></a>name   &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a1&quot;</span>, <span class="st">&quot;a2&quot;</span>, <span class="st">&quot;b3&quot;</span>)</span>
+<span id="cb109-2"><a href="#cb109-2"></a>value1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">23</span>, <span class="dv">4</span>, <span class="dv">12</span>)</span>
+<span id="cb109-3"><a href="#cb109-3"></a>value2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">45</span>, <span class="dv">5</span>)</span>
+<span id="cb109-4"><a href="#cb109-4"></a>dat    &lt;-<span class="st"> </span><span class="kw">data.frame</span>(name, value1, value2)</span>
+<span id="cb109-5"><a href="#cb109-5"></a>dat</span></code></pre></div>
 <pre><code>##   name value1 value2
 ## 1   a1     23      1
 ## 2   a2      4     45
 ## 3   b3     12      5</code></pre>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" title="1"><span class="kw">str</span>(dat) <span class="co"># provide structure</span></a></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1"></a><span class="kw">str</span>(dat) <span class="co"># provide structure</span></span></code></pre></div>
 <pre><code>## &#39;data.frame&#39;:    3 obs. of  3 variables:
 ##  $ name  : chr  &quot;a1&quot; &quot;a2&quot; &quot;b3&quot;
 ##  $ value1: num  23 4 12
 ##  $ value2: num  1 45 5</code></pre>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1"><span class="kw">attributes</span>(dat) <span class="co"># provide attributes</span></a></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1"></a><span class="kw">attributes</span>(dat) <span class="co"># provide attributes</span></span></code></pre></div>
 <pre><code>## $names
 ## [1] &quot;name&quot;   &quot;value1&quot; &quot;value2&quot;
 ## 
@@ -2270,33 +2290,33 @@ div.tocify {
 ## 
 ## $row.names
 ## [1] 1 2 3</code></pre>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">names</span>(dat) <span class="co"># extract colum names</span></a></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1"></a><span class="kw">names</span>(dat) <span class="co"># extract colum names</span></span></code></pre></div>
 <pre><code>## [1] &quot;name&quot;   &quot;value1&quot; &quot;value2&quot;</code></pre>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1"><span class="kw">rownames</span>(dat) <span class="co"># extract row names</span></a></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1"></a><span class="kw">rownames</span>(dat) <span class="co"># extract row names</span></span></code></pre></div>
 <pre><code>## [1] &quot;1&quot; &quot;2&quot; &quot;3&quot;</code></pre>
 </div>
 <div id="lists" class="section level4">
 <h4>Lists</h4>
 <p>A <strong>list</strong> is an ordered set of components stored in a 1D vector. In fact, it’s another kind of vector called a recursive vector where each vector element can be of different data type and structure. This implies that each element of a list can hold complex objects such as matrices, data frames and other list objects too! Think of a list as a single column spreadsheet where each cell stores anything from a number, to a three paragraph sentence, to a five column table.</p>
 <p>A list is constructed using the <code>list</code> function. For example, the following list consists of 3 components: a two-column data frame (tagged as component <code>A</code>), a two element logical vector (tagged as component <code>B</code>) and a three element character vector (tagged as component <code>C</code>).</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" title="1">A &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
-<a class="sourceLine" id="cb117-2" title="2">     <span class="dt">x =</span> <span class="kw">c</span>(<span class="fl">7.3</span>, <span class="fl">29.4</span>, <span class="fl">29.4</span>, <span class="fl">2.9</span>, <span class="fl">12.3</span>, <span class="fl">7.5</span>, <span class="fl">36.0</span>, <span class="fl">4.8</span>, <span class="fl">18.8</span>, <span class="fl">4.2</span>),</a>
-<a class="sourceLine" id="cb117-3" title="3">     <span class="dt">y =</span> <span class="kw">c</span>(<span class="fl">5.2</span>, <span class="fl">26.6</span>, <span class="fl">31.2</span>, <span class="fl">2.2</span>, <span class="fl">13.8</span>, <span class="fl">7.8</span>, <span class="fl">35.2</span>, <span class="fl">8.6</span>, <span class="fl">20.3</span>, <span class="fl">1.1</span>) )</a>
-<a class="sourceLine" id="cb117-4" title="4">B &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb117-5" title="5">C &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;apples&quot;</span>, <span class="st">&quot;oranges&quot;</span>, <span class="st">&quot;round&quot;</span>)</a>
-<a class="sourceLine" id="cb117-6" title="6">lst &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">A =</span> A, <span class="dt">B =</span> B, <span class="dt">C =</span> C)</a></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1"></a>A &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb119-2"><a href="#cb119-2"></a>     <span class="dt">x =</span> <span class="kw">c</span>(<span class="fl">7.3</span>, <span class="fl">29.4</span>, <span class="fl">29.4</span>, <span class="fl">2.9</span>, <span class="fl">12.3</span>, <span class="fl">7.5</span>, <span class="fl">36.0</span>, <span class="fl">4.8</span>, <span class="fl">18.8</span>, <span class="fl">4.2</span>),</span>
+<span id="cb119-3"><a href="#cb119-3"></a>     <span class="dt">y =</span> <span class="kw">c</span>(<span class="fl">5.2</span>, <span class="fl">26.6</span>, <span class="fl">31.2</span>, <span class="fl">2.2</span>, <span class="fl">13.8</span>, <span class="fl">7.8</span>, <span class="fl">35.2</span>, <span class="fl">8.6</span>, <span class="fl">20.3</span>, <span class="fl">1.1</span>) )</span>
+<span id="cb119-4"><a href="#cb119-4"></a>B &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>)</span>
+<span id="cb119-5"><a href="#cb119-5"></a>C &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;apples&quot;</span>, <span class="st">&quot;oranges&quot;</span>, <span class="st">&quot;round&quot;</span>)</span>
+<span id="cb119-6"><a href="#cb119-6"></a>lst &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">A =</span> A, <span class="dt">B =</span> B, <span class="dt">C =</span> C)</span></code></pre></div>
 <p>You can view each component’s structure using the <code>str</code> function.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" title="1"><span class="kw">str</span>(lst)</a></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1"></a><span class="kw">str</span>(lst)</span></code></pre></div>
 <pre><code>## List of 3
 ##  $ A:&#39;data.frame&#39;:   10 obs. of  2 variables:
 ##   ..$ x: num [1:10] 7.3 29.4 29.4 2.9 12.3 7.5 36 4.8 18.8 4.2
 ##   ..$ y: num [1:10] 5.2 26.6 31.2 2.2 13.8 7.8 35.2 8.6 20.3 1.1
 ##  $ B: logi [1:2] TRUE FALSE
 ##  $ C: chr [1:3] &quot;apples&quot; &quot;oranges&quot; &quot;round&quot;</code></pre>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" title="1"><span class="kw">names</span>(lst)</a></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1"></a><span class="kw">names</span>(lst)</span></code></pre></div>
 <pre><code>## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot;</code></pre>
 <p>Each component of a list can be extracted using the <code>$</code> symbol followed by that component’s name. For example, to access component A from list <code>lst</code>, type:</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" title="1">lst<span class="op">$</span>A</a></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1"></a>lst<span class="op">$</span>A</span></code></pre></div>
 <pre><code>##       x    y
 ## 1   7.3  5.2
 ## 2  29.4 26.6
@@ -2309,7 +2329,7 @@ div.tocify {
 ## 9  18.8 20.3
 ## 10  4.2  1.1</code></pre>
 <p>You can also access that same component using its numerical index. Since A is the first component in <code>lst</code>, its numerical index is <code>1</code>.</p>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" title="1">lst[[<span class="dv">1</span>]]</a></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1"></a>lst[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>##       x    y
 ## 1   7.3  5.2
 ## 2  29.4 26.6
@@ -2321,11 +2341,11 @@ div.tocify {
 ## 8   4.8  8.6
 ## 9  18.8 20.3
 ## 10  4.2  1.1</code></pre>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" title="1"><span class="kw">class</span>(lst[[<span class="dv">1</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1"></a><span class="kw">class</span>(lst[[<span class="dv">1</span>]])</span></code></pre></div>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
 <p>Note that components do not require names. For example, we could have created a list as follows (note the omission of <code>A=</code>, <code>B=</code>, etc…):</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" title="1">lst.notags &lt;-<span class="st"> </span><span class="kw">list</span>(A, B, D)</a>
-<a class="sourceLine" id="cb128-2" title="2">lst.notags</a></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1"></a>lst.notags &lt;-<span class="st"> </span><span class="kw">list</span>(A, B, D)</span>
+<span id="cb130-2"><a href="#cb130-2"></a>lst.notags</span></code></pre></div>
 <pre><code>## [[1]]
 ##       x    y
 ## 1   7.3  5.2
@@ -2345,14 +2365,14 @@ div.tocify {
 ## [[3]]
 ## function (expr, name) 
 ## .External(C_doD, expr, name)
-## &lt;bytecode: 0x000000001d213db0&gt;
+## &lt;bytecode: 0x000000001d74c770&gt;
 ## &lt;environment: namespace:stats&gt;</code></pre>
 <p>When lists do not have component names, the <code>names</code> function will return NULL.</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" title="1"><span class="kw">names</span>(lst.notags)</a></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1"></a><span class="kw">names</span>(lst.notags)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 <p>You’ll find that many functions in R return list objects such as the linear regression model function <code>lm</code>. For example, when we run a regression analysis for vector elements <code>x</code> and <code>y</code> (in data frame <code>A</code>) and save the output of the regression analysis to an object called M:</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" title="1">M &lt;-<span class="st"> </span><span class="kw">lm</span>( y <span class="op">~</span><span class="st"> </span>x, A)</a>
-<a class="sourceLine" id="cb132-2" title="2"><span class="kw">str</span>(M)</a></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1"></a>M &lt;-<span class="st"> </span><span class="kw">lm</span>( y <span class="op">~</span><span class="st"> </span>x, A)</span>
+<span id="cb134-2"><a href="#cb134-2"></a><span class="kw">str</span>(M)</span></code></pre></div>
 <pre><code>## List of 12
 ##  $ coefficients : Named num [1:2] 0.0779 0.991
 ##   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;(Intercept)&quot; &quot;x&quot;
@@ -2410,12 +2430,12 @@ div.tocify {
 ##   .. .. ..- attr(*, &quot;dataClasses&quot;)= Named chr [1:2] &quot;numeric&quot; &quot;numeric&quot;
 ##   .. .. .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;y&quot; &quot;x&quot;
 ##  - attr(*, &quot;class&quot;)= chr &quot;lm&quot;</code></pre>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" title="1"><span class="kw">names</span>(M)</a></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1"></a><span class="kw">names</span>(M)</span></code></pre></div>
 <pre><code>##  [1] &quot;coefficients&quot;  &quot;residuals&quot;     &quot;effects&quot;       &quot;rank&quot;         
 ##  [5] &quot;fitted.values&quot; &quot;assign&quot;        &quot;qr&quot;            &quot;df.residual&quot;  
 ##  [9] &quot;xlevels&quot;       &quot;call&quot;          &quot;terms&quot;         &quot;model&quot;</code></pre>
 <p>The <code>M</code> list is more complex than the simple list <code>lst</code> we created earlier. In addition to having more components, it stores a <em>wider</em> range of data types and structures. For example, element qr is itself a list of five elements!</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" title="1"><span class="kw">str</span>(M<span class="op">$</span>qr)</a></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1"></a><span class="kw">str</span>(M<span class="op">$</span>qr)</span></code></pre></div>
 <pre><code>## List of 5
 ##  $ qr   : num [1:10, 1:2] -3.162 0.316 0.316 0.316 0.316 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
@@ -2428,39 +2448,39 @@ div.tocify {
 ##  $ rank : int 2
 ##  - attr(*, &quot;class&quot;)= chr &quot;qr&quot;</code></pre>
 <p>So if we want to access the element rank in the component qr of list <code>M</code>, we can type:</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" title="1">M<span class="op">$</span>qr<span class="op">$</span>rank</a></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1"></a>M<span class="op">$</span>qr<span class="op">$</span>rank</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 </div>
 </div>
 <div id="coercing-data" class="section level3">
 <h3>Coercing data</h3>
 <p>Data can be coerced from one type to another. For example, to coerce the following vector object from character to numeric, use the <code>as.numeric</code> function.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" title="1">y   &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;23.8&quot;</span>, <span class="st">&quot;6&quot;</span>, <span class="st">&quot;100.01&quot;</span>,<span class="st">&quot;6&quot;</span>)</a>
-<a class="sourceLine" id="cb140-2" title="2">y.c &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(y)</a>
-<a class="sourceLine" id="cb140-3" title="3">y.c</a></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1"></a>y   &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;23.8&quot;</span>, <span class="st">&quot;6&quot;</span>, <span class="st">&quot;100.01&quot;</span>,<span class="st">&quot;6&quot;</span>)</span>
+<span id="cb142-2"><a href="#cb142-2"></a>y.c &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(y)</span>
+<span id="cb142-3"><a href="#cb142-3"></a>y.c</span></code></pre></div>
 <pre><code>## [1]  23.80   6.00 100.01   6.00</code></pre>
 <p>The <code>as.numeric</code> function forces the vector to a double (you could have also used the <code>as.double</code> function). If you convert <code>y</code> to an integer, R will remove all fractional parts of the number.</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" title="1"><span class="kw">as.integer</span>(y)</a></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1"></a><span class="kw">as.integer</span>(y)</span></code></pre></div>
 <pre><code>## [1]  23   6 100   6</code></pre>
 <p>To convert a number to a character use <code>as.character</code></p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" title="1">numchar &lt;-<span class="st"> </span><span class="kw">as.character</span>(y.c)</a>
-<a class="sourceLine" id="cb144-2" title="2">numchar</a></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1"></a>numchar &lt;-<span class="st"> </span><span class="kw">as.character</span>(y.c)</span>
+<span id="cb146-2"><a href="#cb146-2"></a>numchar</span></code></pre></div>
 <pre><code>## [1] &quot;23.8&quot;   &quot;6&quot;      &quot;100.01&quot; &quot;6&quot;</code></pre>
 <p>You can also coerce a number or character to a factor.</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" title="1">numfac &lt;-<span class="st"> </span><span class="kw">as.factor</span>(y)</a>
-<a class="sourceLine" id="cb146-2" title="2">numfac</a></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1"></a>numfac &lt;-<span class="st"> </span><span class="kw">as.factor</span>(y)</span>
+<span id="cb148-2"><a href="#cb148-2"></a>numfac</span></code></pre></div>
 <pre><code>## [1] 23.8   6      100.01 6     
 ## Levels: 100.01 23.8 6</code></pre>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" title="1">charfac &lt;-<span class="st"> </span><span class="kw">as.factor</span>(y.c)</a>
-<a class="sourceLine" id="cb148-2" title="2">charfac</a></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1"></a>charfac &lt;-<span class="st"> </span><span class="kw">as.factor</span>(y.c)</span>
+<span id="cb150-2"><a href="#cb150-2"></a>charfac</span></code></pre></div>
 <pre><code>## [1] 23.8   6      100.01 6     
 ## Levels: 6 23.8 100.01</code></pre>
 <p>There are many other coercion functions in R, a summary of some the most common ones we’ll be using in this course follows:</p>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r fold-show"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" title="1"><span class="kw">as.character</span>() <span class="co">#    Convert to character</span></a>
-<a class="sourceLine" id="cb150-2" title="2"><span class="kw">as.numeric</span>()  <span class="kw">as.double</span>()   <span class="co"># Convert to double</span></a>
-<a class="sourceLine" id="cb150-3" title="3"><span class="kw">as.integer</span>()    <span class="co"># Convert to integer</span></a>
-<a class="sourceLine" id="cb150-4" title="4"><span class="kw">as.factor</span>() <span class="co"># Convert to factor</span></a>
-<a class="sourceLine" id="cb150-5" title="5"><span class="kw">as.logical</span>()    <span class="co">#Convert to a Boolean</span></a></code></pre></div>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1"></a><span class="kw">as.character</span>() <span class="co">#    Convert to character</span></span>
+<span id="cb152-2"><a href="#cb152-2"></a><span class="kw">as.numeric</span>()  <span class="kw">as.double</span>()   <span class="co"># Convert to double</span></span>
+<span id="cb152-3"><a href="#cb152-3"></a><span class="kw">as.integer</span>()    <span class="co"># Convert to integer</span></span>
+<span id="cb152-4"><a href="#cb152-4"></a><span class="kw">as.factor</span>() <span class="co"># Convert to factor</span></span>
+<span id="cb152-5"><a href="#cb152-5"></a><span class="kw">as.logical</span>()    <span class="co">#Convert to a Boolean</span></span></code></pre></div>
 <hr />
 <blockquote>
 <p><em><span style="color: green"><strong>RP5</strong>: create the following data frame summarizing the results of a small experiment on 5 individuals testing the efficiency of a specific diet (drinking bubble tea only - feak data). Create another vector with the weight loss (in %) associated with subject no. What can you say on this bubble tea diet? Reformat the table by creating: a variable <code>individual</code> with the identity of the five individuals, a variable <code>diet</code> with two levels <code>before</code> and <code>after</code>, a variable <code>weight</code> containing the weight before and after the diet. </span></em></p>
