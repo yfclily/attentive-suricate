@@ -1,7 +1,7 @@
 ---
 title: "Fun with R:  Ecological data analysis in R"
 author: "Vianney Denis"
-date: "2020/11/17"
+date: "2020/11/17 "
 output:  
   "html_document":
    theme: united
@@ -14,7 +14,7 @@ output:
     # ioslides_presentation 
 ---
 
-# Topic - Linear Models
+# Topic 7 - Linear Models (6 hrs)
 
 ```{r,  eval=T, warning=F, message=F}
 library(Hmisc)
