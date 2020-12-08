@@ -16,11 +16,15 @@ output:
 
 # Topic 8 - Multivariate analyses
 
-
 ```{r,  eval=T, warning=F, message=F}
 library(vegan)
 library(ade4)
 library(gclus)
+library(qgraph)
+```
+
+```{r eval = TRUE,  message=F, warning=F, purl=F, results="hide"}
+knitr::purl("Topic_8_multivariate.Rmd", documentation = F)
 ```
 
 Ecological phenomena are inherently complex, and it is rare that a single variable is sufficient to describe an ecological system. Therefore, it is common to deal with:
@@ -257,8 +261,14 @@ coldiss(spe.dbln,byrank=F,diag=T) # for the bc dissimilarity on log-transformed 
 coldiss(env.de, diag=T) # for the environmental data
 ```
 
-In the untransformed distance matrix, small differences in abundant species
-have the same importance as small differences in species with few individuals
+In the untransformed distance matrix, the small differences in abundant species have the same importance as small differences in species with few individuals
+
+Distance matrices are also commonly visualized through a network:
+
+```{r,  eval=T}
+qgraph(1-spe.db, layout='spring', vsize=4)
+```
+
 
 **Note 1**: In **Q mode** similarity from binary data can be interpret by a simple matching coefficient **S~1~**: for each pair of sites, it is the ratio between the number of double 1s plus double 0s and the total number of variables.
  
