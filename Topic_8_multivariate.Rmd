@@ -119,7 +119,7 @@ But whatto deal with **double-zeros**?
 
 - the **zero value** has the **same meaning** as any other values (*e.g. 0mg/L of O2 in deep anoxic layer of a lake*)
 
-- the **zero value** in matrix of species abundances (or presence-absence) can **not** always be counted as an indication of **resemblance** (presence has an ecological meaning, but no conclusions on the absence: e.g. *is the absence of a given nationality in this class means that no students of this sppecific country are in NTU? And is it a element of similarity with other University (high similarity because many nationalities probably absent ? No, but at same sample size 1/0 becomes informative*)
+- the **zero value** in matrix of species abundances (or presence-absence) can **not** always be counted as an indication of **resemblance** (presence has an ecological meaning, but no conclusions on the absence: e.g. *is the absence of a given nationality in this class means that no students from this specific country are in NTU? And is it an element to evaluate the similarity with other university (high similarity because many nationalities probably absent ? No, but at same sample size 1/0 becomes informative*)
 
 Because of the **double-zeros** problem, 2 classes of association measures exist based on how they deal with this issue". 
 
@@ -152,12 +152,7 @@ When your community data samples include abundance information (as opposed to si
 
 When you have abundance data your measures of (dis)similarity are a bit more “refined” and you have the potential to pick up patterns in the data that you would otherwise not see using presence-absence data.
 
-There are many metrics that you might use to explore (dis)similarity.
-
-![](Figures/multi_coeff.png)
-
-
-Four of them are particularly common:
+There are many metrics that you might use to explore (dis)similarity. Four of them are particularly common:
 
 + Bray-Curtis
 + Canberra
@@ -268,10 +263,10 @@ have the same importance as small differences in species with few individuals
 **Note 1**: In **Q mode** similarity from binary data can be interpret by a simple matching coefficient **S~1~**: for each pair of sites, it is the ratio between the number of double 1s plus double 0s and the total number of variables.
  
 
-**Note 2**: For mixed types variables, including categorical or qualitative multiclass variables use **Gower's similarity (S~15~)**. It is easily computed in R using `daisy` function built in the `cluster` package. Avoid `vegdist` with `method='gower'`, which is appropriate for quantitative and presence-absence, but not for multiclass variables. Overall, `gowdis` from the package `FD` is the most complete function to compute Gower's coefficient in R, and commonly used in **trait-base appraoch** analyses. 
+**Note 2**: For mixed types variables, including categorical or qualitative multiclass variables use **Gower's similarity (S~15~)**. It is easily computed in R using `daisy` function built in the `cluster` package. Avoid `vegdist` with `method='gower'`, which is appropriate for quantitative and presence-absence, but not for multiclass variables. Overall, `gowdis` from the package `FD` is the most complete function to compute Gower's coefficient in R, and commonly used in **trait-based approach** analyses. 
 
 
-### Rmode
+### R mode
 
 Correlation type coefficents are commonly used to compare variable in R mode. Remember: 
 
@@ -315,7 +310,7 @@ pairs (env[,env.o], lower.panel=panel.smooth, upper.panel=panel.cor,diag.panel=p
 
 + *<span style="color: green"> Plot heat maps of respective matrix and compare. Briefly explain the differences.</span>*
 
-```{r,  eval=T}
+```{r,  eval=T, warning=F}
 library(mvabund)
 data(tikus)
 ```
