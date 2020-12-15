@@ -21,6 +21,7 @@ library(vegan)
 library(ade4)
 library(gclus)
 library(qgraph)
+library(factoextra)
 ```
 
 ```{r eval = TRUE,  message=F, warning=F, purl=F, results="hide"}
@@ -92,7 +93,7 @@ If variables do not have uniform scale (e.g. environmental parameters measured i
 The function `decostand` from the `vegan` package offers an easy way to transform your data. The `varespec` data frame has **24 rows** and **44 columns**. Columns are estimated cover values of **44 lichen species**. The variable names are formed from the scientific names, and are self explanatory for anybody familiar with vegetation type / lichen species. 
 
 ```{r,  eval=T}
-?varespec
+# ?varespec
 data (varespec)
 varespec[1:5,1:5]
 ```
@@ -324,3 +325,371 @@ pairs (env[,env.o], lower.panel=panel.smooth, upper.panel=panel.cor,diag.panel=p
 library(mvabund)
 data(tikus)
 ```
+
+
+```{r class.source = "fold-hide",  eval=F}
+# past code
+```
+
+
+## Cluster analysis
+
+
+We often aim to recognize discontinuous **subsets** in an environment which is  represented by discrete (taxonomy) changes but  perceived as continuous changes in ecology.
+
+**Clustering** consists in partitioning the collection of objects (or descriptors in R-mode). Clustering **does not test** any hypothesis.
+
+**Clustering** is an explanatory procedure which helps to understand data with complex structure and multivariate relationships, and is a very useful method to extract knowledge and information especially from large datasets.
+
+Many **clustering** approaches rely on association matrix, which stresses on the **importance** of the chhoice of a appropriate association coefficient.
+
+### Families
+
+1. **Sequential** or **Simultaneous** algorithms (most of the clustering algorithm)
+
+2. **Agglomerative** or **Divisive**
+
+3. **Monothetic** (common prop.) versus **Polythetic** 
+4. **Hierarchical** versus **Non-hierarchical** (flat)
+
+5. **Probabilistic** (decision tree) versus **non-probabilistic** methods
+
+6. **Hard** and **Soft** (may overlap)
+
+
+Calculate numerical classification requires two arguments: matrix of distances among samples (ecological resemblance, D) and the method: name of clustering algorithm.
+
+### R clustering
+
+Common hierarchical clustering methods are available through the function `hclust` from the `stats` package
+
++ **Data dredging** clustering produces tree-like structure. You don't choose clustering method according to how your tree looks like.
+
++ The suitable method is usually carefully **selected** and/or **evaluated** accoding to the data set you are dealing with and your hypotheses.
+
+
+#### Hierarchical: common methods
+
+* **Single linkage agglomerative clustering** (neighbor sorting)
+
+  + commonly produced chain dendrograms: a pair is linked to a third object
+  
+  + agglomerates objects on the basis of their shortest pairwise distance
+  
+  + partitions difficult to interpret, but gradients quite clear
+  
+  
+*e.g. Single linkage agglomerative clustering computed on chord distance matrix*
+
+
+```{r class.source = "fold-show", eval=T, warning=F}
+# Step 1: chord distance = normalization + euclidean
+spe.norm<-decostand(spe,'normalize') 
+spe.ch<-vegdist(spe.norm,'euc') 
+```
+
+```{r class.source = "fold-show", eval=T, warning=F}
+# Step 2: single linkage agglomerative clustering
+spe.ch.single <-hclust(spe.ch,method='single') 
+# plot function
+plot(spe.ch.single, main='Single linkage agglomerative clustering' ) 
+```
+
+Single linkage allows object to agglomerate easily to a group since a link to a single object of the group suffices to induce fusion. **This is the 'closest' friend' procedure**.
+
+* **Complete linkage agglomerative clustering** (furthest neighbor sorting)
+
+  + dendrograms look a bit like rakes – some cluster merge together at the highest dissimilarity
+
+  + allow an object (or a group) to agglomerate with another group only at the distance corresponding to that of the most distant pair of objects 
+
+
+*e.g. Complete linkage agglomerative clustering computed on chord distance matrix*
+
+```{r class.source = "fold-show", eval=T, warning=F}
+spe.ch.complete<-hclust(spe.ch,method='complete') 
+plot(spe.ch.complete, main='Complete linkage agglomerative clustering') 
+```
+
+A group admits a new member only at the distance corresponding to the furthest object of the group: **one could say that the admission requires unanimity of the group**.
+
+* **Average agglomerative clustering**
+
+  + it is the method the **most common** in ecology (species data)
+
+  + this family comprises **four methods** that are based on **average** dissimilarities among objects or on the **centroids** of cluster,
+
+![](Figures/multi_upgma.png)
+
+*e.g. Average agglomerative clustering (UPGMA) computed on chord distance matrix*
+
+```{r class.source = "fold-show", eval=T, warning=F}
+spe.ch.UPGMA<-hclust(spe.ch,method='average') 
+plot(spe.ch.UPGMA, main='Average (UPGMA) agglomerative clustering') 
+```
+
+* **Ward's Minimum Variance clustering**
+
+ + **Ward** method is also a favorite  clustering method
+ 
+ + it is based on linear model criterion of least square: within-group sum of square (i.e. the square error of ANOVA) is minimized.
+ 
+**Note**: Ward method is based on Euclidean model. It should not be combined with distance measures, which are not strictly metric such as the popular Bray-Curtis distance.
+
+```{r class.source = "fold-show", eval=T, warning=F}
+spe.ch.ward<-hclust(spe.ch,method='ward.D') 
+plot(spe.ch.ward, main='Ward clustering') 
+```
+
+* **Flexible clustering**
+
+`hclust` is called in this algorithm, but flexible clustering is available in the R package `cluster` with the function `agnes`
+
+
++ *Beta flexible* methods
+
++ Model encompassing all the clustering methods seen before, which are obtained by changing the values of four parameters
+
+#### Quality clustering
+
+There are many ways to evaluate the overall quality of the chose clustering algorithm and therefore their representations.
+
+* the **cophenetic correlation** related distances extracted from the dendrogram (function `cophenetic` on a `hclust` object) with ditances in our original distance matrices. A higher correlation means a better representation of the initial matrix. 
+
+```{r class.source = "fold-show", eval=T, warning=F}
+# Single linkage clustering
+spe.ch.single.coph <- cophenetic (spe.ch.single)
+cor(spe.ch,spe.ch.single.coph)
+
+# complete linkage clustering
+spe.ch.complete.coph <- cophenetic (spe.ch.complete)
+cor(spe.ch,spe.ch.complete.coph)
+
+# Average clustering
+spe.ch.UPGMA.coph <- cophenetic (spe.ch.UPGMA)
+cor(spe.ch,spe.ch.UPGMA.coph)
+
+# Ward clustering
+spe.ch.ward.coph <- cophenetic (spe.ch.ward)
+cor(spe.ch,spe.ch.ward.coph)
+```
+
+
+* the **shepard-like diagram** is a plot that represents orginal distances against the cophentic distances. Can be combined with cophentic correlation seen above. 
+
+
+```{r class.source = "fold-show", eval=T, warning=F}
+par(mfrow=c(2,2))
+
+plot(spe.ch,spe.ch.single.coph,xlab='Chord distance',ylab='Chophenetic distance',asp=1, main=c('Single linkage',paste('Cophenetic correlation',round(cor(spe.ch,spe.ch.single.coph),3))))
+abline (0,1)
+lines(lowess(spe.ch,spe.ch.single.coph),col='red')
+
+plot(spe.ch,spe.ch.complete.coph,xlab='Chord distance',ylab='Chophenetic distance',asp=1, main=c('Complete linkage',paste('Cophenetic correlation',round(cor(spe.ch, spe.ch.complete.coph),3))))
+abline (0,1)
+lines(lowess(spe.ch, spe.ch.complete.coph),col='red')
+
+plot(spe.ch,spe.ch.UPGMA.coph,xlab='Chord distance',ylab='Chophenetic distance',asp=1, main=c('UPGMA',paste('Cophenetic correlation',round(cor(spe.ch,spe.ch.UPGMA.coph),3))))
+abline (0,1)
+lines(lowess(spe.ch,spe.ch.UPGMA.coph),col='red')
+
+plot(spe.ch,spe.ch.ward.coph,xlab='Chord distance',ylab='Chophenetic distance',asp=1, main=c('Ward clustering',paste('Cophenetic correlation',round(cor(spe.ch,spe.ch.ward.coph),3))))
+abline (0,1)
+lines(lowess(spe.ch,spe.ch.ward.coph),col='red')
+
+dev.off()
+```
+
+* the **Fusion Level Values**. Examine values where a fusion between two branches of a dendrogram occurs. This graph is useful whenver you want to define an interpretable cutting levels.
+
+```{r class.source = "fold-show", eval=T, warning=F}
+plot(spe.ch.UPGMA$height, nrow(spe):2, 
+     type='S',main='Fusion levels - chord - UPGMA',
+     ylab='k (number of clusters)', xlab='h (node height)', col='grey')
+text (spe.ch.UPGMA$height,nrow(spe):2, nrow(spe):2, col='red', cex=0.8)
+```
+
+The graph of fusion level values shows clear jump after each fusion between 2 and 6 groups Let's cut our dendrogram at the corresponding distance Do the groups makes sense? Do you obtain groups containing a substantial number of sites?
+
+```{r class.source = "fold-show", eval=T, warning=F}
+plot(spe.ch.UPGMA)
+rect.hclust(spe.ch.UPGMA, k=6) # number of group
+rect.hclust(spe.ch.UPGMA, h=0.79) # with height
+```
+
+Let's repeat the same for all the clustering methods:
+
+```{r class.source = "fold-show", eval=T, warning=F}
+
+par(mfrow=c(2,2))
+# fusion level - single linkage clustering
+plot(spe.ch.single$height, 
+     nrow(spe):2, type='S',main='Fusion levels - chord - single',
+     ylab='k (number of clusters)', xlab='h (node height)', col='grey')
+text (spe.ch.single$height,nrow(spe):2, nrow(spe):2, col='red', cex=0.8)
+
+# fusion level - complete linkage clustering
+plot(spe.ch.complete$height, 
+     nrow(spe):2, type='S',main='Fusion levels - chord - complete',
+     ylab='k (number of clusters)', xlab='h (node height)', col='grey')
+text (spe.ch.complete$height,nrow(spe):2, nrow(spe):2, col='red', cex=0.8)
+
+# fusion level - UPGMA clustering
+plot(spe.ch.UPGMA$height, nrow(spe):2, 
+     type='S',main='Fusion levels - chord - UPGMA',
+     ylab='k (number of clusters)', xlab='h (node height)', col='grey')
+text (spe.ch.UPGMA$height,nrow(spe):2, nrow(spe):2, col='red', cex=0.8)
+
+# fusion level - the ward clustering
+plot(spe.ch.ward$height, nrow(spe):2,
+     type='S',main='Fusion levels - chord - Ward',
+     ylab='k (number of clusters)', xlab='h (node height)', col='grey')
+text (spe.ch.ward$height,nrow(spe):2, nrow(spe):2, col='red', cex=0.8)
+```
+
+All graphs look a but different: there is no single 'truth' among these solution and each may provide insight onto the data. However the Chord UPGMA received the best supported in both the cophenetic correlation and sheppard-like diagram. Therefore, fusion levels may have have a stronger support examined with this cluster approach.
+
+One can compared classification by cutting tree `cutree` and comparing grouping using contingency tables:
+
+```{r class.source = "fold-show", eval=T, warning=F}
+k<-5 # Number of groups (conscensus) 
+spebc.single.g <- cutree(spe.ch.single, k)
+spebc.complete.g <- cutree(spe.ch.complete, k)
+spebc.UPGMA.g <- cutree(spe.ch.UPGMA, k)
+spebc.ward.g <- cutree(spe.ch.ward, k)
+
+table(spebc.single.g,spebc.complete.g) # Single vs complete
+```
+
+If two classifications provided the same group contents, the contingency table would show only non zero frequency value in each row and each column0 It is never the case here.
+
+* the **Silhouette** widths indicator.
+
+  + The silhouette width is a measure of the **degree of membership of an
+object to its cluster** based on the average distance between this object
+and all objects of the cluster to which is belongs, compared to the same
+measure for the next closest cluster.
+
+  + Silhouette widths range from 1 to 1 and can be averaged over all objects of a partition
+
+  + The greater the value is, the greater the better the object is clustered Negative values mean that the corresponding objects have probably placed in the wrong cluster (intra group variation inter group variation). 
+
+![](Figures/multi_silhouette.png)
+
+```{r class.source = "fold-show", eval=T, warning=F}
+cutg<-cutree(spe.ch.UPGMA, k=3)
+sil<-silhouette (cutg,spe.ch)
+plot(sil)
+```
+
+* the **Mantel** test
+
+  + Compares the original distance matrix to binary matrices
+computed from dendrogram cut at various level
+
+  + Chooses the level where the matrix ( correlation
+between the two is the highest
+
+  + The Mantel correlation is in its simplest sense, i.e. the
+equivalent of a Pearson r correlation between the values in
+the distance matrices
+
+Comparison between the distance matrix and binary matrices representing partitions
+
+```{r class.source = "fold-show", eval=T, warning=F}
+## Mantel test
+# Optimal number of clusters
+# according to mantel statistic 
+# Function to compute a binary distance matrix from groups
+grpdist<-function(x){
+  require (cluster)
+  gr<-as.data.frame(as.factor(x))
+  distgr<-daisy(gr,'gower')
+  distgr
+}
+# run based on the UPGMA clustering
+kt<-data.frame(k=1:nrow(spe),r=0)
+for (i in 2:(nrow(spe)-1)){
+  gr<-cutree(spe.ch.UPGMA,i)
+  distgr<-grpdist(gr)
+  mt<-cor(spe.ch,distgr, method='pearson')
+  kt[i,2] <- mt
+}
+k.best <- which.max (kt$r)
+plot(kt$k,kt$r, 
+     type='h', main='Mantel-optimal number of clusters - UPGMA',
+     xlab='k (number of groups)',ylab="Pearson's correlation")
+axis(1,k.best, 
+     paste('optimum', k.best, sep='\n'), col='red',font=2, col.axis='red')
+points(k.best,max(kt$r),pch=16,col='red',cex=1.5)
+```
+
+* the **Elbow** method
+
+  + This method looks at the percentage of variance explained (SS) as a function of the number of cluster
+
+  + One should choose a number of clusters so that adding another cluster doesn't give much better explanation
+
+At some point the marginal gain will drop, giving an angle in
+the graph. The number of clusters is chosen at this point,
+hence the "elbow criterion".
+
+Using **fuzzy clustering** *(also referred to as soft clustering or soft k-means) is a form of clustering in which each data point can belong to more than one cluster)* 
+
+```{r class.source = "fold-show", eval=T, warning=F}
+fviz_nbclust(spe.norm, hcut, method = "wss",hc_method = "average")
+# fviz_nbclust(spe.norm, hcut, method = "silhouette",hc_method = "average")
+```
+
+* And many others indicators
+
+#### Cluster options
+
+* Visualize groupings
+
+```{r class.source = "fold-show", eval=T, warning=F}
+plot(spe.ch.UPGMA, main='Average linkage')
+rect.hclust(spe.ch.UPGMA, k=3)
+rect.hclust(spe.ch.UPGMA, k=8, border = 'blue')
+```
+
+* Spatial clustering (example)
+
+
+```{r class.source = "fold-show", eval=T, warning=F}
+# ?doubs
+data(doubs)
+doubs.spe<-doubs$fish
+doubs.spa<-doubs$xy
+# remove empty sample 8 from both datasets
+doubs.spe <- doubs.spe[-8,]
+doubs.spa <- doubs.spa[-8,]
+# Calculates hierarchical cluster analysis of species data 
+eucl.ward <- hclust (d = dist (doubs.spe), method = 'ward.D')
+# Dendrogram with the observed groups
+par(mfrow=c(1,2))
+plot (eucl.ward)
+rect.hclust (eucl.ward, k = 4, border = 1:4)
+# Spatial distribution of samples with projection of hierarchical classification
+eucl.ward.cluster <- cutree (eucl.ward, k = 4)
+plot (y ~ x, data = doubs.spa, pch = eucl.ward.cluster, col = eucl.ward.cluster, type = 'b', main = 'Euclidean distance - Ward method')
+dev.off()
+```
+
+* Heat map & clustering visualization (example)
+
+We must reorder objects (function `reorder.hclust`) so that their order in the dissimilarity matrix is respected . This does not affect the topology of the dendrogram.
+
+```{r class.source = "fold-show", eval=T, warning=F}
+spe.chwo<-reorder.hclust(spe.ch.ward,spe.ch)
+dend<-as.dendrogram(spe.chwo) 
+heatmap(as.matrix(spe.ch),Rowv=dend,symm=TRUE, margin=c(3,3))
+```
+
+> *<span style="color: green">RP17:  On  `tikus` data</span>* 
+
+  + *<span style="color: green"> Using Bray-Curtis dissimilarity, compute the four common clustering methods and compare them using cophenetic correlation and Shepard-like diagram</span>* 
+
+  + *<span style="color: green"> Choose method with the highest cophenetic correlation and produce a heat map of the distance matrix reordered with the dendrogram </span>*
+
+
