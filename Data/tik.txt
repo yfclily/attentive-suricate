@@ -1,0 +1,9 @@
+library(mvabund)
+data(tikus)
+tikus.spe<-tikus$abund
+tikus.env<-tikus$x
+tikus.spe.sel<-tikus.spe[tikus.env$time%in% c(81, 83, 85), ]
+bray <-vegdist(tikus.spe.sel)
+eucl<-dist(log1p (tikus.spe.sel))
+coldiss(bray, diag=T)
+coldiss(eucl, diag=T)
