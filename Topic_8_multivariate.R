@@ -3,6 +3,9 @@ library(ade4)
 library(gclus)
 library(qgraph)
 library(factoextra)
+library(fpc)
+library(ggplot2)
+library(gridExtra)
 
 
 
@@ -173,12 +176,12 @@ plot(spe.ch.ward$height, nrow(spe):2,
 text (spe.ch.ward$height,nrow(spe):2, nrow(spe):2, col='red', cex=0.8)
 
 k<-5 # Number of groups (conscensus) 
-spebc.single.g <- cutree(spe.ch.single, k)
-spebc.complete.g <- cutree(spe.ch.complete, k)
-spebc.UPGMA.g <- cutree(spe.ch.UPGMA, k)
-spebc.ward.g <- cutree(spe.ch.ward, k)
+spe.ch.single.g <- cutree(spe.ch.single, k)
+spe.ch.complete.g <- cutree(spe.ch.complete, k)
+spe.ch.UPGMA.g <- cutree(spe.ch.UPGMA, k)
+spe.ch.ward.g <- cutree(spe.ch.ward, k)
 
-table(spebc.single.g,spebc.complete.g) # Single vs complete
+table(spe.ch.single.g,spe.ch.complete.g) # Single vs complete
 
 cutg<-cutree(spe.ch.UPGMA, k=3)
 sil<-silhouette (cutg,spe.ch)
@@ -210,8 +213,8 @@ axis(1,k.best,
      paste('optimum', k.best, sep='\n'), col='red',font=2, col.axis='red')
 points(k.best,max(kt$r),pch=16,col='red',cex=1.5)
 
-fviz_nbclust(spe.norm, hcut, method = "wss",hc_method = "average")
-# fviz_nbclust(spe.norm, hcut, method = "silhouette",hc_method = "average")
+fviz_nbclust(spe.norm, hcut, diss=dist(spe.norm, method='euclidean'),method = "wss",hc_method = "average")
+#fviz_nbclust(spe.norm, hcut, diss=dist(spe.norm, method='euclidean'),method = "silhouette",hc_method = "average")
 
 plot(spe.ch.UPGMA, main='Average linkage')
 rect.hclust(spe.ch.UPGMA, k=3)
@@ -238,3 +241,61 @@ dev.off()
 spe.chwo<-reorder.hclust(spe.ch.ward,spe.ch)
 dend<-as.dendrogram(spe.chwo) 
 heatmap(as.matrix(spe.ch),Rowv=dend,symm=TRUE, margin=c(3,3))
+
+# k-means partitioning of the pre-transformed species data
+spe.kmeans <- kmeans(spe.norm, centers=5, nstart=100)
+# k-means group number of each observation spe.kmeans$cluster 
+spe.kmeans$cluster
+# Comparison with the 5-group classification derived from UPGMA clustering
+comparison<-table(spe.kmeans$cluster,spe.ch.UPGMA.g)
+comparison
+# Visualize k-means clusters 
+fviz_cluster(spe.kmeans, data = spe.norm,geom = "point",
+             stand = FALSE, ellipse.type = "norm") 
+
+# elbow, UPGMA, chord
+fviz_nbclust(spe.norm, hcut, diss=dist(spe.norm, method='euclidean'),method = "wss",hc_method = "average")
+
+# silhouette, UPGMA, chord
+fviz_nbclust(spe.norm, hcut, diss=dist(spe.norm, method='euclidean'),method = "silhouette",hc_method = "average")
+
+# elbow, kmeans, chord
+fviz_nbclust(spe.norm, kmeans, method = "wss")
+
+# silhouette, kmeans, chord
+fviz_nbclust(spe.norm, kmeans, method = "silhouette")
+
+spe.KM.cascade<-cascadeKM(spe.norm,inf.gr=2,sup.gr=10,iter=100,criterion='calinski')
+plot(spe.KM.cascade,sortg=TRUE)
+
+fviz_nbclust (spe.norm , pam, method = "silhouette") 
+fviz_nbclust (spe.norm , pam, method = "wss")
+pamk(spe.norm, krange=2:10, criterion='asw')$nc
+pam6<-pam(spe.norm, 6)
+pam3<-pam(spe.norm, 3)
+plot(silhouette(pam6))
+plot(silhouette(pam3))
+# plot1<-fviz_nbclust(spe.norm, hcut, method = "silhouette", hc_method = "average")
+# plot2 < - fviz_nbclust (spe.norm , pam, method = "silhouette")
+# plot3<-fviz_nbclust(spe.norm, kmeans, method = "silhouette")
+# grid.arrange(plot1, plot2,plot3, ncol=3)
+
+pam.res<-pam(spe.norm, k=6)
+km.res <- kmeans(spe.norm, centers=3)
+plot4 <-fviz_cluster(km.res,spe.norm, stand = FALSE,geom = "point",ellipse.type = "norm") 
+plot5 <-fviz_cluster(pam.res,spe.norm, stand = FALSE,geom = "point",ellipse.type = "norm")
+grid.arrange(plot4, plot5, ncol=2)
+
+set.seed(123)
+res.fanny<-fanny(spe.norm, 3)
+fviz_cluster(res.fanny, ellipse.type = "norm", repel = TRUE,
+             palette = "jco", ggtheme = theme_minimal(),
+             legend = "right")
+
+fviz_silhouette(res.fanny, palette = "jco",
+                ggtheme = theme_minimal())
+
+head(iris)
+
+library(ggplot2)
+ggplot(iris, aes(Petal.Length, Petal.Width, color = Species)) + geom_point() 
