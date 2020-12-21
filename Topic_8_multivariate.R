@@ -6,6 +6,16 @@ library(factoextra)
 library(fpc)
 library(ggplot2)
 library(gridExtra)
+library(e1071)
+library(corrplot)
+library(tree)
+library(rpart)
+library(rattle)
+library(randomForest)
+library(devtools)
+library(caret)
+library(mvpart) # install_github("cran/mvpart", force = T) after devtools
+library(MVPARTwrap) # install_github("cran/MVPARTwrap", force = T) after devtools
 
 
 
@@ -291,11 +301,113 @@ res.fanny<-fanny(spe.norm, 3)
 fviz_cluster(res.fanny, ellipse.type = "norm", repel = TRUE,
              palette = "jco", ggtheme = theme_minimal(),
              legend = "right")
+res.fanny # details on membership
 
 fviz_silhouette(res.fanny, palette = "jco",
                 ggtheme = theme_minimal())
 
-head(iris)
+set.seed(123)
+# Load the data
+data("USArrests")
+# Subset of USArrests
+ss <- sample(1:50, 20)
+df <- scale(USArrests[ss,])
+# Compute fuzzy clustering
+cm <- cmeans(df, 4)
+# Visualize using corrplot
+corrplot(cm$membership, is.corr = FALSE)
 
 library(ggplot2)
-ggplot(iris, aes(Petal.Length, Petal.Width, color = Species)) + geom_point() 
+my_cols <- c("#00AFBB", "#E7B800", "#FC4E07")  
+pairs(iris[,1:4], pch = 19,  cex = 0.5,
+      col = my_cols[iris$Species],
+      lower.panel=NULL)
+
+## fviz_nbclust(iris[, 1:4], kmeans, method = "silhouette")
+## spe.KM.cascade<-cascadeKM(iris[,1:4],inf.gr=2, sup.gr=10, iter=100, criterion='calinski')
+## plot(spe.KM.cascade,sortg=TRUE)
+## 
+## set.seed(1)
+## irisCluster<-kmeans(iris[, 1:4], 3, nstart= 20)
+## table(irisCluster$cluster, iris$Species)
+## irisCluster$cluster<-as.factor(irisCluster$cluster)
+## 
+## plot7<-ggplot(iris, aes(Petal.Length, Petal.Width, color = irisCluster$cluster + geom_point()
+## 
+## plot8<-ggplot(iris, aes(Petal.Length, Petal.Width, color = Species)) + geom_point()
+## 
+## grid.arrange(plot7, plot8, ncol=2)
+
+tree1<-tree(Species~Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data=iris)
+summary(tree1 )
+plot(tree1)
+text(tree1)
+
+tree2 <- rpart(Species ~ ., data=iris, method="class")
+fancyRpartPlot(tree2, main="Iris")
+
+## # Extra to exciting your curiosity
+## iris.rf=randomForest(Species~., data=iris, importance=TRUE, proximity=TRUE, ntree=500)
+## # Required number of trees gives errors for each species and the average for all species (black):
+## plot(iris.rf,lty=2)
+## # Misclassification error rates:
+## iris.rf$confusion
+## # Importance of individual predictor variables for classification (the further the value is on the right of the plot, the more important):
+## varImpPlot(iris.rf)
+## # The membership of a particular class as a function of a variable value can be displayed with this
+## partialPlot(iris.rf,iris,Petal.Width,"setosa")
+## # we can predict unclassified observations. We make up some sample new observations from the original dataset to save some time importing (the first three rows are P. setosa, lets see if RandomForest gets that right:
+## newobs=iris[1:3,1:4]
+## predict(iris.rf,newobs)
+## # This last plot conveys the confidence in your predictions for each individual sample. Colors represent species and points are samples. In this case, many samples can be predicted with great certainty (1) and only few classifications are questionable (approaching 0)
+## plot(margin(iris.rf))
+
+data(doubs)
+spe.norm<-decostand(doubs$fish[-8,], 'nor')
+env<-doubs$env[-8,]
+
+# par(mfrow=c(1,2))
+spe.ch.mvpart <-
+  mvpart(data.matrix(spe.norm)~.,
+         env,
+         margin = 0.08,
+         cp=0,
+         xv='min', # try 'pick' best number, '1se'
+         xval=nrow(spe),
+         xvmult = 100
+         )
+
+# create a list of 80% of the rows in the original dataset that we can use for training
+validation_index <- createDataPartition(iris$Species, p=0.80, list=FALSE)
+# select 20% of the data for validation
+validation <- iris[-validation_index,]
+# use the remaining 80% of data to training and testing the models
+idataset <- iris[validation_index,]
+
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", number=10)
+metric <- "Accuracy"
+
+# lda
+set.seed(7)
+fit.lda <- train(Species~., data=idataset, method="lda", metric=metric, trControl=control)
+# CART
+set.seed(7)
+fit.cart <- train(Species~., data=idataset, method="rpart", metric=metric, trControl=control)
+# kNN
+set.seed(7)
+fit.knn <- train(Species~., data=idataset, method="knn", metric=metric, trControl=control)
+# Random Forest
+set.seed(7)
+fit.rf <- train(Species~., data=idataset, method="rf", metric=metric, trControl=control)
+
+# summarize accuracy of models
+results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, rf=fit.rf))
+summary(results)$statistics$Accuracy
+
+# summarize Best Model
+print(fit.lda)
+
+# estimate skill of LDA on the validation dataset
+predictions <- predict(fit.lda, validation)
+confusionMatrix(predictions, validation$Species)
