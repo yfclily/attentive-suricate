@@ -7,7 +7,7 @@ output:
    theme: united
    highlight: tango
    toc: true
-   toc_depth: 4
+   toc_depth: 5
    toc_float: true
    number_sections: false
    code_folding: show
@@ -22,6 +22,19 @@ library(ade4)
 library(gclus)
 library(qgraph)
 library(factoextra)
+library(fpc)
+library(ggplot2)
+library(gridExtra)
+library(e1071)
+library(corrplot)
+library(tree)
+library(rpart)
+library(rattle)
+library(randomForest)
+library(devtools)
+library(caret)
+library(mvpart) # install_github("cran/mvpart", force = T) after devtools
+library(MVPARTwrap) # install_github("cran/MVPARTwrap", force = T) after devtools
 ```
 
 ```{r eval = TRUE,  message=F, warning=F, purl=F, results="hide"}
@@ -359,16 +372,14 @@ Many **clustering** approaches rely on association matrix, which stresses on the
 
 Calculate numerical classification requires two arguments: matrix of distances among samples (ecological resemblance, D) and the method: name of clustering algorithm.
 
-### R clustering
-
-Common hierarchical clustering methods are available through the function `hclust` from the `stats` package
+Common hierarchical clustering methods are available through the function `hclust` from the `stats` package. Be careful of:
 
 + **Data dredging** clustering produces tree-like structure. You don't choose clustering method according to how your tree looks like.
 
 + The suitable method is usually carefully **selected** and/or **evaluated** accoding to the data set you are dealing with and your hypotheses.
 
 
-#### Hierarchical: common methods
+### Hierarchical Clustering
 
 * **Single linkage agglomerative clustering** (neighbor sorting)
 
@@ -445,12 +456,11 @@ plot(spe.ch.ward, main='Ward clustering')
 
 `hclust` is called in this algorithm, but flexible clustering is available in the R package `cluster` with the function `agnes`
 
+  + *Beta flexible* methods
 
-+ *Beta flexible* methods
+  + Model encompassing all the clustering methods seen before, which are obtained by changing the values of four parameters
 
-+ Model encompassing all the clustering methods seen before, which are obtained by changing the values of four parameters
-
-#### Quality clustering
+**Clustering Quality**
 
 There are many ways to evaluate the overall quality of the chose clustering algorithm and therefore their representations.
 
@@ -553,12 +563,12 @@ One can compared classification by cutting tree `cutree` and comparing grouping 
 
 ```{r class.source = "fold-show", eval=T, warning=F}
 k<-5 # Number of groups (conscensus) 
-spebc.single.g <- cutree(spe.ch.single, k)
-spebc.complete.g <- cutree(spe.ch.complete, k)
-spebc.UPGMA.g <- cutree(spe.ch.UPGMA, k)
-spebc.ward.g <- cutree(spe.ch.ward, k)
+spe.ch.single.g <- cutree(spe.ch.single, k)
+spe.ch.complete.g <- cutree(spe.ch.complete, k)
+spe.ch.UPGMA.g <- cutree(spe.ch.UPGMA, k)
+spe.ch.ward.g <- cutree(spe.ch.ward, k)
 
-table(spebc.single.g,spebc.complete.g) # Single vs complete
+table(spe.ch.single.g,spe.ch.complete.g) # Single vs complete
 ```
 
 If two classifications provided the same group contents, the contingency table would show only non zero frequency value in each row and each column0 It is never the case here.
@@ -632,18 +642,17 @@ points(k.best,max(kt$r),pch=16,col='red',cex=1.5)
 
 At some point the marginal gain will drop, giving an angle in
 the graph. The number of clusters is chosen at this point,
-hence the "elbow criterion".
+hence the "elbow criterion" (wss) .
 
-Using **fuzzy clustering** *(also referred to as soft clustering or soft k-means) is a form of clustering in which each data point can belong to more than one cluster)* 
 
 ```{r class.source = "fold-show", eval=T, warning=F}
-fviz_nbclust(spe.norm, hcut, method = "wss",hc_method = "average")
-# fviz_nbclust(spe.norm, hcut, method = "silhouette",hc_method = "average")
+fviz_nbclust(spe.norm, hcut, diss=dist(spe.norm, method='euclidean'),method = "wss",hc_method = "average")
+#fviz_nbclust(spe.norm, hcut, diss=dist(spe.norm, method='euclidean'),method = "silhouette",hc_method = "average")
 ```
 
 * And many others indicators
 
-#### Cluster options
+**Clustering options** 
 
 * Visualize groupings
 
@@ -692,4 +701,359 @@ heatmap(as.matrix(spe.ch),Rowv=dend,symm=TRUE, margin=c(3,3))
 
   + *<span style="color: green"> Choose method with the highest cophenetic correlation and produce a heat map of the distance matrix reordered with the dendrogram </span>*
 
+### Non-Hierarchical Clustering
 
+(NOTE ON FUZZY)
+
++ Create partition, without hierarchy.
+
++ Determine a partition of the objects into k groups, or clusters, such as the objects within each cluster are more similar to one other than to objects in the other clusters.
+
++ It require an initial configuration (user usually determine the number of groups, _k_), which will be optimized in a recursive process (often random). If random, the initial configuration is run a large number of times with different initial configurations in order to find the best solution.
+
+The most known and commonly used non-hierarchical **partitioning algorithms** is **_k_-means clustering** (MacQueen, 1967), in which, each cluster is represented by the center or means of the data points belonging to the cluster.
+
+![](Figures/multi_kmean.png)
+
+Three  crital steps:
+
+  + **Initialization** (various Methods: Lloyd's algorithm is the mots common): _k_ observations from the dataset are used as the initial means. The **random partition** method first randomly assigns a cluster to each observation and then proceeds to the update step, thus computing the initial mean to be the centroid of the cluster's randomly assigned points. 
+
+  + **Assignment step** Assign each observation to the cluster with the nearest mean: that with the least squared Euclidean distance (Mathematically, this means partitioning the observations according to the Voronoi diagram generated by the means) 
+  
+  + **Update step** Recalculate means (centroids) for observations assigned to each cluster.
+  
+
+The algorithm has **converged** when the assignments no longer change. The algorithm is not always guaranteed to find the optimum.
+
+
+![](Figures/multi_kmean.gif)
+
+The algorithm is often presented as assigning objects to the nearest cluster by distance. Using a different distance function other than (squared) Euclidean distance may prevent the algorithm from converging. Various modifications of _k_-means such as **_k_-medoids** [**PAM (Partitioning Around Medoids**, Kaufman & Rousseeuw, 1990] have been proposed to allow using other distance measures. In this case, cluster is represented by one of the objects in the cluster.
+
+*Note: if variable in the data table are not dimensionally homogenous, they must be standardized prior to partitioning*
+
+Let's play card to simply illustrated what is going one:
+check [here](https://www.youtube.com/watch?v=zHbxbb2ye3E)
+
+
+#### **Implementing _k_-means/PAM partitioning in R**
+
+The aims is to identify **high-density regions** in the data. To do so, the method iteratively minimizes an objective function the **total error sum of squares (TESS or SSE)**, which is the sum of the within groups sums-of squares. *It is basically the sum, over the _k_ groups, of the sums of squared distance among the objects in the group, each divided by the number of objects in the group.*
+
+![](Figures/multi_kmean_2.gif)
+With a pre-determined number of groups, recommended function is: `kmeans` from the `stats` package. Argument `nstart` will repeat the analysis a large number of time using different initial configuration until finding the best solution.
+
+*Note: do not forget to normalized your data*
+
+```{r,  eval=T, message=F}
+# k-means partitioning of the pre-transformed species data
+spe.kmeans <- kmeans(spe.norm, centers=5, nstart=100)
+# k-means group number of each observation spe.kmeans$cluster 
+spe.kmeans$cluster
+# Comparison with the 5-group classification derived from UPGMA clustering
+comparison<-table(spe.kmeans$cluster,spe.ch.UPGMA.g)
+comparison
+# Visualize k-means clusters 
+fviz_cluster(spe.kmeans, data = spe.norm,geom = "point",
+             stand = FALSE, ellipse.type = "norm") 
+```
+
+#### **Best partition**
+
+**Evaluating** partition using elbow and silouette indicators:
+
+```{r,  eval=T, message=F}
+# elbow, UPGMA, chord
+fviz_nbclust(spe.norm, hcut, diss=dist(spe.norm, method='euclidean'),method = "wss",hc_method = "average")
+
+# silhouette, UPGMA, chord
+fviz_nbclust(spe.norm, hcut, diss=dist(spe.norm, method='euclidean'),method = "silhouette",hc_method = "average")
+
+# elbow, kmeans, chord
+fviz_nbclust(spe.norm, kmeans, method = "wss")
+
+# silhouette, kmeans, chord
+fviz_nbclust(spe.norm, kmeans, method = "silhouette")
+```
+
+Function `cascadeKM` in `vegan` package is a wrapper for the `kmeans` function
+
++ creates several partitions forming a cascade from small (argument `inf.gr` to large values of *k* (argument `sup.gr`)
+
++ the cascade proposes the 'best solution' for
+partitioning using the `calinski` or `ssi` criterion
+
+```{r,  eval=T, message=F}
+spe.KM.cascade<-cascadeKM(spe.norm,inf.gr=2,sup.gr=10,iter=100,criterion='calinski')
+plot(spe.KM.cascade,sortg=TRUE)
+```
+
+For `pam` clustering  (package `cluster`):
+
+```{r,  eval=T, message=F}
+fviz_nbclust (spe.norm , pam, method = "silhouette") 
+fviz_nbclust (spe.norm , pam, method = "wss")
+pamk(spe.norm, krange=2:10, criterion='asw')$nc
+pam6<-pam(spe.norm, 6)
+pam3<-pam(spe.norm, 3)
+plot(silhouette(pam6))
+plot(silhouette(pam3))
+# plot1<-fviz_nbclust(spe.norm, hcut, method = "silhouette", hc_method = "average")
+# plot2 < - fviz_nbclust (spe.norm , pam, method = "silhouette")
+# plot3<-fviz_nbclust(spe.norm, kmeans, method = "silhouette")
+# grid.arrange(plot1, plot2,plot3, ncol=3)
+```
+
+#### **Visualizing partitions**
+
+```{r,  eval=T, message=F}
+pam.res<-pam(spe.norm, k=6)
+km.res <- kmeans(spe.norm, centers=3)
+plot4 <-fviz_cluster(km.res,spe.norm, stand = FALSE,geom = "point",ellipse.type = "norm") 
+plot5 <-fviz_cluster(pam.res,spe.norm, stand = FALSE,geom = "point",ellipse.type = "norm")
+grid.arrange(plot4, plot5, ncol=2)
+```           
+             
+#### **Fuzzy clustering**
+
+The **fuzzy clustering** is considered as soft clustering ors or soft _k_-means, in which each element has a probability of belonging to each cluster. In other words, each element has a set of membership coefficients corresponding to the degree of being in a given cluster. In fuzzy clustering, points close to the center of a cluster, may be in the cluster to a higher degree than points in the edge of a cluster. The degree, to which an element belongs to a given cluster, is a numerical value varying from 0 to 1.
+
+
+This is fundamnetally different from _k_-means and _k_-medoid clustering, where each object is affected exactly to one cluster. _k_-means and _k_-medoids clustering are known as hard or non-fuzzy clustering.
+
+In other words, in non-fuzzy clustering an apple can be red or green (hard clustering). Here, the apple can be red AND green (soft clustering). The apple will be red to a certain degree [red = 0.5] as well as green to a certain degree [green = 0.5].
+
+The **fuzzy c-means (FCM)** algorithm is one of the most widely used fuzzy clustering algorithms. The centroid of a cluster is calculated as the mean of all points, weighted by their degree of belonging to the cluster. The function `fanny` [`cluster` package] can be used to compute fuzzy clustering. 'FANNY' stands for *fuzzy analysis clustering*.
+
+```{r,  eval=T, message=F}
+set.seed(123)
+res.fanny<-fanny(spe.norm, 3)
+fviz_cluster(res.fanny, ellipse.type = "norm", repel = TRUE,
+             palette = "jco", ggtheme = theme_minimal(),
+             legend = "right")
+res.fanny # details on membership
+```
+
+```{r,  eval=T, message=F}
+fviz_silhouette(res.fanny, palette = "jco",
+                ggtheme = theme_minimal())
+```
+
+
+Another example using the function `cmeans` from the package `e1071` and a dataset on the criminality in `USArrests` 
+
+
+```{r,  eval=T, message=F}
+set.seed(123)
+# Load the data
+data("USArrests")
+# Subset of USArrests
+ss <- sample(1:50, 20)
+df <- scale(USArrests[ss,])
+# Compute fuzzy clustering
+cm <- cmeans(df, 4)
+# Visualize using corrplot
+corrplot(cm$membership, is.corr = FALSE)
+```
+
+![Four fuzzy clusters along the Doubs River](Figures/multi_fuzzy.png)
+
+
+> *<span style="color: green">RP18:  Let's go back to our flowers and the   `iris` dataset. The data set contains variable sepal length, sepal width, petal length, and petal width of flowers of different species</span>*
+
+```{r,  eval=T, message=F}
+library(ggplot2)
+my_cols <- c("#00AFBB", "#E7B800", "#FC4E07")  
+pairs(iris[,1:4], pch = 19,  cex = 0.5,
+      col = my_cols[iris$Species],
+      lower.panel=NULL)
+```
+
+  + *<span style="color: green"> Using k-means cascade and silhouette width indicator determine the optimal number of clusters?</span>*
+  
+ + *<span style="color: green"> Since, we know that that there are 3 species are involved, we ask the algorithm to group the data into 3 clusters (common sense). How many points are wrongly classified? Plot the results</span>* 
+  
+```{r class.source = "fold-hide",  eval=F}
+fviz_nbclust(iris[, 1:4], kmeans, method = "silhouette")
+spe.KM.cascade<-cascadeKM(iris[,1:4],inf.gr=2, sup.gr=10, iter=100, criterion='calinski')
+plot(spe.KM.cascade,sortg=TRUE)
+
+set.seed(1)
+irisCluster<-kmeans(iris[, 1:4], 3, nstart= 20)
+table(irisCluster$cluster, iris$Species)
+irisCluster$cluster<-as.factor(irisCluster$cluster)
+
+plot7<-ggplot(iris, aes(Petal.Length, Petal.Width, color = irisCluster$cluster + geom_point()
+
+plot8<-ggplot(iris, aes(Petal.Length, Petal.Width, color = Species)) + geom_point()
+
+grid.arrange(plot7, plot8, ncol=2)
+```
+
+
+### Decision trees
+
+[Here](https://www.youtube.com/watch?v=7VeUPuFGJHk&ab_channel=StatQuestwithJoshStarmer) for a basic understanding of decision trees: 
+
+#### Classification And Regression Trees (CART)
+
+The function `ctree` builds decision trees ([recursive partitioning algorithm](https://cran.r-project.org/web/packages/partykit/vignettes/ctree.pdf)). The first parameter is a formula, which defines a target variable and a list of independent variables.
+
+```{r class.source = "fold-show",  eval=T}
+tree1<-tree(Species~Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data=iris)
+summary(tree1 )
+plot(tree1)
+text(tree1)
+```
+
+Another fancier option with the package `rpart`:
+
+```{r class.source = "fold-show",  eval=T}
+tree2 <- rpart(Species ~ ., data=iris, method="class")
+fancyRpartPlot(tree2, main="Iris")
+```
+
+One of the disadvantages of decision trees may be **overfitting** i.e. continually creating partitions to achieve a relatively homogeneous population. This problem can be alleviated by **pruning** the tree (CART), which is basically removing the decisions from the bottom up. Another way is to **combine several trees** and obtain a consensus, which can be done via a process called **random forests** (bootstrapped version of CART - many trees built based on subsets of the data, in addition not all predictor variables are used every time, rather a random subset).
+
+```{r class.source = "fold-show",  eval=F}
+# Extra to exciting your curiosity
+iris.rf=randomForest(Species~., data=iris, importance=TRUE, proximity=TRUE, ntree=500)
+# Required number of trees gives errors for each species and the average for all species (black):
+plot(iris.rf,lty=2)
+# Misclassification error rates:
+iris.rf$confusion
+# Importance of individual predictor variables for classification (the further the value is on the right of the plot, the more important):
+varImpPlot(iris.rf)
+# The membership of a particular class as a function of a variable value can be displayed with this
+partialPlot(iris.rf,iris,Petal.Width,"setosa")
+# we can predict unclassified observations. We make up some sample new observations from the original dataset to save some time importing (the first three rows are P. setosa, lets see if RandomForest gets that right:
+newobs=iris[1:3,1:4]
+predict(iris.rf,newobs)
+# This last plot conveys the confidence in your predictions for each individual sample. Colors represent species and points are samples. In this case, many samples can be predicted with great certainty (1) and only few classifications are questionable (approaching 0)
+plot(margin(iris.rf))
+```
+
+#### Multivariate Regression Trees: constrained clustering
+
+**Multivariate regression trees** (MRT; De’ath 2002) are an extension of univariate regression trees, a method allowing the recursive partitioning of a quantitative response variable under the control of a set of quantitative or categorical explanatory variables (Breiman et al. 1984). Such a procedure is sometimes called **constrained** or **supervised** clustering.The result is a tree whose “leaves” (terminal groups of sites) are composed of subsets of 'sites' chosen to minimize the within-group sums of squares (as in a _k_-means clustering), but where each successive partition is defined by a threshold value or a state of one of the explanatory variables.
+
+
+The only package implementing a complete and handy version of MRT is `mvpart`. Unfortunately, this package is no longer supported by the R Core Team, so that no updates are available for R versions posterior to R 3.0.3. Nevertheless, `mvpart` can still be installed via github.
+
+
+```{r class.source = "fold-show",  eval=T}
+data(doubs)
+spe.norm<-decostand(doubs$fish[-8,], 'nor')
+env<-doubs$env[-8,]
+
+# par(mfrow=c(1,2))
+spe.ch.mvpart <-
+  mvpart(data.matrix(spe.norm)~.,
+         env,
+         margin = 0.08,
+         cp=0,
+         xv='min', # try 'pick' best number, '1se'
+         xval=nrow(spe),
+         xvmult = 100
+         )
+```
+
+
+#### Hello World to Machine Learning
+
+
+Create a **Validation Dataset** We will split `iris` dataset into two, 80% of which we will use to train our models and 20% that we will hold back as a validation dataset. 
+
+```{r class.source = "fold-show",  eval=T}
+# create a list of 80% of the rows in the original dataset that we can use for training
+validation_index <- createDataPartition(iris$Species, p=0.80, list=FALSE)
+# select 20% of the data for validation
+validation <- iris[-validation_index,]
+# use the remaining 80% of data to training and testing the models
+idataset <- iris[validation_index,]
+```
+
+You now have training data in the dataset variable and a validation set we will use later in the validation variable.
+
+**Evaluate Algorithm** it is time to create some models of the data and estimate their accuracy on unseen data. 
+
+ + Step 1: set-up the test harness to use 10-fold cross validation.
+ We will 10-fold crossvalidation to estimate accuracy.This will split our dataset into 10 parts, train in 9 and test on 1 and release for all combinations of train-test splits. We will also repeat the process 3 times for each algorithm with different splits of the data into 10 groups, in an effort to get a more accurate estimate
+
+```{r class.source = "fold-show",  eval=T}
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", number=10)
+metric <- "Accuracy"
+```
+
+We are using the metric of “Accuracy” to evaluate models. This is a ratio of the number of correctly predicted instances in divided by the total number of instances in the dataset multiplied by 100 to give a percentage (e.g. 95% accurate). We will be using the metric variable when we run build and evaluate each model next.
+
+  + Step 2: Build Models. We don’t know which algorithms would be good on this problem or what configurations to use, let's evaluate 3 different algorithms:
+
+    * Classification and Regression Trees (CART) - non linear algorithm
+    * k-Nearest Neighbors (kNN)  - non linear algorithm
+    * Linear Discriminant Analysis (LDA) - linear algorithm
+    * Random Forest (RF)  - advanced algorithms
+
+```{r class.source = "fold-show",  eval=T}
+# lda
+set.seed(7)
+fit.lda <- train(Species~., data=idataset, method="lda", metric=metric, trControl=control)
+# CART
+set.seed(7)
+fit.cart <- train(Species~., data=idataset, method="rpart", metric=metric, trControl=control)
+# kNN
+set.seed(7)
+fit.knn <- train(Species~., data=idataset, method="knn", metric=metric, trControl=control)
+# Random Forest
+set.seed(7)
+fit.rf <- train(Species~., data=idataset, method="rf", metric=metric, trControl=control)
+```
+
+ + Step 3: Build Models. We don’t know which algorithms would be good on this problem or what configurations to use, let's evaluate 3 different algorithms:
+
+We now have 4 models and accuracy estimations for each. We need to compare the models to each other and select the most accurate.
+
+We can report on the accuracy of each model by first creating a list of the created models and using the summary function.
+
+```{r class.source = "fold-show",  eval=T}
+# summarize accuracy of models
+results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, rf=fit.rf))
+summary(results)$statistics$Accuracy
+```
+
+We can see that the most accurate model in this case was LDA:
+
+
+```{r class.source = "fold-show",  eval=T}
+# summarize Best Model
+print(fit.lda)
+```
+
+This gives a nice summary of what was used to train the model and the mean and standard deviation (SD) accuracy achieved, specifically 97.5% accuracy +/- 4%
+
+
+**Prediction**
+
+The LDA was the most accurate model. Now we want to get an idea of the accuracy of the model on our validation set.
+
+This will give us an independent final check on the accuracy of the best model. It is valuable to keep a validation set just in case you made a slip during such as overfitting to the training set or a data leak. Both will result in an overly optimistic result.
+
+We can run the LDA model directly on the validation set and summarize the results in a confusion matrix.
+
+```{r class.source = "fold-show",  eval=T}
+# estimate skill of LDA on the validation dataset
+predictions <- predict(fit.lda, validation)
+confusionMatrix(predictions, validation$Species)
+```
+
+We can see that the accuracy is 100%. It was a small validation dataset (20%), but this result is within our expected margin of 97% +/-4% (Accuracy +/- SD of lda model) suggesting we may have an accurate and a reliably accurate model.
+
+*See more* https://machinelearningmastery.com/machine-learning-in-r-step-by-step/
+
+
+Basically, we learn about one **neurone** in a network. You are only one step toward Deep Learning.   
+
+
+![Machine Learning vs. Deep Learning](Figures/multi_MLDL.png)
