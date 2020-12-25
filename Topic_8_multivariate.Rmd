@@ -14,7 +14,7 @@ output:
     # ioslides_presentation 
 ---
 
-# Topic 8 - Multivariate analyses
+# Topic 8 - Multivariate analyses - Part A: Clustering
 
 ```{r,  eval=T, warning=F, message=F}
 library(vegan)
