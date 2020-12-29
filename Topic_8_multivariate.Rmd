@@ -14,7 +14,7 @@ output:
     # ioslides_presentation 
 ---
 
-# Topic 8 - Multivariate analyses
+# Topic 8 - Multivariate analyses - Part A: Clustering
 
 ```{r,  eval=T, warning=F, message=F}
 library(vegan)
@@ -31,10 +31,10 @@ library(tree)
 library(rpart)
 library(rattle)
 library(randomForest)
-library(devtools)
 library(caret)
-library(mvpart) # install_github("cran/mvpart", force = T) after devtools
-library(MVPARTwrap) # install_github("cran/MVPARTwrap", force = T) after devtools
+library(devtools)
+library(mvpart) # install_github("cran/mvpart", force = T) # after devtools
+library(MVPARTwrap) # install_github("cran/MVPARTwrap", force = T) # after devtools
 ```
 
 ```{r eval = TRUE,  message=F, warning=F, purl=F, results="hide"}
@@ -1053,7 +1053,7 @@ We can see that the accuracy is 100%. It was a small validation dataset (20%), b
 *See more* https://machinelearningmastery.com/machine-learning-in-r-step-by-step/
 
 
-Basically, we learn about one **neurone** in a network. You are only one step toward Deep Learning.   
+Basically, we learn about one **neurone** of a network. You are only one step toward Deep Learning.   
 
 
 ![Machine Learning vs. Deep Learning](Figures/multi_MLDL.png)

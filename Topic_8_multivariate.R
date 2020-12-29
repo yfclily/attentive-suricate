@@ -12,10 +12,10 @@ library(tree)
 library(rpart)
 library(rattle)
 library(randomForest)
-library(devtools)
 library(caret)
-library(mvpart) # install_github("cran/mvpart", force = T) after devtools
-library(MVPARTwrap) # install_github("cran/MVPARTwrap", force = T) after devtools
+library(devtools)
+library(mvpart) # install_github("cran/mvpart", force = T) # after devtools
+library(MVPARTwrap) # install_github("cran/MVPARTwrap", force = T) # after devtools
 
 
 
