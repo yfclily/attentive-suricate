@@ -16,6 +16,8 @@ output:
 
 # Topic 9 - Multivariate analyses - Part B: Ordination
 
+Packages & Customized Functions:
+
 ```{r,  eval=T, warning=F, message=F}
 library(vegan)
 library(ade4)
@@ -23,6 +25,8 @@ library(ape)
 source ('https://www.dipintothereef.com/uploads/3/7/3/5/37359245/cleanplot.pca.r')
 source ('https://www.dipintothereef.com/uploads/3/7/3/5/37359245/evplot.r')
 ```
+
+Extract R code:
 
 ```{r eval = TRUE,  message=F, warning=F, purl=F, results="hide"}
 knitr::purl("Topic_8_multivariate.Rmd", documentation = F)
@@ -37,7 +41,7 @@ knitr::purl("Topic_8_multivariate.Rmd", documentation = F)
 
 The aim of ordination methods is to represent the data along a reduced number of orthogonal axes, constructed in such way that they represent, in decreasing order, the **main trends of the data**
 
- + The rends can be **interpreted visually or in association with other methods** such as clustering or regression </span>
+ + The renders can be **interpreted visually or in association with other methods** such as clustering or regression
 
  + Most ordination methods (except nMDS) are based on the extraction of the **eigenvectors** of an association matrix
 
@@ -154,7 +158,7 @@ summary(env.pca) # default scaling 2
 + **Scaling 2** = correlation biplot: each eigenvector is scaled to the square root of its eigenvalue. (1) Distances among objects in the biplot are not approximations of their Euclidean distances in multidimensional space. (2) **The angles between descriptors in the biplot reflect their correlations.**
 
 + The compromise **Scaling 3** has no clear interpretation rules, and
-therefore we will not discuss it further in this book.
+therefore we will not discuss it further.
 
 Bottom line: if the main interest of the analysis is to interpret the relationships among **objects**, choose **scaling 1**. If the main interest focuses on the relationships among descriptors, choose **scaling 2**.
 
